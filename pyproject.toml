@@ -48,6 +48,9 @@ dev = [
     "rich",
     "ruff",
 ]
+docs = [
+
+]
 
 [project.urls]
 homepage = "https://github.com/dennisbrookner/matchmaps"

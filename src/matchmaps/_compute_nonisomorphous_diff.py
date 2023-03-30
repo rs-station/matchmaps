@@ -12,7 +12,7 @@ import gemmi
 import numpy as np
 from functools import partial
 
-from mapreg._utils import (
+from matchmaps._utils import (
     make_floatgrid_from_mtz,
     rigid_body_refinement_wrapper,
     _handle_special_positions,
@@ -164,18 +164,46 @@ def parse_arguments():
     """Parse commandline arguments"""
     parser = argparse.ArgumentParser(
         description=(
-            "Prepare inputs for map registration. "
-            "Note that both ccp4 and phenix must be active in the environment. "
+            "Compute a difference map using non-isomorphous inputs. "
+            "You will need two MTZ files, which will be referred to throughout as 'on' and 'off', "
+            "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
+            "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
+            "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
+            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to work. "
         )
     )
 
+    parser.add_argument(
+        "--mtzoff",
+        "-f",
+        nargs=3,
+        metavar=("mtzfileoff", "Foff", "SigFoff"),
+        required=True,
+        help=(
+            "MTZ containing off/apo/ground/dark state data. "
+            "Specified as [filename F SigF]"
+        ),
+    )
+
+    parser.add_argument(
+        "--mtzon",
+        "-n",
+        nargs=3,
+        metavar=("mtzfileon", "Fon", "SigFon"),
+        required=True,
+        help=(
+            "MTZ containing on/bound/excited/bright state data. "
+            "Specified as [filename F SigF]"
+        ),
+    )
+    
     parser.add_argument(
         "--pdboff",
         "-p",
         required=True,
         help=(
             "Reference pdb corresponding to the off/apo/ground/dark state. "
-            "Used to rigid-body refine onto `mtzon` and obtain 'on' phases."
+            "Used for rigid-body refinement of both input MTZs to generate phases."
         ),
     )
 
@@ -189,30 +217,6 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "--mtzoff",
-        "-f",
-        nargs=3,
-        metavar=("mtzfileoff", "Foff", "SigFoff"),
-        required=True,
-        help=(
-            "Reference mtz containing off/apo/ground/dark state data. "
-            "Specified as (filename, F, SigF)"
-        ),
-    )
-
-    parser.add_argument(
-        "--mtzon",
-        "-n",
-        nargs=3,
-        metavar=("mtzfileon", "Fon", "SigFon"),
-        required=True,
-        help=(
-            "mtz containing on/bound/excited/bright state data. "
-            "Specified as (filename, F, SigF)"
-        ),
-    )
-
-    parser.add_argument(
         "--input-dir",
         required=False,
         default="./",
@@ -223,16 +227,7 @@ def parse_arguments():
         "--output-dir",
         required=False,
         default="./",
-        help="Path to which output maps should be written. Optional, defaults to './' (current directory)",
-    )
-
-    parser.add_argument(
-        "--verbose",
-        "-v",
-        required=False,
-        action="store_true",
-        default=False,
-        help="Include this flag to print out scaleit and phenix.refine outputs to the terminal",
+        help="Path to which output files should be written. Optional, defaults to './' (current directory)",
     )
 
     parser.add_argument(
@@ -240,9 +235,43 @@ def parse_arguments():
         required=False,
         action="store_true",
         default=False,
-        help="Include this flag to register 'off' onto 'on' (instead of 'on' onto 'off', the default)",
+        help=(
+            "Include this flag to align 'off' data onto 'on' data. By default, 'off' data is stationary and 'on' data is moved."
+        ),
     )
 
+    parser.add_argument(
+        "--spacing",
+        "-s",
+        required=False,
+        type=float,
+        default=0.5,
+        help=(
+            "Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. "
+            "Value is approximate because there must be an integer number of voxels along each unit cell dimension"
+        ),
+    )
+
+    parser.add_argument(
+        "--dmin",
+        required=False,
+        type=float,
+        default=None,
+        help=(
+            "Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. "
+            "By default, cutoff is the resolution of the lower-resolution input MTZ. "
+        ),
+    )
+    
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Include this flag to print out scaleit and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.",
+    )
+    
     parser.add_argument(
         "--selection",
         required=False,
@@ -260,34 +289,13 @@ def parse_arguments():
         help=("Custom .eff template for running phenix.refine. "),
     )
 
-    parser.add_argument(
-        "--spacing",
-        "-s",
-        required=False,
-        type=float,
-        default=0.5,
-        help=(
-            "Approximate voxel size in Angstroms. Defaults to 0.5 A. "
-            "Value is approximate because there must be an integer number of voxels along each unit cell dimension"
-        ),
-    )
-
-    parser.add_argument(
-        "--dmin",
-        required=False,
-        type=float,
-        default=None,
-        help=(
-            "Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, no cutoff. "
-        ),
-    )
-
-    return parser.parse_args()
+    return parser
 
 
 def main():
 
-    args = parse_arguments()
+    parser = parse_arguments()
+    args = parser.parse_args()
     
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
