@@ -1,9 +1,13 @@
-from tqdm import tqdm
+"""
+Utilities and helperfunctions used by matchmaps
+
+Functions make_floatgrid_from_mtz, rigid_body_refinement_wrapper, and align_grids_from_model_transform
+are exported to python for use in prototyping and testing
+"""
+
 import gemmi
 import reciprocalspaceship as rs
 import numpy as np
-from skimage.transform import warp
-from skimage.registration import optical_flow_ilk
 
 import shutil
 import glob
@@ -145,7 +149,7 @@ refinement {
 }
     """
     else:
-        with open(eff, "r") as file:
+        with open(input_dir + eff, "r") as file:
             eff_contents = file.read()
 
     if off_labels is None:

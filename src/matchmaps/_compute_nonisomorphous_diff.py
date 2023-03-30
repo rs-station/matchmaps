@@ -23,20 +23,64 @@ def compute_nonisomorphous_difference_map(
     pdboff,
     mtzoff,
     mtzon,
+    Foff,
+    SigFoff,
+    Fon,
+    SigFon,
     ligands=None,
-    Foff="FP",
-    SigFoff="PHWT",
-    Fon="FP",
-    SigFon="PHWT",
+    dmin=None,
+    spacing=0.5,
+    on_as_stationary=False,
     input_dir="./",
     output_dir="./",
     verbose=False,
     selection=None,
     eff=None,
-    dmin=None,
-    spacing=0.25,
-    on_as_stationary=False,
 ):
+    """
+    _summary_
+
+    Parameters
+    ----------
+    pdboff : string
+        Name of input .pdb file to use for phasing 
+    mtzoff : string
+        Name of input .mtz file containing 'off' data
+    mtzon : string
+        Name of input .mtz file containing 'off' data
+    Foff : string
+        Column in mtzoff containing structure factor amplitudes
+    SigFoff : string
+        Column in mtzoff containing structure factor uncertainties
+    Fon : string
+        Column in mtzon containing structure factor amplitudes
+    SigFon : string
+        Column in mtzon containing structure factor uncertainties
+    ligands : list of strings
+        Filename(s) of any .cif ligand restraint files necessary for phenix.refine
+        by default None, meaning only the .pdb is required for refinement
+    dmin : float, optional
+        Minimum resolution (in Angstroms) reflections to be used in computing real-space maps from mtzs.
+        If omitted, resolution cutoff is the maximum resolution from the lower-resolution input file.
+    spacing : float, optional
+        Approximate size of real-space voxels in Angstroms, by default 0.5 A
+    on_as_stationary : bool, optional
+        _description_, by default False
+    input_dir : str, optional
+        Path to directory containing input files, by default "./" (current directory)
+    output_dir : str, optional
+        Path to directory to which output files should be written, by default "./" (current directory)
+    verbose : bool, optional
+        If True, print outputs of scaleit and phenix.refine, by default False
+    selection : str, optional
+        Custom selection to provide to refinement.refine.sites.rigid_body=
+        If omitted, then refinement.refine.sites.rigid_body=all
+        Custom selection is only necessary if special-position atoms need to be excluded from refinement
+    eff : str, optional
+        Name of a file containing a template .eff parameter file for phenix.refine.
+        If omitted, the sensible built-in .eff template is used. If you need to change something,
+        I recommend copying the template from the source code and editing that.
+    """
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
     
@@ -56,7 +100,6 @@ def compute_nonisomorphous_difference_map(
         shell=True,
         capture_output=(not verbose),
     )
-    # print(f"Ran scaleit and produced {mtzon_scaled}")
 
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir) 
 
@@ -115,7 +158,6 @@ def compute_nonisomorphous_difference_map(
     fg_on = make_floatgrid_from_mtz(
         mtzon, spacing, F="F-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin
     )
-    # print("Constructed FloatGrids from mtzs")
 
     print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
     if on_as_stationary:
