@@ -166,12 +166,14 @@ def compute_nonisomorphous_difference_map(
         rs.io.write_ccp4_map(fg_off.array, f'{output_dir}/off_before_transforming.map',
                              fg_off.unit_cell, fg_off.spacegroup)
         fg_off = align_grids_from_model_transform(fg_on, fg_off, pdbon, pdboff)
+        fg_on = align_grids_from_model_transform(fg_on, fg_on, pdbon, pdbon)
         pdb = pdbon
         fg_ref = fg_on
     else:
         rs.io.write_ccp4_map(fg_on.array, f'{output_dir}/on_before_transforming.map',
                              fg_on.unit_cell, fg_on.spacegroup)
         fg_on = align_grids_from_model_transform(fg_off, fg_on, pdboff, pdbon)
+        fg_off = align_grids_from_model_transform(fg_off, fg_off, pdboff, pdboff) # apply same masking sitch to both grids?
         pdb = pdboff
         fg_ref = fg_off
         
@@ -262,6 +264,7 @@ def parse_arguments():
 
     parser.add_argument(
         "--input-dir",
+        "-i",
         required=False,
         default="./",
         help="Path to input mtzs and pdb. Optional, defaults to './' (current directory)",
@@ -269,6 +272,7 @@ def parse_arguments():
     
     parser.add_argument(
         "--output-dir",
+        "-o",
         required=False,
         default="./",
         help="Path to which output files should be written. Optional, defaults to './' (current directory)",
