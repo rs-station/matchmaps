@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>matchmaps &mdash; matchmaps</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="matchmaps’s Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            matchmaps
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command-line usage</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">matchmaps</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">matchmaps</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/cli.rst" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="matchmaps">
+<span id="cli"></span><h1>matchmaps<a class="headerlink" href="#matchmaps" title="Permalink to this heading"></a></h1>
+<p>Compute a difference map using non-isomorphous inputs. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to work.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
+<span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
+<span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
+<span class="go">                 [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
+<span class="go">                 [--verbose] [--selection SELECTION] [--eff EFF]</span>
+</pre></div>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-h">
+<span id="cmdoption-matchmaps-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-mtzoff">
+<span id="cmdoption-matchmaps-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzoff" title="Permalink to this definition"></a></dt>
+<dd><p>MTZ containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-mtzon">
+<span id="cmdoption-matchmaps-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzon" title="Permalink to this definition"></a></dt>
+<dd><p>MTZ containing on/bound/excited/bright state data. Specified as [filename F SigF]</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-pdboff">
+<span id="cmdoption-matchmaps-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-pdboff" title="Permalink to this definition"></a></dt>
+<dd><p>Reference pdb corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-ligands">
+<span id="cmdoption-matchmaps-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-ligands" title="Permalink to this definition"></a></dt>
+<dd><p>Any .cif restraint files needed for refinement</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-input-dir">
+<span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-input-dir" title="Permalink to this definition"></a></dt>
+<dd><p>Path to input mtzs and pdb. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-output-dir">
+<span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-output-dir" title="Permalink to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-on-as-stationary">
+<span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-on-as-stationary" title="Permalink to this definition"></a></dt>
+<dd><p>Include this flag to align ‘off’ data onto ‘on’ data. By default, ‘off’ data is stationary and ‘on’ data is moved.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-spacing">
+<span id="cmdoption-matchmaps-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-spacing" title="Permalink to this definition"></a></dt>
+<dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-dmin">
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Permalink to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution of the lower-resolution input MTZ.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-verbose">
+<span id="cmdoption-matchmaps-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-verbose" title="Permalink to this definition"></a></dt>
+<dd><p>Include this flag to print out scaleit and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-selection">
+<span class="sig-name descname"><span class="pre">--selection</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;selection&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-selection" title="Permalink to this definition"></a></dt>
+<dd><p>Argument to phenix.refine’s refinement.refine.sites.rigid_body. Use this flag if atoms on special positions need to be omitted from the atom selection.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-eff">
+<span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-eff" title="Permalink to this definition"></a></dt>
+<dd><p>Custom .eff template for running phenix.refine.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="matchmaps’s Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dennis Brookner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

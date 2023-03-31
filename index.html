@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>matchmaps’s Documentation &mdash; matchmaps</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="matchmaps" href="cli.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            matchmaps
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line usage</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">matchmaps</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">matchmaps’s Documentation</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="matchmapss-documentation">
+<h1>matchmaps’s Documentation<a class="headerlink" href="#matchmapss-documentation" title="Permalink to this heading"></a></h1>
+<p>Welcome to the docs for <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, a python package for aligning and subtracting non-isomorphous crystallographic datasets. Do you have a pair of datasets for which an isomorphous difference maps doesn’t quite work due to changes in your unit cell dimensions? If so, this is the package for you.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>The python dependencies for <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>matchmaps
+</pre></div>
+</div>
+<p>I recommend that you use a package manager such as <a class="reference external" href="https://docs.conda.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">conda</span></code></a> and always install into a fresh environment, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>my-matchmaps-env
+conda<span class="w"> </span>activate<span class="w"> </span>my-matchmaps-env
+pip<span class="w"> </span>install<span class="w"> </span>matchmaps
+</pre></div>
+</div>
+<section id="additional-dependencies">
+<h3>Additional dependencies<a class="headerlink" href="#additional-dependencies" title="Permalink to this heading"></a></h3>
+<p>Though <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is a python package, it relies on two pieces of external software that are not (yet!) <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable. If they do become <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable in the future, I will excitedly update this package and save you the trouble. For the time being, you will need to install:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.ccp4.ac.uk/download/#os=mac">ccp4</a></p></li>
+<li><p><a class="reference external" href="https://phenix-online.org/documentation/install-setup-run.html">phenix</a></p></li>
+</ul>
+<p>When actually using <code class="docutils literal notranslate"><span class="pre">mapreg</span></code> in the command-line, you’ll need to have both ccp4 and phenix active. Doing that will look something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/path/to/phenix/phenix_env.sh
+/path/to/ccp4/start<span class="w"> </span>
+</pre></div>
+</div>
+<p>At this point, you should be good to go! Please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue on github</a> is this is not working.</p>
+</section>
+</section>
+<section id="using-matchmaps">
+<h2>Using matchmaps<a class="headerlink" href="#using-matchmaps" title="Permalink to this heading"></a></h2>
+<p>Read about <a class="reference internal" href="cli.html"><span class="std std-doc">using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> in the command-line</span></a></p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="cli.html" class="btn btn-neutral float-right" title="matchmaps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dennis Brookner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
