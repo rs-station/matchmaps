@@ -60,6 +60,7 @@ extensions = [
     # "jupyter_sphinx",
     "myst_parser",
     "sphinxcontrib.autoprogram",
+    "sphinx_rtd_theme",
     # "numpydoc",
     # "sphinx.ext.autodoc",
     # "sphinx.ext.intersphinx",
