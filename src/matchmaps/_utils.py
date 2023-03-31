@@ -133,7 +133,6 @@ refinement {
       map_type = "2mFo-DFc"
       mtz_label_amplitudes = "2FOFCWT"
       mtz_label_phases = "PH2FOFCWT"
-      fill_missing_f_obs = True
     }
   }
   refine {

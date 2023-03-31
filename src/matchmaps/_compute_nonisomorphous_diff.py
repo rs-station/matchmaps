@@ -163,20 +163,28 @@ def compute_nonisomorphous_difference_map(
 
     print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
     if on_as_stationary:
-        rs.io.write_ccp4_map(fg_off.array, f'{output_dir}/off_before_transforming.map',
-                             fg_off.unit_cell, fg_off.spacegroup)
+        # rs.io.write_ccp4_map(fg_off.array, f'{output_dir}/off_before_transforming.map',
+        #                      fg_off.unit_cell, fg_off.spacegroup)
         fg_off = align_grids_from_model_transform(fg_on, fg_off, pdbon, pdboff)
         fg_on = align_grids_from_model_transform(fg_on, fg_on, pdbon, pdbon)
         pdb = pdbon
         fg_ref = fg_on
     else:
-        rs.io.write_ccp4_map(fg_on.array, f'{output_dir}/on_before_transforming.map',
-                             fg_on.unit_cell, fg_on.spacegroup)
+        # rs.io.write_ccp4_map(fg_on.array, f'{output_dir}/on_before_transforming.map',
+        #                      fg_on.unit_cell, fg_on.spacegroup)
         fg_on = align_grids_from_model_transform(fg_off, fg_on, pdboff, pdbon)
         fg_off = align_grids_from_model_transform(fg_off, fg_off, pdboff, pdboff) # apply same masking sitch to both grids?
         pdb = pdboff
         fg_ref = fg_off
-        
+    
+    print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
+    
+    # do this again, because transformation + carving can mess up scales:
+    fg_on.normalize()
+    fg_off.normalize()
+    
+    print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
+    
     print(f"{time.strftime('%H:%M:%S')}: Writing files...")
     
     difference_array = fg_on.array - fg_off.array  
@@ -185,7 +193,7 @@ def compute_nonisomorphous_difference_map(
     # we can do this in gemmi
     fg_mask_only = fg_ref.clone()
     masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
-    # masker.rprobe = 1.2 # this should do it, idk, no need to make this a user parameter
+    masker.rprobe = 2 # this should do it, idk, no need to make this a user parameter
     
     masker.put_mask_on_float_grid(fg_mask_only, pdb[0])
     masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
