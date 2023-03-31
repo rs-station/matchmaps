@@ -30,27 +30,26 @@ copyright = "2023, Dennis Brookner"
 author = "Dennis Brookner"
 
 
-# -- Generate API ------------------------------------------------------------
-api_folder_name = "api"
-shutil.rmtree(api_folder_name, ignore_errors=True)  # in case of new or renamed modules
-subprocess.call(
-    " ".join(
-        [
-            "sphinx-apidoc",
-            f"-o {api_folder_name}/",
-            "--force",
-            "--no-toc",
-            "--templatedir _templates",
-            "--separate",
-            "../matchmaps/",
-            # excluded modules
-            # nothing here for cookiecutter
-        ]
-    ),
-    shell=True,
-)
+# # -- Generate API ------------------------------------------------------------
+# api_folder_name = "api"
+# shutil.rmtree(api_folder_name, ignore_errors=True)  # in case of new or renamed modules
+# subprocess.call(
+#     " ".join(
+#         [
+#             "sphinx-apidoc",
+#             f"-o {api_folder_name}/",
+#             "--force",
+#             "--no-toc",
+#             "--templatedir _templates",
+#             "--separate",
+#             "../matchmaps/",
+#             # excluded modules
+#             # nothing here for cookiecutter
+#         ]
+#     ),
+#     shell=True,
+# )
 
-import sphinx_rtd_theme
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -74,12 +73,13 @@ extensions = [
 ]
 
 
-# API settings
-autodoc_default_options = {
-    "members": True,
-    "show-inheritance": True,
-    "undoc-members": True,
-}
+# # API settings
+# autodoc_default_options = {
+#     "members": True,
+#     "show-inheritance": True,
+#     "undoc-members": True,
+# }
+
 add_module_names = False
 napoleon_google_docstring = False
 napoleon_include_private_with_doc = False
