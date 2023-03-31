@@ -159,6 +159,8 @@ def compute_nonisomorphous_difference_map(
         mtzon, spacing, F="F-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin
     )
 
+    # TO-DO: think more about scaling!
+
     print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
     if on_as_stationary:
         rs.io.write_ccp4_map(fg_off.array, f'{output_dir}/off_before_transforming.map',
