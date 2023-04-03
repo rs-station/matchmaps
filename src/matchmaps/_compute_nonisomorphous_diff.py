@@ -1,23 +1,22 @@
-"""
-Compute unbiased nonisomorphous difference map
-"""
+"""Compute unbiased nonisomorphous difference map."""
 
 import argparse
-import subprocess
 import os
+import subprocess
 import time
-
-import reciprocalspaceship as rs
-import gemmi
-import numpy as np
 from functools import partial
 
+import gemmi
+import numpy as np
+import reciprocalspaceship as rs
+
 from matchmaps._utils import (
-    make_floatgrid_from_mtz,
-    rigid_body_refinement_wrapper,
     _handle_special_positions,
     align_grids_from_model_transform,
+    make_floatgrid_from_mtz,
+    rigid_body_refinement_wrapper,
 )
+
 
 def compute_nonisomorphous_difference_map(
     pdboff,
@@ -38,12 +37,12 @@ def compute_nonisomorphous_difference_map(
     eff=None,
 ):
     """
-    _summary_
+    _summary_.
 
     Parameters
     ----------
     pdboff : string
-        Name of input .pdb file to use for phasing 
+        Name of input .pdb file to use for phasing
     mtzoff : string
         Name of input .mtz file containing 'off' data
     mtzon : string
@@ -83,17 +82,19 @@ def compute_nonisomorphous_difference_map(
     """
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
-    
+
     # make sure directories have a trailing slash!
-    if input_dir[-1] != '/':
-        input_dir = input_dir + '/'
-        
-    if output_dir[-1] != '/':
-        output_dir = output_dir + '/'
+    if input_dir[-1] != "/":
+        input_dir = input_dir + "/"
+
+    if output_dir[-1] != "/":
+        output_dir = output_dir + "/"
 
     mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
 
-    print(f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data...")
+    print(
+        f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data..."
+    )
 
     subprocess.run(
         f"rs.scaleit -r {input_dir}/{mtzoff} {Foff} {SigFoff} -i {input_dir}/{mtzon} {Fon} {SigFon} -o {output_dir}/{mtzon_scaled}",
@@ -101,7 +102,7 @@ def compute_nonisomorphous_difference_map(
         capture_output=(not verbose),
     )
 
-    pdboff = _handle_special_positions(pdboff, input_dir, output_dir) 
+    pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
     mtzon = mtzon_scaled
 
@@ -117,7 +118,7 @@ def compute_nonisomorphous_difference_map(
         verbose=verbose,
         selection=selection,
     )
-    
+
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
 
     nickname_off = rigid_body_refinement_wrapper(
@@ -129,11 +130,11 @@ def compute_nonisomorphous_difference_map(
         eff=eff,
         verbose=verbose,
         selection=selection,
-        off_labels=f'{Foff},{SigFoff}'
+        off_labels=f"{Foff},{SigFoff}",
     )
-        
+
     # done with reciprocal space; transitioning to real space
-    
+
     # read back in the files created by phenix
     # these have knowable names
     mtzon = rs.read_mtz(f"{output_dir}/{nickname_on}_1.mtz")
@@ -173,34 +174,36 @@ def compute_nonisomorphous_difference_map(
         # rs.io.write_ccp4_map(fg_on.array, f'{output_dir}/on_before_transforming.map',
         #                      fg_on.unit_cell, fg_on.spacegroup)
         fg_on = align_grids_from_model_transform(fg_off, fg_on, pdboff, pdbon)
-        fg_off = align_grids_from_model_transform(fg_off, fg_off, pdboff, pdboff) # apply same masking sitch to both grids?
+        fg_off = align_grids_from_model_transform(
+            fg_off, fg_off, pdboff, pdboff
+        )  # apply same masking sitch to both grids?
         pdb = pdboff
         fg_ref = fg_off
-    
+
     print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
-    
+
     # do this again, because transformation + carving can mess up scales:
     fg_on.normalize()
     fg_off.normalize()
-    
+
     print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
-    
+
     print(f"{time.strftime('%H:%M:%S')}: Writing files...")
-    
-    difference_array = fg_on.array - fg_off.array  
-    
+
+    difference_array = fg_on.array - fg_off.array
+
     # all that's left is to mask out voxels that aren't near the model!
     # we can do this in gemmi
     fg_mask_only = fg_ref.clone()
     masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
-    masker.rprobe = 2 # this should do it, idk, no need to make this a user parameter
-    
+    masker.rprobe = 2  # this should do it, idk, no need to make this a user parameter
+
     masker.put_mask_on_float_grid(fg_mask_only, pdb[0])
     masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
-    
+
     # and finally, write stuff out
-    # use partial function to guarantee I'm always using the same and correct cell 
-    
+    # use partial function to guarantee I'm always using the same and correct cell
+
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
     if all(
         [
@@ -220,24 +223,28 @@ def compute_nonisomorphous_difference_map(
             fg_ref.unit_cell.beta,
             fg_ref.unit_cell.gamma,
         )
-        print('did silly angle thing')
-    
-    write_maps = partial(rs.io.write_ccp4_map, cell=fg_ref.unit_cell, spacegroup=fg_ref.spacegroup)
-    
-    write_maps(fg_on.array, f'{output_dir}/{on_name}.map')
-    
-    write_maps(fg_off.array, f'{output_dir}/{off_name}.map')
-    
-    write_maps(masked_difference_array, f'{output_dir}/{on_name}_minus_{off_name}.map')
-    write_maps(difference_array, f'{output_dir}/{on_name}_minus_{off_name}_unmasked.map')
-    
+        print("did silly angle thing")
+
+    write_maps = partial(
+        rs.io.write_ccp4_map, cell=fg_ref.unit_cell, spacegroup=fg_ref.spacegroup
+    )
+
+    write_maps(fg_on.array, f"{output_dir}/{on_name}.map")
+
+    write_maps(fg_off.array, f"{output_dir}/{off_name}.map")
+
+    write_maps(masked_difference_array, f"{output_dir}/{on_name}_minus_{off_name}.map")
+    write_maps(
+        difference_array, f"{output_dir}/{on_name}_minus_{off_name}_unmasked.map"
+    )
+
     print(f"{time.strftime('%H:%M:%S')}: Done!")
-    
+
     return
 
 
 def parse_arguments():
-    """Parse commandline arguments"""
+    """Parse commandline arguments."""
     parser = argparse.ArgumentParser(
         description=(
             "Compute a difference map using non-isomorphous inputs. "
@@ -272,7 +279,7 @@ def parse_arguments():
             "Specified as [filename F SigF]"
         ),
     )
-    
+
     parser.add_argument(
         "--pdboff",
         "-p",
@@ -299,7 +306,7 @@ def parse_arguments():
         default="./",
         help="Path to input mtzs and pdb. Optional, defaults to './' (current directory)",
     )
-    
+
     parser.add_argument(
         "--output-dir",
         "-o",
@@ -340,7 +347,7 @@ def parse_arguments():
             "By default, cutoff is the resolution of the lower-resolution input MTZ. "
         ),
     )
-    
+
     parser.add_argument(
         "--verbose",
         "-v",
@@ -349,7 +356,7 @@ def parse_arguments():
         default=False,
         help="Include this flag to print out scaleit and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.",
     )
-    
+
     parser.add_argument(
         "--selection",
         required=False,
@@ -371,10 +378,9 @@ def parse_arguments():
 
 
 def main():
-
     parser = parse_arguments()
     args = parser.parse_args()
-    
+
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 

@@ -7,20 +7,18 @@
 # -- Path setup --------------------------------------------------------------
 
 import inspect
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
-import shutil
-import subprocess
 import sys
 
 try:
     from matchmaps import __version__ as release
 except ImportError:
     release = "unknown"
-
 
 
 # -- Project information -----------------------------------------------------
@@ -160,7 +158,7 @@ html_css_files = [
 ]
 html_sourcelink_suffix = ""
 html_static_path = ["_static"]
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 # html_theme_options = {
 #     "launch_buttons": {
 #         "binderhub_url": "https://mybinder.org",

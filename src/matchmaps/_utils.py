@@ -1,22 +1,22 @@
 """
-Utilities and helperfunctions used by matchmaps
+Utilities and helperfunctions used by matchmaps.
 
 Functions make_floatgrid_from_mtz, rigid_body_refinement_wrapper, and align_grids_from_model_transform
 are exported to python for use in prototyping and testing
 """
 
-import gemmi
-import reciprocalspaceship as rs
-import numpy as np
-
-import shutil
 import glob
+import shutil
 import subprocess
+
+import gemmi
+import numpy as np
+import reciprocalspaceship as rs
 
 
 def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
     """
-    Make a gemmi.FloatGrid from an rs.DataSet
+    Make a gemmi.FloatGrid from an rs.DataSet.
 
     Parameters
     ----------
@@ -39,7 +39,6 @@ def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
         Fourier transform of mtz, written out as a gemmi object containing a 3D voxel array
         and various other metadata and methods
     """
-
     # drop NAs in either of the specified columns
     # this has the secondary purpose of not silently modifying the input mtz
     new_mtz = mtz[~mtz[F].isnull()]
@@ -79,6 +78,7 @@ def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
 
     return float_grid
 
+
 def rigid_body_refinement_wrapper(
     mtzon,
     pdboff,
@@ -92,7 +92,7 @@ def rigid_body_refinement_wrapper(
 ):
     # confirm that phenix is active in the command-line environment
     if shutil.which("phenix.refine") is None:
-        raise EnvironmentError(
+        raise OSError(
             "Cannot find executable, phenix.refine. Please set up your phenix environment."
         )
 
@@ -124,7 +124,7 @@ refinement {
     serial = 1
     serial_format = "%d"
     job_title = '''nickname'''
-    write_def_file = False    
+    write_def_file = False
     write_eff_file = False
     write_geo_file = False
   }
@@ -136,10 +136,10 @@ refinement {
     }
   }
   refine {
-    strategy = *rigid_body 
+    strategy = *rigid_body
     sites {
       rigid_body = all
-    }  
+    }
   }
   main {
     number_of_macro_cycles = 1
@@ -148,7 +148,7 @@ refinement {
 }
     """
     else:
-        with open(input_dir + eff, "r") as file:
+        with open(input_dir + eff) as file:
             eff_contents = file.read()
 
     if off_labels is None:
@@ -181,7 +181,7 @@ refinement {
     }
 
     if off_labels is None:
-        params["columns"] = "FPH1,SIGFPH1" # names from scaleit output
+        params["columns"] = "FPH1,SIGFPH1"  # names from scaleit output
     else:
         params["columns"] = off_labels
 
@@ -222,7 +222,7 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
     """
     Check if any waters happen to sit on special positions, and if so, remove them.
     If any non-water atoms sit on special positions, throw a (hopefully helpful) error.
-    
+
     Regardless of whether any special positions were found, copy this file over to output_dir
 
     Parameters
@@ -239,7 +239,6 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
         for chain in model:
             for residue in chain:
                 for atom in residue:
-
                     # check if atom is within 0.5 A of a special position
                     # returns a number > 0 if so
                     if pdb.cell.is_special_position(atom.pos, max_dist=0.5) > 0:
@@ -257,21 +256,21 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
                         else:
                             raise ValueError(
                                 """
-Input model contains a non-water atom on a special position. 
-Please use the --selection flag to supply an input suitable for rigid-body refinement by phenix. 
+Input model contains a non-water atom on a special position.
+Please use the --selection flag to supply an input suitable for rigid-body refinement by phenix.
 """
                             )
-    
-    pdboff_nospecialpositions = pdboff.removesuffix('.pdb') + '_nospecialpositions.pdb'
-    
-    pdb.write_pdb(output_dir + pdboff_nospecialpositions)                        
-    
+
+    pdboff_nospecialpositions = pdboff.removesuffix(".pdb") + "_nospecialpositions.pdb"
+
+    pdb.write_pdb(output_dir + pdboff_nospecialpositions)
+
     return pdboff_nospecialpositions
 
 
 def align_grids_from_model_transform(grid1, grid2, structure1, structure2):
     """
-    This function is basically just a wrapper around `gemmi.interpolate_grid_of_aligned_model2`, which is an amazing thing that exists!!
+    This function is basically just a wrapper around `gemmi.interpolate_grid_of_aligned_model2`, which is an amazing thing that exists!!.
 
     Parameters
     ----------
@@ -287,20 +286,27 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2):
     Returns
     -------
     grid2_out : gemmi.FloatGrid
-        Aligned, interpolated, and trimmed grid 
+        Aligned, interpolated, and trimmed grid
     """
-    
     span1 = structure1[0]["A"].get_polymer()
     span2 = structure2[0]["A"].get_polymer()
     sup = gemmi.calculate_superposition(
         span1, span2, span1.check_polymer_type(), gemmi.SupSelect.CaP
     )
     transform = sup.transform.inverse()
-    
+
     # clone a grid to hold the output
-    grid2_out = grid1.clone() # this makes sure that grid2_out has a voxel frame matching grid1
-    
-    gemmi.interpolate_grid_of_aligned_model2(dest = grid2_out, src = grid2, tr = transform, dest_model = structure1[0], radius = 3, order = 2)
-    
+    grid2_out = (
+        grid1.clone()
+    )  # this makes sure that grid2_out has a voxel frame matching grid1
+
+    gemmi.interpolate_grid_of_aligned_model2(
+        dest=grid2_out,
+        src=grid2,
+        tr=transform,
+        dest_model=structure1[0],
+        radius=3,
+        order=2,
+    )
+
     return grid2_out
-    
