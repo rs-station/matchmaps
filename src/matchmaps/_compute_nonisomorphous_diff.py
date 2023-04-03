@@ -200,6 +200,28 @@ def compute_nonisomorphous_difference_map(
     
     # and finally, write stuff out
     # use partial function to guarantee I'm always using the same and correct cell 
+    
+    # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
+    if all(
+        [
+            angle == 90
+            for angle in (
+                fg_ref.unit_cell.alpha,
+                fg_ref.unit_cell.beta,
+                fg_ref.unit_cell.gamma,
+            )
+        ]
+    ):
+        fg_ref.unit_cell = gemmi.UnitCell(
+            fg_ref.unit_cell.a,
+            fg_ref.unit_cell.b,
+            fg_ref.unit_cell.c,
+            90.006,
+            fg_ref.unit_cell.beta,
+            fg_ref.unit_cell.gamma,
+        )
+        print('did silly angle thing')
+    
     write_maps = partial(rs.io.write_ccp4_map, cell=fg_ref.unit_cell, spacegroup=fg_ref.spacegroup)
     
     write_maps(fg_on.array, f'{output_dir}/{on_name}.map')
