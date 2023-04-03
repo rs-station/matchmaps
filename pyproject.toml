@@ -57,7 +57,7 @@ docs = [
 ]
 
 [project.urls]
-homepage = "https://github.com/dennisbrookner/matchmaps"
+homepage = "https://dennisbrookner.github.io/matchmaps/"
 repository = "https://github.com/dennisbrookner/matchmaps"
 
 # same as console_scripts entry point

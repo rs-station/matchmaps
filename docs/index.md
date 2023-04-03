@@ -26,7 +26,7 @@ Though `matchmaps` is a python package, it relies on two pieces of external soft
 When actually using `mapreg` in the command-line, you'll need to have both ccp4 and phenix active. Doing that will look something like:
 ```bash
 source /path/to/phenix/phenix_env.sh
-/path/to/ccp4/start 
+/path/to/ccp4/start
 ```
 
 At this point, you should be good to go! Please [file an issue on github](https://github.com/dennisbrookner/matchmaps/issues) is this is not working.
