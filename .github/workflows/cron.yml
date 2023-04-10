@@ -4,8 +4,8 @@ name: --pre Test
 # (and open an issue if a test fails)
 
 on:
-  schedule:
-    - cron: "0 16 * * 1" # monday at noon est
+#  schedule:
+#    - cron: "0 16 * * 1" # monday at noon est
   workflow_dispatch:
 
 jobs:
