@@ -1,4 +1,4 @@
-"""Compute unbiased nonisomorphous difference map."""
+"""Compute unbiased real space difference map."""
 
 import argparse
 import os
@@ -12,13 +12,15 @@ import reciprocalspaceship as rs
 
 from matchmaps._utils import (
     _handle_special_positions,
-    align_grids_from_model_transform,
+    # align_grids_from_model_transform,
     make_floatgrid_from_mtz,
     rigid_body_refinement_wrapper,
+    _realspace_align_and_subtract,
+    _rbr_selection_parser,
 )
 
 
-def compute_nonisomorphous_difference_map(
+def compute_realspace_difference_map(
     pdboff,
     mtzoff,
     mtzon,
@@ -33,7 +35,7 @@ def compute_nonisomorphous_difference_map(
     input_dir="./",
     output_dir="./",
     verbose=False,
-    selection=None,
+    rbr_selections=None,
     eff=None,
 ):
     """
@@ -71,10 +73,10 @@ def compute_nonisomorphous_difference_map(
         Path to directory to which output files should be written, by default "./" (current directory)
     verbose : bool, optional
         If True, print outputs of scaleit and phenix.refine, by default False
-    selection : str, optional
-        Custom selection to provide to refinement.refine.sites.rigid_body=
-        If omitted, then refinement.refine.sites.rigid_body=all
-        Custom selection is only necessary if special-position atoms need to be excluded from refinement
+    rbr_selections : list of strings, optional
+        # Custom selection to provide to refinement.refine.sites.rigid_body=
+        # If omitted, then refinement.refine.sites.rigid_body=all
+        # Custom selection is only necessary if special-position atoms need to be excluded from refinement
     eff : str, optional
         Name of a file containing a template .eff parameter file for phenix.refine.
         If omitted, the sensible built-in .eff template is used. If you need to change something,
@@ -89,6 +91,10 @@ def compute_nonisomorphous_difference_map(
 
     if output_dir[-1] != "/":
         output_dir = output_dir + "/"
+    
+    # take in the list of rbr selections and parse them into phenix and gemmi selection formats
+    # if rbr_groups = None, just returns (None, None)  
+    rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
     mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
 
@@ -116,7 +122,7 @@ def compute_nonisomorphous_difference_map(
         ligands=ligands,
         eff=eff,
         verbose=verbose,
-        selection=selection,
+        rbr_selections=rbr_phenix,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -129,12 +135,10 @@ def compute_nonisomorphous_difference_map(
         ligands=ligands,
         eff=eff,
         verbose=verbose,
-        selection=selection,
+        rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
     )
-
-    # done with reciprocal space; transitioning to real space
-
+    
     # read back in the files created by phenix
     # these have knowable names
     mtzon = rs.read_mtz(f"{output_dir}/{nickname_on}_1.mtz")
@@ -142,7 +146,7 @@ def compute_nonisomorphous_difference_map(
 
     pdbon = gemmi.read_structure(f"{output_dir}/{nickname_on}_1.pdb")
     pdboff = gemmi.read_structure(f"{output_dir}/{nickname_off}_1.pdb")
-
+    
     if dmin is None:
         dmin = max(
             min(mtzoff.compute_dHKL(inplace=True).dHKL),
@@ -160,83 +164,37 @@ def compute_nonisomorphous_difference_map(
         mtzon, spacing, F="F-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin
     )
 
-    # TO-DO: think more about scaling!
-
-    print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
-    if on_as_stationary:
-        # rs.io.write_ccp4_map(fg_off.array, f'{output_dir}/off_before_transforming.map',
-        #                      fg_off.unit_cell, fg_off.spacegroup)
-        fg_off = align_grids_from_model_transform(fg_on, fg_off, pdbon, pdboff)
-        fg_on = align_grids_from_model_transform(fg_on, fg_on, pdbon, pdbon)
-        pdb = pdbon
-        fg_ref = fg_on
-    else:
-        # rs.io.write_ccp4_map(fg_on.array, f'{output_dir}/on_before_transforming.map',
-        #                      fg_on.unit_cell, fg_on.spacegroup)
-        fg_on = align_grids_from_model_transform(fg_off, fg_on, pdboff, pdbon)
-        fg_off = align_grids_from_model_transform(
-            fg_off, fg_off, pdboff, pdboff
-        )  # apply same masking sitch to both grids?
-        pdb = pdboff
-        fg_ref = fg_off
-
-    print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
-
-    # do this again, because transformation + carving can mess up scales:
-    fg_on.normalize()
-    fg_off.normalize()
-
-    print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
-
-    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
-
-    difference_array = fg_on.array - fg_off.array
-
-    # all that's left is to mask out voxels that aren't near the model!
-    # we can do this in gemmi
-    fg_mask_only = fg_ref.clone()
-    masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
-    masker.rprobe = 2  # this should do it, idk, no need to make this a user parameter
-
-    masker.put_mask_on_float_grid(fg_mask_only, pdb[0])
-    masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
-
-    # and finally, write stuff out
-    # use partial function to guarantee I'm always using the same and correct cell
-
-    # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
-    if all(
-        [
-            angle == 90
-            for angle in (
-                fg_ref.unit_cell.alpha,
-                fg_ref.unit_cell.beta,
-                fg_ref.unit_cell.gamma,
-            )
-        ]
-    ):
-        fg_ref.unit_cell = gemmi.UnitCell(
-            fg_ref.unit_cell.a,
-            fg_ref.unit_cell.b,
-            fg_ref.unit_cell.c,
-            90.006,
-            fg_ref.unit_cell.beta,
-            fg_ref.unit_cell.gamma,
+    if rbr_gemmi is None:
+        _realspace_align_and_subtract(
+            fg_off=fg_off,
+            fg_on=fg_on,
+            pdboff=pdboff,
+            pdbon=pdbon,
+            output_dir=output_dir,   
+            on_name=on_name,      
+            off_name=off_name,     
+            on_as_stationary=on_as_stationary,
+            selection=rbr_gemmi,      
         )
-        print("did silly angle thing")
+    
+    else: # run helper function separately for each selection
+        for n, selection in enumerate(rbr_gemmi, start=1):
+            
+            on_name_rbr = on_name + '_rbrgroup' + str(n)
+            off_name_rbr = off_name + '_rbrgroup' + str(n)
+            
+            _realspace_align_and_subtract(
+                fg_off=fg_off,
+                fg_on=fg_on,
+                pdboff=pdboff,
+                pdbon=pdbon,
+                output_dir=output_dir,   
+                on_name=on_name_rbr,      
+                off_name=off_name_rbr,     
+                on_as_stationary=on_as_stationary,
+                selection=selection,      
+            )
 
-    write_maps = partial(
-        rs.io.write_ccp4_map, cell=fg_ref.unit_cell, spacegroup=fg_ref.spacegroup
-    )
-
-    write_maps(fg_on.array, f"{output_dir}/{on_name}.map")
-
-    write_maps(fg_off.array, f"{output_dir}/{off_name}.map")
-
-    write_maps(masked_difference_array, f"{output_dir}/{on_name}_minus_{off_name}.map")
-    write_maps(
-        difference_array, f"{output_dir}/{on_name}_minus_{off_name}_unmasked.map"
-    )
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
@@ -358,12 +316,12 @@ def parse_arguments():
     )
 
     parser.add_argument(
-        "--selection",
+        "--rbr-selections",
+        "-r",
         required=False,
         default=None,
         help=(
-            "Argument to phenix.refine's refinement.refine.sites.rigid_body. "
-            "Use this flag if atoms on special positions need to be omitted from the atom selection. "
+            "Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group. "
         ),
     )
 
@@ -384,7 +342,7 @@ def main():
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
 
-    compute_nonisomorphous_difference_map(
+    compute_realspace_difference_map(
         pdboff=args.pdboff,
         ligands=args.ligands,
         mtzoff=args.mtzoff[0],
@@ -396,7 +354,7 @@ def main():
         input_dir=args.input_dir,
         output_dir=args.output_dir,
         verbose=args.verbose,
-        selection=args.selection,
+        rbr_selections=args.rbr_selections,
         eff=args.eff,
         dmin=args.dmin,
         spacing=args.spacing,
