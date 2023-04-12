@@ -34,7 +34,6 @@ def _rbr_selection_parser(rbr_selections):
 
     # get rid of spaces, which have no semantic meaning to my parser
     rbr_selections = [g.replace(" ", "") for g in rbr_selections]
-    print(rbr_selections)
     phenix_selections = []
     gemmi_selections = []
 
@@ -49,6 +48,7 @@ def _rbr_selection_parser(rbr_selections):
 
             phe = " or ".join([f"({p})" for p in phenixtemp])
 
+            # gem = [pg[1] for pg in phegem]
             gem = phegem[0][1]
 
             phenix_selections.append(phe)
@@ -57,7 +57,6 @@ def _rbr_selection_parser(rbr_selections):
         # just one selection in each
         else:
             phe, gem = _subparser(group)
-            print(phe)
             phenix_selections.append(phe)
             gemmi_selections.append(gem)
 
@@ -288,11 +287,6 @@ refinement {
         capture_output=(not verbose),
     )
 
-    # if off_labels is not None:
-    #     print(f"                                ^^^ Use this file as --mtzoff for mapreg.register ")
-    # else:
-    #     print(f"                                ^^^ Use this file as --mtzon for mapreg.register ")
-
     return nickname
 
 
@@ -322,10 +316,10 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
                     if pdb.cell.is_special_position(atom.pos, max_dist=0.5) > 0:
                         if residue.is_water():
                             print(
-                                "Input model contains water at special position. Removing water so as to not break rigid-body refinement."
+                                "   Input model contains water at special position. Removing water so as to not break rigid-body refinement."
                             )
                             print(
-                                "If it is important that you keep this water and just omit it from your refinement selection, use the --selection flag"
+                                "   If it is important that you keep this water and just omit it from your refinement selection, use the --rbr-selections flag"
                             )
                             residue.remove_atom(
                                 name=atom.name, altloc=atom.altloc, el=atom.element
@@ -335,7 +329,7 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
                             raise ValueError(
                                 """
 Input model contains a non-water atom on a special position.
-Please use the --selection flag to supply an input suitable for rigid-body refinement by phenix.
+Please use the --rbr-selections flag to supply an input suitable for rigid-body refinement by phenix.
 """
                             )
 
@@ -345,6 +339,29 @@ Please use the --selection flag to supply an input suitable for rigid-body refin
 
     return pdboff_nospecialpositions
 
+def _renumber_waters(pdb, dir):
+    """
+    Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
+
+    Parameters
+    ----------
+    pdb : str
+        name of pdb file 
+    dir : str
+        directory in which pdb file lives
+    """
+    
+    pdb_renumbered = pdb.removesuffix(".pdb") + "_renumbered.pdb"
+    
+    subprocess.run(
+        f"phenix.sort_hetatms file_name={dir}/{pdb} output_file={dir}/{pdb_renumbered}",
+        shell=True,
+        capture_output=True,
+    )
+    
+    print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
+    
+    return pdb_renumbered
 
 def _realspace_align_and_subtract(
     output_dir,
@@ -384,14 +401,31 @@ def _realspace_align_and_subtract(
         If not None, should be a valid gemmi selection string or a list of valid gemmi selection strings
     """
 
-    print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
-    
-    if on_as_stationary:
-        fg_fixed = fg_on
-        pdb_fixed = pdbon
+    if selection:
+        print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps for rigid-body selection {selection}...")
     else:
-        fg_fixed = fg_off
-        pdb_fixed = pdboff
+        print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
+    
+    rs.io.write_ccp4_map(
+        fg_on.array,
+        output_dir + on_name + '_before.map',
+        cell=fg_on.unit_cell, 
+        spacegroup=fg_on.spacegroup
+        )
+    rs.io.write_ccp4_map(
+        fg_off.array,
+        output_dir + off_name + '_before.map',
+        cell=fg_off.unit_cell, 
+        spacegroup=fg_off.spacegroup
+        )
+
+    if on_as_stationary:
+        fg_fixed = fg_on.clone()
+        pdb_fixed = pdbon.clone()
+    else:
+        fg_fixed = fg_off.clone()
+        pdb_fixed = pdboff.clone()
+    
     
     fg_off = align_grids_from_model_transform(
         fg_fixed, fg_off, pdb_fixed, pdboff, selection
@@ -399,14 +433,10 @@ def _realspace_align_and_subtract(
     fg_on = align_grids_from_model_transform(
         fg_fixed, fg_on, pdb_fixed, pdbon, selection
     )
-
-    print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
-
+    
     # do this again, because transformation + carving can mess up scales:
     fg_on.normalize()
     fg_off.normalize()
-
-    print(f"{fg_off.array.mean()=}, {fg_on.array.mean()=}")
 
     print(f"{time.strftime('%H:%M:%S')}: Writing files...")
 
@@ -418,7 +448,13 @@ def _realspace_align_and_subtract(
     masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
     masker.rprobe = 2  # this should do it, idk, no need to make this a user parameter
 
-    masker.put_mask_on_float_grid(fg_mask_only, pdb_fixed[0])
+    # if selection is None:
+    if True:
+        pdb_for_mask = pdb_fixed[0]
+    else:
+        pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
+        
+    masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
     masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
 
     # and finally, write stuff out
@@ -442,7 +478,6 @@ def _realspace_align_and_subtract(
             fg_fixed.unit_cell.beta,
             fg_fixed.unit_cell.gamma,
         )
-        print("did silly angle thing")
 
     # use partial function to guarantee I'm always using the same and correct cell
     write_maps = partial(
@@ -492,7 +527,7 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
         dest_model = structure1[0]
     
     else:
-        sel = gemmi.selection(selection)
+        sel = gemmi.Selection(selection)
         
         span1 = sel.copy_structure_selection(structure1)[0][0].get_polymer()
         span2 = sel.copy_structure_selection(structure2)[0][0].get_polymer()
@@ -503,7 +538,7 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
         span1, span2, span1.check_polymer_type(), gemmi.SupSelect.CaP
     )
     transform = sup.transform.inverse()
-
+    
     # clone a grid to hold the output
     grid2_out = (
         grid1.clone()
@@ -513,9 +548,16 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
         dest=grid2_out,
         src=grid2,
         tr=transform,
-        dest_model=structure1[0],
+        dest_model=structure1[0], #dest_model,
         radius=3,
         order=2,
     )
 
     return grid2_out
+
+def _extract_pdb_selection(pdb, selection):
+    
+    # return a gemmi.Model containing only the selected things
+    # selection can be either a string or a list of strings
+    
+    return

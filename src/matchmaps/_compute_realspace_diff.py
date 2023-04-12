@@ -17,6 +17,7 @@ from matchmaps._utils import (
     rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
+    _renumber_waters,
 )
 
 
@@ -109,7 +110,9 @@ def compute_realspace_difference_map(
     )
 
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
-
+    
+    pdboff = _renumber_waters(pdboff, output_dir)
+    
     mtzon = mtzon_scaled
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
@@ -184,8 +187,8 @@ def compute_realspace_difference_map(
             off_name_rbr = off_name + '_rbrgroup' + str(n)
             
             _realspace_align_and_subtract(
-                fg_off=fg_off,
-                fg_on=fg_on,
+                fg_off=fg_off.clone(),
+                fg_on=fg_on.clone(),
                 pdboff=pdboff,
                 pdbon=pdbon,
                 output_dir=output_dir,   
@@ -194,8 +197,7 @@ def compute_realspace_difference_map(
                 on_as_stationary=on_as_stationary,
                 selection=selection,      
             )
-
-
+            
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
     return
