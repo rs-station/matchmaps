@@ -449,11 +449,11 @@ def _realspace_align_and_subtract(
     masker.rprobe = 2  # this should do it, idk, no need to make this a user parameter
 
     # if selection is None:
-    if True:
+    if selection is None:
         pdb_for_mask = pdb_fixed[0]
     else:
         pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
-        
+       
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
     masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
 
@@ -560,4 +560,8 @@ def _extract_pdb_selection(pdb, selection):
     # return a gemmi.Model containing only the selected things
     # selection can be either a string or a list of strings
     
-    return
+    sel = gemmi.Selection(selection)
+        
+    pdb_selection = sel.copy_model_selection(pdb)
+
+    return pdb_selection
