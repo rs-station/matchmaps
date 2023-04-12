@@ -320,6 +320,7 @@ def parse_arguments():
         "-r",
         required=False,
         default=None,
+        nargs="*",
         help=(
             "Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group. "
         ),
