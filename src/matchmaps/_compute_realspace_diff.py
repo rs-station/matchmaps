@@ -91,9 +91,9 @@ def compute_realspace_difference_map(
 
     if output_dir[-1] != "/":
         output_dir = output_dir + "/"
-    
+
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
-    # if rbr_groups = None, just returns (None, None)  
+    # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
     mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
@@ -109,9 +109,9 @@ def compute_realspace_difference_map(
     )
 
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
-    
+
     pdboff = _renumber_waters(pdboff, output_dir)
-    
+
     mtzon = mtzon_scaled
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
@@ -140,7 +140,7 @@ def compute_realspace_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
     )
-    
+
     # read back in the files created by phenix
     # these have knowable names
     mtzon = rs.read_mtz(f"{output_dir}/{nickname_on}_1.mtz")
@@ -148,7 +148,7 @@ def compute_realspace_difference_map(
 
     pdbon = gemmi.read_structure(f"{output_dir}/{nickname_on}_1.pdb")
     pdboff = gemmi.read_structure(f"{output_dir}/{nickname_off}_1.pdb")
-    
+
     if dmin is None:
         dmin = max(
             min(mtzoff.compute_dHKL(inplace=True).dHKL),
@@ -172,31 +172,30 @@ def compute_realspace_difference_map(
             fg_on=fg_on,
             pdboff=pdboff,
             pdbon=pdbon,
-            output_dir=output_dir,   
-            on_name=on_name,      
-            off_name=off_name,     
+            output_dir=output_dir,
+            on_name=on_name,
+            off_name=off_name,
             on_as_stationary=on_as_stationary,
-            selection=rbr_gemmi,      
+            selection=rbr_gemmi,
         )
-    
-    else: # run helper function separately for each selection
+
+    else:  # run helper function separately for each selection
         for n, selection in enumerate(rbr_gemmi, start=1):
-            
-            on_name_rbr = on_name + '_rbrgroup' + str(n)
-            off_name_rbr = off_name + '_rbrgroup' + str(n)
-            
+            on_name_rbr = on_name + "_rbrgroup" + str(n)
+            off_name_rbr = off_name + "_rbrgroup" + str(n)
+
             _realspace_align_and_subtract(
                 fg_off=fg_off.clone(),
                 fg_on=fg_on.clone(),
                 pdboff=pdboff,
                 pdbon=pdbon,
-                output_dir=output_dir,   
-                on_name=on_name_rbr,      
-                off_name=off_name_rbr,     
+                output_dir=output_dir,
+                on_name=on_name_rbr,
+                off_name=off_name_rbr,
                 on_as_stationary=on_as_stationary,
-                selection=selection,      
+                selection=selection,
             )
-            
+
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
     return
