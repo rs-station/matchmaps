@@ -72,12 +72,13 @@
              
   <section id="matchmaps">
 <span id="cli"></span><h1>matchmaps<a class="headerlink" href="#matchmaps" title="Permalink to this heading"></a></h1>
-<p>Compute a difference map using non-isomorphous inputs. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to work.</p>
+<p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
 <span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
 <span class="go">                 [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
-<span class="go">                 [--verbose] [--selection SELECTION] [--eff EFF]</span>
+<span class="go">                 [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
+<span class="go">                 [--eff EFF]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -137,7 +138,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-dmin">
 <span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Permalink to this definition"></a></dt>
-<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution of the lower-resolution input MTZ.</p>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -147,9 +148,9 @@
 </dd></dl>
 
 <dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps-selection">
-<span class="sig-name descname"><span class="pre">--selection</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;selection&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-selection" title="Permalink to this definition"></a></dt>
-<dd><p>Argument to phenix.refine’s refinement.refine.sites.rigid_body. Use this flag if atoms on special positions need to be omitted from the atom selection.</p>
+<dt class="sig sig-object std" id="cmdoption-matchmaps-rbr-selections">
+<span id="cmdoption-matchmaps-r"></span><span class="sig-name descname"><span class="pre">--rbr-selections</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-rbr-selections" title="Permalink to this definition"></a></dt>
+<dd><p>Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group.</p>
 </dd></dl>
 
 <dl class="std option">
