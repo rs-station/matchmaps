@@ -76,7 +76,7 @@ def compute_realspace_difference_map(
         If True, print outputs of scaleit and phenix.refine, by default False
     rbr_selections : list of strings, optional
         Custom selections to provide to refinement.refine.sites.rigid_body=
-        If omitted, then refinement.refine.sites.rigid_body=all, and the entire structure is refined as a single rigid body. 
+        If omitted, then refinement.refine.sites.rigid_body=all, and the entire structure is refined as a single rigid body.
     eff : str, optional
         Name of a file containing a template .eff parameter file for phenix.refine.
         If omitted, the sensible built-in .eff template is used. If you need to change something,
