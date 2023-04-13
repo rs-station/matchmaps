@@ -8,10 +8,81 @@ are exported to python for use in prototyping and testing
 import glob
 import shutil
 import subprocess
+import time
+import re
+from functools import partial
 
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
+
+
+def _rbr_selection_parser(rbr_selections):
+    # end early and return nones if this feature isn't being used
+    if rbr_selections is None:
+        return None, None
+
+    # validate input is a list of strings
+    if not isinstance(rbr_selections, list):
+        raise ValueError(
+            f"rbr_selections must be a list of str, not {type(rbr_selections).__name__}"
+        )
+    if not all([isinstance(sel, str) for sel in rbr_selections]):
+        raise ValueError(
+            f"rbr_selections must be a list of str, not list of {[type(sel).__name__ for sel in rbr_selections]}"
+        )
+
+    # get rid of spaces, which have no semantic meaning to my parser
+    rbr_selections = [g.replace(" ", "") for g in rbr_selections]
+    phenix_selections = []
+    gemmi_selections = []
+
+    for group in rbr_selections:
+        # check if there are multiple, separate selections
+        # that make up this rigid-body selection
+        if len(group.split(",")) > 1:
+            subgroups = group.split(",")
+            phegem = [_subparser(sub) for sub in subgroups]
+
+            phenixtemp = [pg[0] for pg in phegem]
+
+            phe = " or ".join([f"({p})" for p in phenixtemp])
+
+            # gem = [pg[1] for pg in phegem]
+            gem = phegem[0][1]
+
+            phenix_selections.append(phe)
+            gemmi_selections.append(gem)
+
+        # just one selection in each
+        else:
+            phe, gem = _subparser(group)
+            phenix_selections.append(phe)
+            gemmi_selections.append(gem)
+
+    return phenix_selections, gemmi_selections
+
+
+def _subparser(selection):
+    if selection.isalpha():  # just a chain name
+        phe = "chain " + selection
+        gem = selection
+
+    else:
+        chain = "".join(re.findall("[a-zA-Z]", selection))
+        residues = selection.removeprefix(chain)
+
+        if "-" in residues:
+            start, end = [int(r) for r in residues.split("-")]
+
+            phe = f"chain {chain} and resseq {start}:{end}"
+            gem = f"{chain}/{start}-{end}"
+
+        else:
+            phe = f"chain {chain} and resid {residues}"
+            gem = f"{chain}/{residues}"
+
+    return phe, gem
 
 
 def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
@@ -88,7 +159,7 @@ def rigid_body_refinement_wrapper(
     ligands=None,
     eff=None,
     verbose=False,
-    selection=None,
+    rbr_selections=None,
 ):
     # confirm that phenix is active in the command-line environment
     if shutil.which("phenix.refine") is None:
@@ -138,7 +209,7 @@ refinement {
   refine {
     strategy = *rigid_body
     sites {
-      rigid_body = all
+      rigid_body_sites
     }
   }
   main {
@@ -185,8 +256,8 @@ refinement {
     else:
         params["columns"] = off_labels
 
-    if selection is not None:
-        params["all"] = selection  # overwrite atom selection
+    # if selection is not None:
+    #     params["all"] = selection  # overwrite atom selection
 
     for key, value in params.items():
         eff_contents = eff_contents.replace(key, value)
@@ -197,6 +268,14 @@ refinement {
         eff_contents = eff_contents.replace("ligands", ligand_string)
     else:
         eff_contents = eff_contents.replace("ligands", "")
+
+    if rbr_selections is not None:
+        selection_string = "\n".join(
+            [f"rigid_body = '{sel}'" for sel in rbr_selections]
+        )
+        eff_contents = eff_contents.replace("rigid_body_sites", selection_string)
+    else:
+        eff_contents = eff_contents.replace("rigid_body_sites", "rigid_body = all")
 
     # write out customized .eff file for use by phenix
     with open(eff, "w") as file:
@@ -209,11 +288,6 @@ refinement {
         shell=True,
         capture_output=(not verbose),
     )
-
-    # if off_labels is not None:
-    #     print(f"                                ^^^ Use this file as --mtzoff for mapreg.register ")
-    # else:
-    #     print(f"                                ^^^ Use this file as --mtzon for mapreg.register ")
 
     return nickname
 
@@ -244,20 +318,22 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
                     if pdb.cell.is_special_position(atom.pos, max_dist=0.5) > 0:
                         if residue.is_water():
                             print(
-                                "Input model contains water at special position. Removing water so as to not break rigid-body refinement."
+                                "   Input model contains water at special position. Removing water so as to not break rigid-body refinement."
                             )
                             print(
-                                "If it is important that you keep this water and just omit it from your refinement selection, use the --selection flag"
+                                # "   If it is important that you keep this water and just omit it from your refinement selection, you many the --rbr-selections flag"
                             )
                             residue.remove_atom(
                                 name=atom.name, altloc=atom.altloc, el=atom.element
                             )
 
                         else:
-                            raise ValueError(
+                            raise NotImplementedError(
                                 """
-Input model contains a non-water atom on a special position.
-Please use the --selection flag to supply an input suitable for rigid-body refinement by phenix.
+Input model contains a non-water atom on a special position, which is not allowed in rigid-body refinement.
+You may attempt to exclude this atom via a custom atom selection to the `--rbr-selections` argument, but this feature is not currently tested.
+
+Alternatively, you can remove this atom from your structure altogether and try again.
 """
                             )
 
@@ -268,7 +344,166 @@ Please use the --selection flag to supply an input suitable for rigid-body refin
     return pdboff_nospecialpositions
 
 
-def align_grids_from_model_transform(grid1, grid2, structure1, structure2):
+def _renumber_waters(pdb, dir):
+    """
+    Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
+
+    Parameters
+    ----------
+    pdb : str
+        name of pdb file
+    dir : str
+        directory in which pdb file lives
+    """
+
+    pdb_renumbered = pdb.removesuffix(".pdb") + "_renumbered.pdb"
+
+    subprocess.run(
+        f"phenix.sort_hetatms file_name={dir}/{pdb} output_file={dir}/{pdb_renumbered}",
+        shell=True,
+        capture_output=True,
+    )
+
+    print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
+
+    return pdb_renumbered
+
+
+def _realspace_align_and_subtract(
+    output_dir,
+    fg_off,
+    fg_on,
+    pdboff,
+    pdbon,
+    on_name,
+    off_name,
+    on_as_stationary,
+    selection,
+):
+    """
+    Take in two floatgrids and two pdbs. Apply the alignment transformation and subtract.
+
+    If there were multiple selections used for rigid-body refinement, this method should be called separately for each selection.
+
+    Parameters
+    ----------
+    output_dir : _type_
+        _description_
+    fg_off : _type_
+        _description_
+    fg_on : _type_
+        _description_
+    pdboff : _type_
+        _description_
+    pdbon : _type_
+        _description_
+    on_name : _type_
+        _description_
+    off_name : _type_
+        _description_
+    on_as_stationary : _type_
+        _description_
+    selection : str or list of str
+        If not None, should be a valid gemmi selection string or a list of valid gemmi selection strings
+    """
+
+    if selection:
+        print(
+            f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps for rigid-body selection {selection}..."
+        )
+    else:
+        print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
+
+    rs.io.write_ccp4_map(
+        fg_on.array,
+        output_dir + on_name + "_before.map",
+        cell=fg_on.unit_cell,
+        spacegroup=fg_on.spacegroup,
+    )
+    rs.io.write_ccp4_map(
+        fg_off.array,
+        output_dir + off_name + "_before.map",
+        cell=fg_off.unit_cell,
+        spacegroup=fg_off.spacegroup,
+    )
+
+    if on_as_stationary:
+        fg_fixed = fg_on.clone()
+        pdb_fixed = pdbon.clone()
+    else:
+        fg_fixed = fg_off.clone()
+        pdb_fixed = pdboff.clone()
+
+    fg_off = align_grids_from_model_transform(
+        fg_fixed, fg_off, pdb_fixed, pdboff, selection
+    )
+    fg_on = align_grids_from_model_transform(
+        fg_fixed, fg_on, pdb_fixed, pdbon, selection
+    )
+
+    # do this again, because transformation + carving can mess up scales:
+    fg_on.normalize()
+    fg_off.normalize()
+
+    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
+
+    difference_array = fg_on.array - fg_off.array
+
+    # all that's left is to mask out voxels that aren't near the model!
+    # we can do this in gemmi
+    fg_mask_only = fg_fixed.clone()
+    masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
+    masker.rprobe = 2  # this should do it, idk, no need to make this a user parameter
+
+    # if selection is None:
+    if selection is None:
+        pdb_for_mask = pdb_fixed[0]
+    else:
+        pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
+
+    masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
+    masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
+
+    # and finally, write stuff out
+
+    # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
+    if all(
+        [
+            angle == 90
+            for angle in (
+                fg_fixed.unit_cell.alpha,
+                fg_fixed.unit_cell.beta,
+                fg_fixed.unit_cell.gamma,
+            )
+        ]
+    ):
+        fg_fixed.unit_cell = gemmi.UnitCell(
+            fg_fixed.unit_cell.a,
+            fg_fixed.unit_cell.b,
+            fg_fixed.unit_cell.c,
+            90.006,
+            fg_fixed.unit_cell.beta,
+            fg_fixed.unit_cell.gamma,
+        )
+
+    # use partial function to guarantee I'm always using the same and correct cell
+    write_maps = partial(
+        rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
+    )
+
+    write_maps(fg_on.array, f"{output_dir}/{on_name}.map")
+
+    write_maps(fg_off.array, f"{output_dir}/{off_name}.map")
+
+    write_maps(masked_difference_array, f"{output_dir}/{on_name}_minus_{off_name}.map")
+    write_maps(
+        difference_array, f"{output_dir}/{on_name}_minus_{off_name}_unmasked.map"
+    )
+
+    return
+
+
+def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selection):
     """
     This function is basically just a wrapper around `gemmi.interpolate_grid_of_aligned_model2`, which is an amazing thing that exists!!.
 
@@ -282,14 +517,30 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2):
         _description_
     structure2 : gemmi.Structure
         _description_
+    selection : str
+        a string sufficient to describe the rbr selection to gemmi
+        If the rbr selection contained multiple chains / spans, can just be the first chain / span
 
     Returns
     -------
     grid2_out : gemmi.FloatGrid
         Aligned, interpolated, and trimmed grid
     """
-    span1 = structure1[0]["A"].get_polymer()
-    span2 = structure2[0]["A"].get_polymer()
+
+    if selection is None:
+        span1 = structure1[0][0].get_polymer()
+        span2 = structure2[0][0].get_polymer()
+
+        dest_model = structure1[0]
+
+    else:
+        sel = gemmi.Selection(selection)
+
+        span1 = sel.copy_structure_selection(structure1)[0][0].get_polymer()
+        span2 = sel.copy_structure_selection(structure2)[0][0].get_polymer()
+
+        dest_model = sel.copy_structure_selection(structure1)[0]
+
     sup = gemmi.calculate_superposition(
         span1, span2, span1.check_polymer_type(), gemmi.SupSelect.CaP
     )
@@ -304,9 +555,20 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2):
         dest=grid2_out,
         src=grid2,
         tr=transform,
-        dest_model=structure1[0],
+        dest_model=structure1[0],  # dest_model,
         radius=3,
         order=2,
     )
 
     return grid2_out
+
+
+def _extract_pdb_selection(pdb, selection):
+    # return a gemmi.Model containing only the selected things
+    # selection can be either a string or a list of strings
+
+    sel = gemmi.Selection(selection)
+
+    pdb_selection = sel.copy_model_selection(pdb)
+
+    return pdb_selection
