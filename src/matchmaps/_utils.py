@@ -270,7 +270,9 @@ refinement {
         eff_contents = eff_contents.replace("ligands", "")
 
     if rbr_selections is not None:
-        selection_string = "\n".join([f"rigid_body = '{sel}'" for sel in rbr_selections])
+        selection_string = "\n".join(
+            [f"rigid_body = '{sel}'" for sel in rbr_selections]
+        )
         eff_contents = eff_contents.replace("rigid_body_sites", selection_string)
     else:
         eff_contents = eff_contents.replace("rigid_body_sites", "rigid_body = all")
@@ -339,6 +341,7 @@ Please use the --rbr-selections flag to supply an input suitable for rigid-body 
 
     return pdboff_nospecialpositions
 
+
 def _renumber_waters(pdb, dir):
     """
     Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
@@ -346,22 +349,23 @@ def _renumber_waters(pdb, dir):
     Parameters
     ----------
     pdb : str
-        name of pdb file 
+        name of pdb file
     dir : str
         directory in which pdb file lives
     """
-    
+
     pdb_renumbered = pdb.removesuffix(".pdb") + "_renumbered.pdb"
-    
+
     subprocess.run(
         f"phenix.sort_hetatms file_name={dir}/{pdb} output_file={dir}/{pdb_renumbered}",
         shell=True,
         capture_output=True,
     )
-    
+
     print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
-    
+
     return pdb_renumbered
+
 
 def _realspace_align_and_subtract(
     output_dir,
@@ -402,22 +406,24 @@ def _realspace_align_and_subtract(
     """
 
     if selection:
-        print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps for rigid-body selection {selection}...")
+        print(
+            f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps for rigid-body selection {selection}..."
+        )
     else:
         print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
-    
+
     rs.io.write_ccp4_map(
         fg_on.array,
-        output_dir + on_name + '_before.map',
-        cell=fg_on.unit_cell, 
-        spacegroup=fg_on.spacegroup
-        )
+        output_dir + on_name + "_before.map",
+        cell=fg_on.unit_cell,
+        spacegroup=fg_on.spacegroup,
+    )
     rs.io.write_ccp4_map(
         fg_off.array,
-        output_dir + off_name + '_before.map',
-        cell=fg_off.unit_cell, 
-        spacegroup=fg_off.spacegroup
-        )
+        output_dir + off_name + "_before.map",
+        cell=fg_off.unit_cell,
+        spacegroup=fg_off.spacegroup,
+    )
 
     if on_as_stationary:
         fg_fixed = fg_on.clone()
@@ -425,15 +431,14 @@ def _realspace_align_and_subtract(
     else:
         fg_fixed = fg_off.clone()
         pdb_fixed = pdboff.clone()
-    
-    
+
     fg_off = align_grids_from_model_transform(
         fg_fixed, fg_off, pdb_fixed, pdboff, selection
     )
     fg_on = align_grids_from_model_transform(
         fg_fixed, fg_on, pdb_fixed, pdbon, selection
     )
-    
+
     # do this again, because transformation + carving can mess up scales:
     fg_on.normalize()
     fg_off.normalize()
@@ -453,7 +458,7 @@ def _realspace_align_and_subtract(
         pdb_for_mask = pdb_fixed[0]
     else:
         pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
-       
+
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
     masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
 
@@ -519,26 +524,26 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
     grid2_out : gemmi.FloatGrid
         Aligned, interpolated, and trimmed grid
     """
-    
+
     if selection is None:
         span1 = structure1[0][0].get_polymer()
         span2 = structure2[0][0].get_polymer()
-        
+
         dest_model = structure1[0]
-    
+
     else:
         sel = gemmi.Selection(selection)
-        
+
         span1 = sel.copy_structure_selection(structure1)[0][0].get_polymer()
         span2 = sel.copy_structure_selection(structure2)[0][0].get_polymer()
-        
+
         dest_model = sel.copy_structure_selection(structure1)[0]
-    
+
     sup = gemmi.calculate_superposition(
         span1, span2, span1.check_polymer_type(), gemmi.SupSelect.CaP
     )
     transform = sup.transform.inverse()
-    
+
     # clone a grid to hold the output
     grid2_out = (
         grid1.clone()
@@ -548,20 +553,20 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
         dest=grid2_out,
         src=grid2,
         tr=transform,
-        dest_model=structure1[0], #dest_model,
+        dest_model=structure1[0],  # dest_model,
         radius=3,
         order=2,
     )
 
     return grid2_out
 
+
 def _extract_pdb_selection(pdb, selection):
-    
     # return a gemmi.Model containing only the selected things
     # selection can be either a string or a list of strings
-    
+
     sel = gemmi.Selection(selection)
-        
+
     pdb_selection = sel.copy_model_selection(pdb)
 
     return pdb_selection
