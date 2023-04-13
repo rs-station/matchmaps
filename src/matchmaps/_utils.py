@@ -319,17 +319,19 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
                                 "   Input model contains water at special position. Removing water so as to not break rigid-body refinement."
                             )
                             print(
-                                "   If it is important that you keep this water and just omit it from your refinement selection, use the --rbr-selections flag"
+                                # "   If it is important that you keep this water and just omit it from your refinement selection, you many the --rbr-selections flag"
                             )
                             residue.remove_atom(
                                 name=atom.name, altloc=atom.altloc, el=atom.element
                             )
 
                         else:
-                            raise ValueError(
+                            raise NotImplementedError(
                                 """
-Input model contains a non-water atom on a special position.
-Please use the --rbr-selections flag to supply an input suitable for rigid-body refinement by phenix.
+Input model contains a non-water atom on a special position, which is not allowed in rigid-body refinement.
+You may attempt to exclude this atom via a custom atom selection to the `--rbr-selections` argument, but this feature is not currently tested.
+
+Alternatively, you can remove this atom from your structure altogether and try again.
 """
                             )
 

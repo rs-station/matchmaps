@@ -75,9 +75,8 @@ def compute_realspace_difference_map(
     verbose : bool, optional
         If True, print outputs of scaleit and phenix.refine, by default False
     rbr_selections : list of strings, optional
-        # Custom selection to provide to refinement.refine.sites.rigid_body=
-        # If omitted, then refinement.refine.sites.rigid_body=all
-        # Custom selection is only necessary if special-position atoms need to be excluded from refinement
+        Custom selections to provide to refinement.refine.sites.rigid_body=
+        If omitted, then refinement.refine.sites.rigid_body=all, and the entire structure is refined as a single rigid body. 
     eff : str, optional
         Name of a file containing a template .eff parameter file for phenix.refine.
         If omitted, the sensible built-in .eff template is used. If you need to change something,
@@ -207,12 +206,12 @@ def parse_arguments():
     """Parse commandline arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Compute a difference map using non-isomorphous inputs. "
+            "Compute a real-space difference map. "
             "You will need two MTZ files, which will be referred to throughout as 'on' and 'off', "
             "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
             "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
             "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
-            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to work. "
+            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
         )
     )
 
@@ -304,7 +303,7 @@ def parse_arguments():
         default=None,
         help=(
             "Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. "
-            "By default, cutoff is the resolution of the lower-resolution input MTZ. "
+            "By default, cutoff is the resolution limit of the lower-resolution input MTZ. "
         ),
     )
 
