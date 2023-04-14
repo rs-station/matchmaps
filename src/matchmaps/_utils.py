@@ -96,9 +96,9 @@ def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
     spacing : float
         Approximate voxel size desired (will be rounded as necessary to create integer grid dimensions)
     F : str, optional
-        Column in mtz containing structure factor amplitudes to use for calculation, by default "2FOFCWT"
+        Column in mtz containing structure factor amplitudes to use for calculation
     Phi : str, optional
-        Column in mtz containing phases to be used for calculation, by default "PH2FOFCWT"
+        Column in mtz containing phases to be used for calculation
     spacegroup : str, optional
         Spacegroup for the output FloatGrid. Defaults to P1.
     dmin: float, optional
@@ -467,24 +467,7 @@ def _realspace_align_and_subtract(
     # and finally, write stuff out
 
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
-    if all(
-        [
-            angle == 90
-            for angle in (
-                fg_fixed.unit_cell.alpha,
-                fg_fixed.unit_cell.beta,
-                fg_fixed.unit_cell.gamma,
-            )
-        ]
-    ):
-        fg_fixed.unit_cell = gemmi.UnitCell(
-            fg_fixed.unit_cell.a,
-            fg_fixed.unit_cell.b,
-            fg_fixed.unit_cell.c,
-            90.006,
-            fg_fixed.unit_cell.beta,
-            fg_fixed.unit_cell.gamma,
-        )
+    fg_fixed.unit_cell = _unit_cell_hack(fg_fixed.unit_cell)
 
     # use partial function to guarantee I'm always using the same and correct cell
     write_maps = partial(
@@ -501,6 +484,45 @@ def _realspace_align_and_subtract(
     )
 
     return
+
+
+def _unit_cell_hack(cell):
+    """
+    Helper function to check if alpha, beta and gamma are all 90, and if so,
+    set alpha to 90.006. Otherwise, do nothing. a, b, c, beta, and gamma are never changed.
+
+    This is necessary because coot assumes that maps in P1 with alpha, beta, gamma all = 90 are
+    EM maps, and do not have periodic boundaries. Setting alpha=90.006 is sufficient to convince
+    coot to render periodic boundaries.
+
+    Parameters
+    ----------
+    cell : gemmi.UnitCell
+
+    Returns
+    -------
+    cell_with_hack : gemmi.UnitCell
+    """
+    if all(
+        [
+            angle == 90
+            for angle in (
+                cell.alpha,
+                cell.beta,
+                cell.gamma,
+            )
+        ]
+    ):
+        return gemmi.UnitCell(
+            cell.a,
+            cell.b,
+            cell.c,
+            90.006,
+            cell.beta,
+            cell.gamma,
+        )
+    else:
+        return cell
 
 
 def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selection):
@@ -572,3 +594,78 @@ def _extract_pdb_selection(pdb, selection):
     pdb_selection = sel.copy_model_selection(pdb)
 
     return pdb_selection
+
+
+def _ncs_align_and_subtract(
+    fg,
+    pdb,
+    ncs_chains,
+    name,
+    output_dir,
+):
+    # here, ncs_chains would be ["B", "C"] for example
+    # first element is 'fixed', second is 'moving'
+
+    fg.unit_cell = _unit_cell_hack(fg.unit_cell)
+
+    sup = gemmi.calculate_superposition(
+        pdb[0][ncs_chains[0]].get_polymer(),
+        pdb[0][ncs_chains[1]].get_polymer(),
+        gemmi.PolymerType.PeptideL,
+        gemmi.SupSelect.CaP,
+    )
+
+    fg2 = fg.clone()
+    fg2.fill(0)
+
+    gemmi.interpolate_grid_of_aligned_model2(
+        dest=fg2,
+        src=fg,
+        tr=sup.transform.inverse(),
+        dest_model=pdb[0],
+        radius=8,
+        order=2,
+    )
+
+    model = gemmi.Model("dummy model")
+    model.add_chain(pdb[0][ncs_chains[0]])
+
+    fg_mask_only = fg.clone()
+    fg_mask_only.fill(0)
+
+    masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
+    masker.rprobe = 4  # generous mask to be sure to leave no islands
+    masker.put_mask_on_float_grid(fg_mask_only, model)
+
+    masked_arr1 = np.logical_not(fg_mask_only.array) * fg.array
+    masked_arr2 = np.logical_not(fg_mask_only.array) * fg2.array
+
+    mask = np.logical_not(fg_mask_only.array.astype(bool))
+
+    masked_arr1[mask] = _quicknorm(masked_arr1[mask])
+    masked_arr2[mask] = _quicknorm(masked_arr2[mask])
+
+    fg.set_subarray(arr=masked_arr1, start=(0, 0, 0))
+    fg2.set_subarray(arr=masked_arr2, start=(0, 0, 0))
+
+    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
+
+    write_maps = partial(
+        rs.io.write_ccp4_map, cell=fg.unit_cell, spacegroup=fg.spacegroup
+    )
+
+    write_maps(fg.array, f"{output_dir}/{name}_{ncs_chains[0]}.map")
+    write_maps(fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}.map")
+
+    write_maps(
+        fg2.array - fg.array,
+        f"{output_dir}/{name}_{ncs_chains[1]}_minus_{ncs_chains[0]}.map",
+    )
+
+    print(f"{time.strftime('%H:%M:%S')}: Done!")
+
+    return
+
+
+def _quicknorm(array):
+    return (array - array.mean()) / array.std()
