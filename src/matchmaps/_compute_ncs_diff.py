@@ -40,18 +40,16 @@ def compute_ncs_difference_map(
     refine_ncs_separately=False,
     eff=None,
 ):
-    
     # make sure directories have a trailing slash!
     if input_dir[-1] != "/":
         input_dir = input_dir + "/"
 
     if output_dir[-1] != "/":
         output_dir = output_dir + "/"
-        
+
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
-    
-    if Phi is None: # do rigid-body refinement to get phases
-        
+
+    if Phi is None:  # do rigid-body refinement to get phases
         if not refine_ncs_separately:
             rbr_phenix = None
 
@@ -72,41 +70,40 @@ def compute_ncs_difference_map(
             rbr_selections=rbr_phenix,
             off_labels=f"{F},{SigF}",
         )
-        
+
         # use phenix names for columns when computing FloatGrid
         fname = "F-obs-filtered"
         phiname = "PH2FOFCWT"
-        
+
         mtzfilename = f"{output_dir}/{nickname}_1.mtz"
         pdbfilename = f"{output_dir}/{nickname}_1.pdb"
-        
+
     else:
         print(f"{time.strftime('%H:%M:%S')}: Using provided phases...")
         fname = F
         phiname = Phi
-        
+
         mtzfilename = f"{input_dir}/{mtz}"
         pdbfilename = f"{input_dir}/{pdb}"
 
     # regardless of whether refinement was performed, read in these two files:
     mtz = rs.read_mtz(mtzfilename)
     pdb = gemmi.read_structure(pdbfilename)
-  
+
     print(f"{time.strftime('%H:%M:%S')}: Constructing FloatGrid from mtz...")
     # hard-coding F, Phi because they're always phenix outputs
     # TO-DO: Figure out why phenix outputs are sometimes still split into (+) and (-) columns, even when I specify that anomalous=False
     # As a workaround, even anomalous files have a single 'F-obs-filtered' column, so I can always just use that.
-    fg = make_floatgrid_from_mtz(
-        mtz, spacing, F=fname, Phi=phiname, spacegroup="P1"
-    )
-    
+    fg = make_floatgrid_from_mtz(mtz, spacing, F=fname, Phi=phiname, spacegroup="P1")
+
     _ncs_align_and_subtract(
-       fg=fg,
-       pdb=pdb,
-       ncs_chains=ncs_chains,
-       output_dir=output_dir,
-       name=name,
+        fg=fg,
+        pdb=pdb,
+        ncs_chains=ncs_chains,
+        output_dir=output_dir,
+        name=name,
     )
+
 
 def parse_arguments():
     """Parse commandline arguments."""
@@ -117,7 +114,7 @@ def parse_arguments():
             "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
         )
     )
-    
+
     parser.add_argument(
         "--mtz",
         "-m",
@@ -129,8 +126,8 @@ def parse_arguments():
             "Specified as [filename F SigF] or [filename F]"
             "SigF is not necessary if phases are also provided"
         ),
-    ) 
-    
+    )
+
     parser.add_argument(
         "--phases",
         required=False,
@@ -141,7 +138,7 @@ def parse_arguments():
             "the provided model and structure factor amplitudes."
         ),
     )
-    
+
     parser.add_argument(
         "--pdb",
         "-p",
@@ -151,7 +148,7 @@ def parse_arguments():
             "If phases are not provided, used for rigid-body refinement of input MTZ to generate phases."
         ),
     )
-    
+
     parser.add_argument(
         "--ncs-chains",
         "-n",
@@ -164,14 +161,14 @@ def parse_arguments():
             "E.g. to overlay chain C onto chain B, specify: --ncs-chains B C"
         ),
     )
-    
+
     parser.add_argument(
         "--mapname",
         required=False,
-        default='matchmaps_ncs',
-        help=("Base filename for the output map files. ")
+        default="matchmaps_ncs",
+        help=("Base filename for the output map files. "),
     )
-    
+
     parser.add_argument(
         "--ligands",
         "-l",
@@ -180,7 +177,7 @@ def parse_arguments():
         nargs="*",
         help=("Any .cif restraint files needed for refinement"),
     )
-    
+
     parser.add_argument(
         "--input-dir",
         "-i",
@@ -196,7 +193,7 @@ def parse_arguments():
         default="./",
         help="Path to which output files should be written. Optional, defaults to './' (current directory)",
     )
-    
+
     parser.add_argument(
         "--spacing",
         "-s",
@@ -235,8 +232,9 @@ def parse_arguments():
         default=None,
         help=("Custom .eff template for running phenix.refine. "),
     )
-    
+
     return parser
+
 
 def main():
     parser = parse_arguments()
@@ -244,10 +242,10 @@ def main():
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-    
+
     if not os.path.exists(args.input_dir):
         raise ValueError(f"Input directory '{args.input_dir}' does not exist")
-    
+
     compute_ncs_difference_map(
         pdb=args.pdb,
         mtz=args.mtz[0],
@@ -264,8 +262,9 @@ def main():
         dmin=args.dmin,
         spacing=args.spacing,
     )
-    
+
     return
+
 
 if __name__ == "__main__":
     main()
