@@ -211,6 +211,8 @@ def parse_arguments():
             "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
             "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
             "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
+            ""
+            "If you'd like to make an internal difference map instead, see matchmaps.ncs "
         )
     )
 
@@ -342,7 +344,10 @@ def main():
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
-
+        
+    if not os.path.exists(args.input_dir):
+        raise ValueError(f"Input directory '{args.input_dir}' does not exist")
+    
     compute_realspace_difference_map(
         pdboff=args.pdboff,
         ligands=args.ligands,
