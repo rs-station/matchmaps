@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>matchmaps &mdash; matchmaps</title>
+  <title>matchmaps command-line interface &mdash; matchmaps</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -18,8 +18,10 @@
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="About the `matchmaps algorithm" href="about.html" />
     <link rel="prev" title="matchmaps’s Documentation" href="index.html" /> 
 </head>
 
@@ -43,7 +45,12 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Command-line usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Command-line usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#matchmaps">matchmaps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matchmaps-ncs">matchmaps.ncs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
 </ul>
 
         </div>
@@ -60,9 +67,9 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">matchmaps</li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> command-line interface</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/cli.rst" rel="nofollow"> View page source</a>
+            <a href="_sources/cli.md" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -70,9 +77,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="matchmaps">
-<span id="cli"></span><h1>matchmaps<a class="headerlink" href="#matchmaps" title="Permalink to this heading"></a></h1>
-<p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run.</p>
+  <section class="tex2jax_ignore mathjax_ignore" id="matchmaps-command-line-interface">
+<h1><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> command-line interface<a class="headerlink" href="#matchmaps-command-line-interface" title="Permalink to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is built to be used from the command-line. See the following utilities below. You can also print these messages in the command-line via the <code class="docutils literal notranslate"><span class="pre">--help</span></code> option.</p>
+<section id="matchmaps">
+<h2>matchmaps<a class="headerlink" href="#matchmaps" title="Permalink to this heading"></a></h2>
+<p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. If you’d like to make an internal difference map instead, see matchmaps.ncs</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
 <span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
@@ -160,12 +170,103 @@
 </dd></dl>
 
 </section>
+<section id="matchmaps-ncs">
+<h2>matchmaps.ncs<a class="headerlink" href="#matchmaps-ncs" title="Permalink to this heading"></a></h2>
+<p>Compute an ‘internal’ real-space difference map between NCS-related molecules. You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB file.Please note that both ccp4 and phenix must be installed and active in your environment for this function to run.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.ncs [-h] --mtz [MTZ ...] [--phases PHASES] --pdb PDB</span>
+<span class="go">                     --ncs-chains fixed_chain moving_chain [--mapname MAPNAME]</span>
+<span class="go">                     [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
+<span class="go">                     [--output-dir OUTPUT_DIR] [--spacing SPACING]</span>
+<span class="go">                     [--dmin DMIN] [--verbose] [--eff EFF]</span>
+</pre></div>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-h">
+<span id="cmdoption-matchmaps-ncs-h"></span><span id="cmdoption-matchmaps.ncs-help"></span><span id="cmdoption-matchmaps-ncs-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-mtz">
+<span id="cmdoption-matchmaps-ncs-mtz"></span><span id="cmdoption-matchmaps.ncs-m"></span><span id="cmdoption-matchmaps-ncs-m"></span><span class="sig-name descname"><span class="pre">--mtz</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mtz" title="Permalink to this definition"></a></dt>
+<dd><p>MTZ file containing structure factor amplitudes. Specified as [filename F SigF] or [filename F]SigF is not necessary if phases are also provided</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-phases">
+<span id="cmdoption-matchmaps-ncs-phases"></span><span class="sig-name descname"><span class="pre">--phases</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;phases&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-phases" title="Permalink to this definition"></a></dt>
+<dd><p>Optional. Column in MTZ file containing phases. If phases are not provided, phases will be computed via rigid-body refinement of the provided model and structure factor amplitudes.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-pdb">
+<span id="cmdoption-matchmaps-ncs-pdb"></span><span id="cmdoption-matchmaps.ncs-p"></span><span id="cmdoption-matchmaps-ncs-p"></span><span class="sig-name descname"><span class="pre">--pdb</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-pdb" title="Permalink to this definition"></a></dt>
+<dd><p>Reference pdb. If phases are not provided, used for rigid-body refinement of input MTZ to generate phases.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-ncs-chains">
+<span id="cmdoption-matchmaps-ncs-ncs-chains"></span><span id="cmdoption-matchmaps.ncs-n"></span><span id="cmdoption-matchmaps-ncs-n"></span><span class="sig-name descname"><span class="pre">--ncs-chains</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ncs-chains" title="Permalink to this definition"></a></dt>
+<dd><p>NCS chains to overlay and subtract, specified as [fixed_chain, moving_chain].E.g. to overlay chain C onto chain B, specify: –ncs-chains B C</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-mapname">
+<span id="cmdoption-matchmaps-ncs-mapname"></span><span class="sig-name descname"><span class="pre">--mapname</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mapname&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mapname" title="Permalink to this definition"></a></dt>
+<dd><p>Base filename for the output map files.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-ligands">
+<span id="cmdoption-matchmaps-ncs-ligands"></span><span id="cmdoption-matchmaps.ncs-l"></span><span id="cmdoption-matchmaps-ncs-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ligands" title="Permalink to this definition"></a></dt>
+<dd><p>Any .cif restraint files needed for refinement</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-input-dir">
+<span id="cmdoption-matchmaps-ncs-input-dir"></span><span id="cmdoption-matchmaps.ncs-i"></span><span id="cmdoption-matchmaps-ncs-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-input-dir" title="Permalink to this definition"></a></dt>
+<dd><p>Path to input mtz and pdb. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-output-dir">
+<span id="cmdoption-matchmaps-ncs-output-dir"></span><span id="cmdoption-matchmaps.ncs-o"></span><span id="cmdoption-matchmaps-ncs-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-output-dir" title="Permalink to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-spacing">
+<span id="cmdoption-matchmaps-ncs-spacing"></span><span id="cmdoption-matchmaps.ncs-s"></span><span id="cmdoption-matchmaps-ncs-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-spacing" title="Permalink to this definition"></a></dt>
+<dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-dmin">
+<span id="cmdoption-matchmaps-ncs-dmin"></span><span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-dmin" title="Permalink to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the input MTZ.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-verbose">
+<span id="cmdoption-matchmaps-ncs-verbose"></span><span id="cmdoption-matchmaps.ncs-v"></span><span id="cmdoption-matchmaps-ncs-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-verbose" title="Permalink to this definition"></a></dt>
+<dd><p>Include this flag to print out phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-eff">
+<span id="cmdoption-matchmaps-ncs-eff"></span><span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-eff" title="Permalink to this definition"></a></dt>
+<dd><p>Custom .eff template for running phenix.refine.</p>
+</dd></dl>
+
+</section>
+</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="matchmaps’s Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="about.html" class="btn btn-neutral float-right" title="About the `matchmaps algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

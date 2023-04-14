@@ -33,7 +33,7 @@ At this point, you should be good to go! Please [file an issue on github](https:
 
 ## Using matchmaps
 
-Read about [using `matchmaps` in the command-line](cli.rst)
+Read about [using `matchmaps` in the command-line](cli.md)
 
 ```{eval-rst}
 .. toctree::
@@ -41,4 +41,5 @@ Read about [using `matchmaps` in the command-line](cli.rst)
    :hidden:
 
    Command-line usage <cli>
+   About the algorithm <about>
 ```

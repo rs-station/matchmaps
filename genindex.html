@@ -17,6 +17,7 @@
         <script src="_static/doctools.js"></script>
         <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" /> 
 </head>
@@ -42,6 +43,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
 </ul>
 
         </div>
@@ -84,12 +86,16 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-dmin">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-dmin">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     --eff
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-eff">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-eff">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
       <li>
@@ -98,6 +104,8 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-h">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-h">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     --input-dir
@@ -105,12 +113,30 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-input-dir">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-input-dir">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     --ligands
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-ligands">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ligands">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --mapname
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-mapname">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --mtz
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-mtz">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
       <li>
@@ -128,6 +154,13 @@
 </li>
       </ul></li>
       <li>
+    --ncs-chains
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ncs-chains">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
     --on-as-stationary
 
       <ul>
@@ -140,6 +173,15 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-output-dir">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-output-dir">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
+    --pdb
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-pdb">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     --pdboff
@@ -149,26 +191,37 @@
 </li>
       </ul></li>
       <li>
+    --phases
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-phases">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
     --rbr-selections
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-rbr-selections">matchmaps command line option</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     --spacing
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-spacing">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-spacing">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     --verbose
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-verbose">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-verbose">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
       <li>
@@ -184,12 +237,16 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-h">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-h">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     -i
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-input-dir">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-input-dir">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
       <li>
@@ -198,12 +255,23 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-ligands">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ligands">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -m
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-mtz">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     -n
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-mtzon">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ncs-chains">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
       <li>
@@ -212,12 +280,16 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-output-dir">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-output-dir">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     -p
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-pdboff">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-pdb">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
       <li>
@@ -233,12 +305,16 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-spacing">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-spacing">matchmaps.ncs command line option</a>
+</li>
       </ul></li>
       <li>
     -v
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-verbose">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-verbose">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
   </ul></td>
@@ -296,6 +372,57 @@
         <li><a href="cli.html#cmdoption-matchmaps-spacing">-s</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps-verbose">-v</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    matchmaps.ncs command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-dmin">--dmin</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-eff">--eff</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-h">--help</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-input-dir">--input-dir</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ligands">--ligands</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-mapname">--mapname</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-mtz">--mtz</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ncs-chains">--ncs-chains</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-output-dir">--output-dir</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-pdb">--pdb</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-phases">--phases</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-spacing">--spacing</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-verbose">--verbose</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-h">-h</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-input-dir">-i</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ligands">-l</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-mtz">-m</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-ncs-chains">-n</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-output-dir">-o</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-pdb">-p</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-spacing">-s</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.ncs-verbose">-v</a>
 </li>
       </ul></li>
   </ul></td>
