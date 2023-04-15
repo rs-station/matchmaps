@@ -655,7 +655,7 @@ def _ncs_align_and_subtract(
     )
 
     write_maps(fg.array, f"{output_dir}/{name}_{ncs_chains[0]}.map")
-    write_maps(fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}.map")
+    write_maps(fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}_onto_{ncs_chains[0]}.map")
 
     write_maps(
         fg2.array - fg.array,
