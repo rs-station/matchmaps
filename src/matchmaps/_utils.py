@@ -669,3 +669,26 @@ def _ncs_align_and_subtract(
 
 def _quicknorm(array):
     return (array - array.mean()) / array.std()
+
+
+def _phaser_wrapper(
+    mtz,
+    pdb,
+    input_dir,
+    output_dir,
+    eff=None,
+    verbose=False,
+    ncopies=1,
+):
+    
+    # confirm that phenix is active in the command-line environment
+    if shutil.which("phenix.phaser") is None:
+        raise OSError(
+            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
+        )
+
+    # if eff is None:
+    #     eff_contents = """
+        
+    # """
+    return
