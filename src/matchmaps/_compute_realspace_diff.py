@@ -18,6 +18,7 @@ from matchmaps._utils import (
     _realspace_align_and_subtract,
     _rbr_selection_parser,
     _renumber_waters,
+    _clean_up_files,
 )
 
 
@@ -195,6 +196,9 @@ def compute_realspace_difference_map(
                 on_as_stationary=on_as_stationary,
                 selection=selection,
             )
+    # print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
+        
+    # _clean_up_files()
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 

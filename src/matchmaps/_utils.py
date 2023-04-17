@@ -5,6 +5,7 @@ Functions make_floatgrid_from_mtz, rigid_body_refinement_wrapper, and align_grid
 are exported to python for use in prototyping and testing
 """
 
+import os
 import glob
 import shutil
 import subprocess
@@ -228,12 +229,17 @@ refinement {
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
 
     # check existing files because phenix doesn't like to overwrite things
+    
+    # number = _find_available_suffix(prefix=f"{output_dir}/{nickname}_", suffix='_1.*')
+    # nickname += f'_{number}'
+    
     similar_files = glob.glob(f"{output_dir}/{nickname}_[0-9]_1.*")
     if len(similar_files) == 0:
         nickname += "_0"
     else:
         n = max([int(s.split("_")[-2]) for s in similar_files])
         nickname += f"_{n+1}"
+        
 
     # read in mtz to access cell parameters and spacegroup
     mtz = rs.read_mtz((output_dir if (off_labels is None) else input_dir) + mtzon)
@@ -692,3 +698,29 @@ def _phaser_wrapper(
         
     # """
     return
+
+def _find_available_dirname(prefix):
+    
+    existing = glob.glob(f"{prefix}_[0-9]/")
+
+    if len(existing) == 0:
+        new_suffix = "0"
+    else:
+        n = max([int(s.split("_")[-1].removesuffix('/')) for s in existing])
+        new_suffix = f"{n+1}"
+        
+    return new_suffix
+
+# def _clean_up_files(output_dir, prefix, mode='vanilla'):
+    
+#     n = _find_available_dirname(prefix='matchmapsfiles')
+#     cleanup_dir = f"{output_dir}/matchmaps_{n}"
+    
+#     os.makedirs(cleanup_dir)
+    
+#     files_to_move = []
+    
+#     # for suffix in ()
+#     files_to_move.append(glob.glob(output_dir + ))
+    
+#     return
