@@ -78,24 +78,27 @@ def compute_mr_difference_map(
     )
     
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
-    
-    
-    # mtzon = phaser_nickname + ".1.mtz" # jokes, original mtzon is fine!
-    pdb_mr_to_on = phaser_nickname + ".1.pdb"
-    
+    edited_mr_pdb = _restore_ligand_occupancy(
+        pdb_to_be_restored=phaser_nickname + ".1.pdb",
+        original_pdb=pdboff,
+        ligands=ligands,
+        output_dir=output_dir
+    )
+        
     # the refinement process *should* be identical. Waters are gone already
     # I just need to make sure that the phaser outputs go together
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 
     nickname_on = rigid_body_refinement_wrapper(
         mtzon=mtzon,
-        pdboff=pdb_mr_to_on,
+        pdboff=edited_mr_pdb,
         input_dir=input_dir,
         output_dir=output_dir,
         ligands=ligands,
         eff=eff,
         verbose=verbose,
         rbr_selections=rbr_phenix,
+        off_labels=f"{Fon},{SigFon}", # workaround for compatibility
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")

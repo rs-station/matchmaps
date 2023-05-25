@@ -483,13 +483,14 @@ phaser {
 def _restore_ligand_occupancy(
     pdb_to_be_restored,
     original_pdb,
-    input_dir,
+    ligands,
     output_dir,
 ):
     
     # do stuff
-    
-    edited_pdb = pdb_to_be_restored
+    # replace with actual logical about ligands being present
+    if True:
+        edited_pdb = pdb_to_be_restored
     
     return edited_pdb   
  
