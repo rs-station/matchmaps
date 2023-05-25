@@ -397,7 +397,6 @@ def phaser_wrapper(
     input_dir,
     output_dir,
     off_labels,
-    ligands=None, # maybe not needed?
     eff=None,
     verbose=False,
 ):
@@ -481,7 +480,19 @@ phaser {
     
     return nickname
     
+def _restore_ligand_occupancy(
+    pdb_to_be_restored,
+    original_pdb,
+    input_dir,
+    output_dir,
+):
     
+    # do stuff
+    
+    edited_pdb = pdb_to_be_restored
+    
+    return edited_pdb   
+ 
 def _realspace_align_and_subtract(
     output_dir,
     fg_off,

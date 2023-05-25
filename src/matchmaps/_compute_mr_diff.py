@@ -18,6 +18,8 @@ from matchmaps._utils import (
     _realspace_align_and_subtract,
     _rbr_selection_parser,
     _remove_waters,
+    _restore_ligand_occupancy,
+    phaser_wrapper,
 )
 
 
@@ -63,9 +65,23 @@ def compute_mr_difference_map(
     # modified pdboff already moved to output_dir by _handle_special_positions
     pdboff = _remove_waters(pdboff, output_dir)
     
-    phaser_names = phaser_wrapper(
-        # not sure these parameters yet
+    print(f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data...")
+
+    phaser_nickname = phaser_wrapper(
+        mtzfile=mtzon,
+        pdb=pdboff,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        off_labels=f"{Fon},{SigFon}",
+        eff=None,
+        verbose=verbose,
     )
+    
+    # TO-DO: fix ligand occupancies in pdb_mr_to_on
+    
+    
+    # mtzon = phaser_nickname + ".1.mtz" # jokes, original mtzon is fine!
+    pdb_mr_to_on = phaser_nickname + ".1.pdb"
     
     # the refinement process *should* be identical. Waters are gone already
     # I just need to make sure that the phaser outputs go together
@@ -73,7 +89,7 @@ def compute_mr_difference_map(
 
     nickname_on = rigid_body_refinement_wrapper(
         mtzon=mtzon,
-        pdboff=pdboff,
+        pdboff=pdb_mr_to_on,
         input_dir=input_dir,
         output_dir=output_dir,
         ligands=ligands,
