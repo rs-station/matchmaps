@@ -374,7 +374,114 @@ def _renumber_waters(pdb, dir):
 
     return pdb_renumbered
 
+def _remove_waters(
+    input_pdb,
+    dir,
+):
+    
+    output_pdb = input_pdb.removesuffix('.pdb') + '_dry'
 
+    subprocess.run(
+        f"phenix.pdbtools {dir}/{input_pdb} remove='water' \
+            output.prefix='{dir}/' \
+            output.suffix='{output_pdb}'",
+        shell=True,
+        capture_output=False,
+    )
+    
+    return output_pdb + '.pdb'  
+
+def phaser_wrapper(
+    mtzfile,
+    pdb,
+    input_dir,
+    output_dir,
+    off_labels,
+    ligands=None, # maybe not needed?
+    eff=None,
+    verbose=False,
+):
+    """
+    Handle simple phaser run from the command line
+    """
+    
+    if shutil.which("phenix.phaser") is None:
+        raise OSError(
+            "Cannot find executable, phenix.phaser. Please set up your phenix environment."  
+        )
+        
+    if eff is None:
+        eff_contents = """
+phaser {
+  mode = ANO CCA EP_AUTO *MR_AUTO MR_FRF MR_FTF MR_PAK MR_RNP NMAXYZ SCEDS
+  hklin = mtz_input
+  labin = labels
+  model = pdb_input
+  model_identity = 100
+  component_copies = 1
+  search_copies = 1
+  chain_type = *protein dna rna
+  crystal_symmetry {
+    unit_cell = cell_parameters
+    space_group = sg
+  }
+  keywords {
+    general {
+      root = '''nickname'''
+      title = '''matchmaps_MR'''
+      mute = None
+      xyzout = True
+      xyzout_ensemble = True
+      hklout = True
+      jobs = 6
+    }
+  }
+}
+        """
+    else:
+        raise NotImplementedError(
+            "Custom phaser specifications are not yet supported"
+        )
+    
+    nickname = f"{mtzfile.removesuffix('.mtz')}_phased_with_{pdb.removesuffix('.pdb')}"
+    
+    similar_files = glob.glob(f"{output_dir}/{nickname}_*")
+    if len(similar_files) == 0:
+        nickname += "_0"
+    else:
+        n = max([int(s.split("_")[-1].split(".")[0]) for s in similar_files])
+        nickname += f"_{n+1}"
+        
+    mtz = rs.read_mtz(input_dir + mtzfile)
+    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
+    sg = mtz.spacegroup.short_name()
+    
+    eff = f"{output_dir}/params_{nickname}.eff"
+    
+    params = {
+        "sg": sg,
+        "cell_parameters": cell_string,
+        "pdb_input": output_dir + pdb,
+        "mtz_input": input_dir + mtzfile,
+        "nickname": output_dir + nickname,
+        "labels": off_labels, #should be prepackaged as a string
+    }
+    
+    for key, value in params.items():
+        eff_contents = eff_contents.replace(key, value)
+        
+    with open(eff, "w") as file:
+        file.write(eff_contents)
+        
+    subprocess.run(
+        f"phenix.phaser {eff}",
+        shell=True,
+        capture_output=(not verbose),
+    )
+    
+    return nickname
+    
+    
 def _realspace_align_and_subtract(
     output_dir,
     fg_off,
@@ -712,6 +819,11 @@ def _find_available_dirname(prefix):
     return new_suffix
 
 # def _clean_up_files(output_dir, prefix, mode='vanilla'):
+    """
+    I know exactly what files are produced by the vanilla version:
+    
+    
+    """
     
 #     n = _find_available_dirname(prefix='matchmapsfiles')
 #     cleanup_dir = f"{output_dir}/matchmaps_{n}"
@@ -719,6 +831,8 @@ def _find_available_dirname(prefix):
 #     os.makedirs(cleanup_dir)
     
 #     files_to_move = []
+
+
     
 #     # for suffix in ()
 #     files_to_move.append(glob.glob(output_dir + ))
