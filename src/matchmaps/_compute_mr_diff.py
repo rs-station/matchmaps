@@ -41,10 +41,9 @@ def compute_mr_difference_map(
     rbr_selections=None,
     eff=None,
 ):
-    
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
-    
+
     # make sure directories have a trailing slash!
     if input_dir[-1] != "/":
         input_dir = input_dir + "/"
@@ -56,16 +55,18 @@ def compute_mr_difference_map(
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
-    # this is where scaling takes place in the usual pipeline, but that doesn't make sense with different-spacegroup inputs 
+    # this is where scaling takes place in the usual pipeline, but that doesn't make sense with different-spacegroup inputs
     # side note: I need to test the importance of scaling even in the normal case!! Might be more artifact than good, who knows
-    
+
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
     # write this function as a wrapper around phenix.pdbtools
     # modified pdboff already moved to output_dir by _handle_special_positions
     pdboff = _remove_waters(pdboff, output_dir)
-    
-    print(f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data...")
+
+    print(
+        f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data..."
+    )
 
     phaser_nickname = phaser_wrapper(
         mtzfile=mtzon,
@@ -76,15 +77,15 @@ def compute_mr_difference_map(
         eff=None,
         verbose=verbose,
     )
-    
+
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
         pdb_to_be_restored=phaser_nickname + ".1.pdb",
         # original_pdb=pdboff,
         ligands=ligands,
-        output_dir=output_dir
+        output_dir=output_dir,
     )
-        
+
     # the refinement process *should* be identical. Waters are gone already
     # I just need to make sure that the phaser outputs go together
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
@@ -98,7 +99,7 @@ def compute_mr_difference_map(
         eff=eff,
         verbose=verbose,
         rbr_selections=rbr_phenix,
-        off_labels=f"{Fon},{SigFon}", # workaround for compatibility
+        off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -114,10 +115,10 @@ def compute_mr_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
     )
-    
+
     # from here down I just copied over the stuff from the normal version
     # this should be proofread for compatibility but should all work
-    
+
     # read back in the files created by phenix
     # these have knowable names
     mtzon = rs.read_mtz(f"{output_dir}/{nickname_on}_1.mtz")
@@ -173,12 +174,13 @@ def compute_mr_difference_map(
                 selection=selection,
             )
     # print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
-        
+
     # _clean_up_files()
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
     return
+
 
 def parse_arguments():
     """Parse commandline arguments."""
