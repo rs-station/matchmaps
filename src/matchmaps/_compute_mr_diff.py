@@ -80,7 +80,7 @@ def compute_mr_difference_map(
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
         pdb_to_be_restored=phaser_nickname + ".1.pdb",
-        original_pdb=pdboff,
+        # original_pdb=pdboff,
         ligands=ligands,
         output_dir=output_dir
     )
@@ -179,3 +179,181 @@ def compute_mr_difference_map(
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
     return
+
+def parse_arguments():
+    """Parse commandline arguments."""
+    parser = argparse.ArgumentParser(
+        description=(
+            "Compute a real-space difference map between inputs in different space groups / crystal packings. "
+            "You will need two MTZ files, which will be referred to throughout as 'on' and 'off', "
+            "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
+            "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
+            "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
+            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
+            ""
+            "If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility "
+            "If you'd like to make an internal difference map, see matchmaps.ncs "
+        )
+    )
+
+    parser.add_argument(
+        "--mtzoff",
+        "-f",
+        nargs=3,
+        metavar=("mtzfileoff", "Foff", "SigFoff"),
+        required=True,
+        help=(
+            "MTZ containing off/apo/ground/dark state data. "
+            "Specified as [filename F SigF]"
+        ),
+    )
+
+    parser.add_argument(
+        "--mtzon",
+        "-n",
+        nargs=3,
+        metavar=("mtzfileon", "Fon", "SigFon"),
+        required=True,
+        help=(
+            "MTZ containing on/bound/excited/bright state data. "
+            "Specified as [filename F SigF]"
+            "This file may be in a different spacegroup / crystal packing than mtzoff"
+        ),
+    )
+
+    parser.add_argument(
+        "--pdboff",
+        "-p",
+        required=True,
+        help=(
+            "Reference pdb corresponding to the off/apo/ground/dark state. "
+            "Used for rigid-body refinement of both input MTZs to generate phases."
+            "Should match mtzoff well enough that molecular replacement is not necessary."
+        ),
+    )
+
+    parser.add_argument(
+        "--ligands",
+        "-l",
+        required=False,
+        default=None,
+        nargs="*",
+        help=("Any .cif restraint files needed for refinement"),
+    )
+
+    parser.add_argument(
+        "--input-dir",
+        "-i",
+        required=False,
+        default="./",
+        help="Path to input mtzs and pdb. Optional, defaults to './' (current directory)",
+    )
+
+    parser.add_argument(
+        "--output-dir",
+        "-o",
+        required=False,
+        default="./",
+        help="Path to which output files should be written. Optional, defaults to './' (current directory)",
+    )
+
+    parser.add_argument(
+        "--on-as-stationary",
+        required=False,
+        action="store_true",
+        default=False,
+        help=(
+            "Include this flag to align 'off' data onto 'on' data. By default, 'off' data is stationary and 'on' data is moved."
+            "For matchmaps.mr, this only applies to the post-molecular-replacement alignment; "
+            "all maps will be placed in the spacegroup of mtzoff."
+        ),
+    )
+
+    parser.add_argument(
+        "--spacing",
+        "-s",
+        required=False,
+        type=float,
+        default=0.5,
+        help=(
+            "Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. "
+            "Value is approximate because there must be an integer number of voxels along each unit cell dimension"
+        ),
+    )
+
+    parser.add_argument(
+        "--dmin",
+        required=False,
+        type=float,
+        default=None,
+        help=(
+            "Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. "
+            "By default, cutoff is the resolution limit of the lower-resolution input MTZ. "
+        ),
+    )
+
+    parser.add_argument(
+        "--verbose",
+        "-v",
+        required=False,
+        action="store_true",
+        default=False,
+        help="Include this flag to print out phenix.phaser and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.",
+    )
+
+    parser.add_argument(
+        "--rbr-selections",
+        "-r",
+        required=False,
+        default=None,
+        nargs="*",
+        help=(
+            "Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group. "
+            "For matchmaps.mr, everything will always be molecular replaced as a single rigid-body, but may then be refined as multiple rigid bodies."
+        ),
+    )
+
+    parser.add_argument(
+        "--eff",
+        required=False,
+        default=None,
+        help=("Custom .eff template for running phenix.refine. "),
+    )
+
+    return parser
+
+
+def main():
+    parser = parse_arguments()
+    args = parser.parse_args()
+
+    if not os.path.exists(args.output_dir):
+        os.makedirs(args.output_dir)
+
+    if not os.path.exists(args.input_dir):
+        raise ValueError(f"Input directory '{args.input_dir}' does not exist")
+
+    compute_mr_difference_map(
+        pdboff=args.pdboff,
+        ligands=args.ligands,
+        mtzoff=args.mtzoff[0],
+        mtzon=args.mtzon[0],
+        Foff=args.mtzoff[1],
+        SigFoff=args.mtzoff[2],
+        Fon=args.mtzon[1],
+        SigFon=args.mtzon[2],
+        input_dir=args.input_dir,
+        output_dir=args.output_dir,
+        verbose=args.verbose,
+        rbr_selections=args.rbr_selections,
+        eff=args.eff,
+        dmin=args.dmin,
+        spacing=args.spacing,
+        on_as_stationary=args.on_as_stationary,
+    )
+
+    return
+
+
+if __name__ == "__main__":
+    main()

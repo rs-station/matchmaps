@@ -237,9 +237,15 @@ refinement {
     if len(similar_files) == 0:
         nickname += "_0"
     else:
-        n = max([int(s.split("_")[-2]) for s in similar_files])
-        nickname += f"_{n+1}"
-        
+        # n = max([int(s.split("_")[-2]) for s in similar_files])
+        # nickname += f"_{n+1}"
+        nums = []
+        for s in similar_files:
+            try:
+                nums.append(int(s.split("_")[-2]))
+            except ValueError:
+                pass
+        nickname += f"_{max(nums)+1}"
 
     # read in mtz to access cell parameters and spacegroup
     mtz = rs.read_mtz((output_dir if (off_labels is None) else input_dir) + mtzon)
@@ -386,7 +392,7 @@ def _remove_waters(
             output.prefix='{dir}/' \
             output.suffix='{output_pdb}'",
         shell=True,
-        capture_output=False,
+        capture_output=True,
     )
     
     return output_pdb + '.pdb'  
@@ -448,8 +454,14 @@ phaser {
     if len(similar_files) == 0:
         nickname += "_0"
     else:
-        n = max([int(s.split("_")[-1].split(".")[0]) for s in similar_files])
-        nickname += f"_{n+1}"
+        nums = []
+        for s in similar_files:
+            try:
+                nums.append(int(s.split("_")[-1].split(".")[0]))
+            except ValueError:
+                pass
+        # n = max([int(s.split("_")[-1].split(".")[0]) for s in similar_files])
+        nickname += f"_{max(nums)+1}"
         
     mtz = rs.read_mtz(input_dir + mtzfile)
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
@@ -482,17 +494,35 @@ phaser {
     
 def _restore_ligand_occupancy(
     pdb_to_be_restored,
-    original_pdb,
+    # original_pdb, # maybe support non-100% occupancies someday
     ligands,
     output_dir,
 ):
     
     # do stuff
     # replace with actual logical about ligands being present
-    if True:
+    if len(ligands) == 0:
         edited_pdb = pdb_to_be_restored
     
-    return edited_pdb   
+    else:
+        edited_pdb = pdb_to_be_restored.removesuffix('.pdb') + '_restoreligs'
+        
+        ligand_names = [f"resname {l.removesuffix('.cif')}" for l in ligands]
+        selection = ' or '.join(ligand_names)
+        
+        print(ligand_names)
+        print(selection)
+
+        subprocess.run(
+            f"phenix.pdbtools {output_dir}/{pdb_to_be_restored} \
+                output.prefix='{output_dir}'  output.suffix='{edited_pdb}'\
+                modify.selection='{selection}' modify.occupancies.set=1",
+            shell=True,
+            capture_output=True,
+        )
+        
+    
+    return edited_pdb + '.pdb'
  
 def _realspace_align_and_subtract(
     output_dir,
