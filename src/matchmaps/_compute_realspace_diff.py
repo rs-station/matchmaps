@@ -41,7 +41,7 @@ def compute_realspace_difference_map(
     eff=None,
 ):
     """
-    _summary_.
+    Compute a real-space difference map from mtzs.
 
     Parameters
     ----------
@@ -68,7 +68,7 @@ def compute_realspace_difference_map(
     spacing : float, optional
         Approximate size of real-space voxels in Angstroms, by default 0.5 A
     on_as_stationary : bool, optional
-        _description_, by default False
+        If True, align "off" data onto "on" data, by default False
     input_dir : str, optional
         Path to directory containing input files, by default "./" (current directory)
     output_dir : str, optional

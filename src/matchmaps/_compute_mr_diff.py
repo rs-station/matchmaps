@@ -41,6 +41,50 @@ def compute_mr_difference_map(
     rbr_selections=None,
     eff=None,
 ):
+    """
+    Compute a real-space difference map from mtzs in different spacegroups.
+
+    Parameters
+    ----------
+    pdboff : string
+        Name of input .pdb file to use for phasing and as an MR search model
+    mtzoff : string
+        Name of input .mtz containing 'off data
+    mtzon : string
+        Name of input .mtz file containing 'off' data
+    Foff : string
+        Column in mtzoff containing structure factor amplitudes
+    SigFoff : string
+        Column in mtzoff containing structure factor uncertainties
+    Fon : string
+        Column in mtzon containing structure factor amplitudes
+    SigFon : string
+        Column in mtzon containing structure factor uncertainties
+    ligands : list of strings
+        Filename(s) of any .cif ligand restraint files necessary for phenix.refine
+        by default None, meaning only the .pdb is required for refinement
+    dmin : float, optional
+        Minimum resolution (in Angstroms) reflections to be used in computing real-space maps from mtzs.
+        If omitted, resolution cutoff is the maximum resolution from the lower-resolution input file.
+    spacing : float, optional
+        Approximate size of real-space voxels in Angstroms, by default 0.5 A
+    on_as_stationary : bool, optional
+        If True, align "off" data onto "on" data, by default False
+        Note that this applies only to post-molecular-replacement refinement, not to molecular replacement itself.
+    input_dir : str, optional
+        Path to directory containing input files, by default "./" (current directory)
+    output_dir : str, optional
+        Path to directory to which output files should be written, by default "./" (current directory)
+    verbose : bool, optional
+        If True, print outputs of scaleit and phenix.refine, by default False
+    rbr_selections : list of strings, optional
+        Custom selections to provide to refinement.refine.sites.rigid_body=
+        If omitted, then refinement.refine.sites.rigid_body=all, and the entire structure is refined as a single rigid body.
+    eff : str, optional
+        Name of a file containing a template .eff parameter file for phenix.refine.
+        If omitted, the sensible built-in .eff template is used. If you need to change something,
+        I recommend copying the template from the source code and editing that.
+    """
     
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
