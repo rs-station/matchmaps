@@ -197,7 +197,7 @@ def compute_realspace_difference_map(
                 selection=selection,
             )
     # print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
-        
+
     # _clean_up_files()
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
