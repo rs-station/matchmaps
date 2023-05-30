@@ -8,4 +8,7 @@
 
 .. autoprogram:: matchmaps._compute_ncs_diff:parse_arguments()
    :prog: matchmaps.ncs
+
+.. autoprogram:: matchmaps._compute_mr_diff:parse_arguments()
+   :prog: matchmaps.mr
 ```

@@ -1,3 +1,3 @@
-# About the `matchmaps algorithm
+# About the `matchmaps` algorithm
 
 More details here coming soon!

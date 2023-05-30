@@ -64,6 +64,7 @@ repository = "https://github.com/dennisbrookner/matchmaps"
 [project.scripts]
 matchmaps = "matchmaps._compute_realspace_diff:main"
 "matchmaps.ncs" = "matchmaps._compute_ncs_diff:main"
+"matchmaps.mr" = "matchmaps._compute_mr_diff:main"
 
 # Entry points
 # https://peps.python.org/pep-0621/#entry-points
