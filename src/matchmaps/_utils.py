@@ -494,33 +494,57 @@ phaser {
 
 def _restore_ligand_occupancy(
     pdb_to_be_restored,
-    # original_pdb, # maybe support non-100% occupancies someday
-    ligands,
+    original_pdb,
     output_dir,
 ):
     # do stuff
     # replace with actual logical about ligands being present
-    if len(ligands) == 0:
-        edited_pdb = pdb_to_be_restored
+    # if len(ligands) == 0:
+    #     edited_pdb = pdb_to_be_restored
 
-    else:
-        edited_pdb = pdb_to_be_restored.removesuffix(".pdb") + "_restoreligs"
+    # else:
+    #     edited_pdb = pdb_to_be_restored.removesuffix(".pdb") + "_restoreligs"
 
-        ligand_names = [f"resname {l.removesuffix('.cif')}" for l in ligands]
-        selection = " or ".join(ligand_names)
+    #     ligand_names = [f"resname {l.removesuffix('.cif')}" for l in ligands]
+    #     selection = " or ".join(ligand_names)
 
-        print(ligand_names)
-        print(selection)
+    #     print(ligand_names)
+    #     print(selection)
 
-        subprocess.run(
-            f"phenix.pdbtools {output_dir}/{pdb_to_be_restored} \
-                output.prefix='{output_dir}'  output.suffix='{edited_pdb}'\
-                modify.selection='{selection}' modify.occupancies.set=1",
-            shell=True,
-            capture_output=True,
-        )
+    #     subprocess.run(
+    #         f"phenix.pdbtools {output_dir}/{pdb_to_be_restored} \
+    #             output.prefix='{output_dir}'  output.suffix='{edited_pdb}'\
+    #             modify.selection='{selection}' modify.occupancies.set=1",
+    #         shell=True,
+    #         capture_output=True,
+    #     )
+    
+    # grab occupancies of all HETATMs in original_pdb
+    with open(output_dir + original_pdb, 'r') as o:
+        original = o.readlines()
+    original_hetatm = []
+    for l in original:
+        if ("HETATM" in l) and (not "REMARK" in l):
+            original_hetatm.append(l)
+    original_occs = [h[56:60] for h in original_hetatm]
+    print(len(original_occs))
+    
+    with open(output_dir + pdb_to_be_restored, 'r') as p:
+        pdb = p.readlines()
+    pdb_hetatm = []
+    n = 0
+    for i in range(len(pdb)):
+        if ("HETATM" in pdb[i]) and (not "REMARK" in pdb[i]):
+            print(i, n)
+            pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
+            n += 1
 
-    return edited_pdb + ".pdb"
+    edited_pdb = original_pdb.removesuffix('.pdb') + '_restorehetatms.pdb'
+    
+    with open(output_dir + edited_pdb, 'w') as output:
+        output.write(''.join(pdb))
+       
+    return edited_pdb
 
 
 def _realspace_align_and_subtract(
