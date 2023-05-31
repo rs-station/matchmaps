@@ -1,4 +1,4 @@
-"""Compute unbiased real space difference map."""
+"""Compute unbiased real space difference map from inputs in different spacegroups"""
 
 import argparse
 import os
@@ -17,12 +17,13 @@ from matchmaps._utils import (
     rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
-    _renumber_waters,
-    # _clean_up_files,
+    _remove_waters,
+    _restore_ligand_occupancy,
+    phaser_wrapper,
 )
 
 
-def compute_realspace_difference_map(
+def compute_mr_difference_map(
     pdboff,
     mtzoff,
     mtzon,
@@ -41,14 +42,14 @@ def compute_realspace_difference_map(
     eff=None,
 ):
     """
-    Compute a real-space difference map from mtzs.
+    Compute a real-space difference map from mtzs in different spacegroups.
 
     Parameters
     ----------
     pdboff : string
-        Name of input .pdb file to use for phasing
+        Name of input .pdb file to use for phasing and as an MR search model
     mtzoff : string
-        Name of input .mtz file containing 'off' data
+        Name of input .mtz containing 'off data
     mtzon : string
         Name of input .mtz file containing 'off' data
     Foff : string
@@ -69,6 +70,7 @@ def compute_realspace_difference_map(
         Approximate size of real-space voxels in Angstroms, by default 0.5 A
     on_as_stationary : bool, optional
         If True, align "off" data onto "on" data, by default False
+        Note that this applies only to post-molecular-replacement refinement, not to molecular replacement itself.
     input_dir : str, optional
         Path to directory containing input files, by default "./" (current directory)
     output_dir : str, optional
@@ -83,6 +85,7 @@ def compute_realspace_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
+
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
 
@@ -97,35 +100,51 @@ def compute_realspace_difference_map(
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
-    mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
-
-    print(
-        f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data..."
-    )
-
-    subprocess.run(
-        f"rs.scaleit -r {input_dir}/{mtzoff} {Foff} {SigFoff} -i {input_dir}/{mtzon} {Fon} {SigFon} -o {output_dir}/{mtzon_scaled}",
-        shell=True,
-        capture_output=(not verbose),
-    )
+    # this is where scaling takes place in the usual pipeline, but that doesn't make sense with different-spacegroup inputs
+    # side note: I need to test the importance of scaling even in the normal case!! Might be more artifact than good, who knows
 
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
-    pdboff = _renumber_waters(pdboff, output_dir)
+    # write this function as a wrapper around phenix.pdbtools
+    # modified pdboff already moved to output_dir by _handle_special_positions
+    pdboff = _remove_waters(pdboff, output_dir)
 
-    mtzon = mtzon_scaled
+    print(
+        f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data..."
+    )
 
+    phaser_nickname = phaser_wrapper(
+        mtzfile=mtzon,
+        pdb=pdboff,
+        input_dir=input_dir,
+        output_dir=output_dir,
+        off_labels=f"{Fon},{SigFon}",
+        eff=None,
+        verbose=verbose,
+    )
+
+    # TO-DO: fix ligand occupancies in pdb_mr_to_on
+    edited_mr_pdb = _restore_ligand_occupancy(
+        pdb_to_be_restored=phaser_nickname + ".1.pdb",
+        # original_pdb=pdboff,
+        ligands=ligands,
+        output_dir=output_dir,
+    )
+
+    # the refinement process *should* be identical. Waters are gone already
+    # I just need to make sure that the phaser outputs go together
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 
     nickname_on = rigid_body_refinement_wrapper(
         mtzon=mtzon,
-        pdboff=pdboff,
+        pdboff=edited_mr_pdb,
         input_dir=input_dir,
         output_dir=output_dir,
         ligands=ligands,
         eff=eff,
         verbose=verbose,
         rbr_selections=rbr_phenix,
+        off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -141,6 +160,9 @@ def compute_realspace_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
     )
+
+    # from here down I just copied over the stuff from the normal version
+    # this should be proofread for compatibility but should all work
 
     # read back in the files created by phenix
     # these have knowable names
@@ -209,14 +231,15 @@ def parse_arguments():
     """Parse commandline arguments."""
     parser = argparse.ArgumentParser(
         description=(
-            "Compute a real-space difference map. "
+            "Compute a real-space difference map between inputs in different space groups / crystal packings. "
             "You will need two MTZ files, which will be referred to throughout as 'on' and 'off', "
             "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
             "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
             "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
             "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
             ""
-            "If you'd like to make an internal difference map instead, see matchmaps.ncs "
+            "If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility "
+            "If you'd like to make an internal difference map, see matchmaps.ncs "
         )
     )
 
@@ -241,6 +264,7 @@ def parse_arguments():
         help=(
             "MTZ containing on/bound/excited/bright state data. "
             "Specified as [filename F SigF]"
+            "This file may be in a different spacegroup / crystal packing than mtzoff"
         ),
     )
 
@@ -251,6 +275,7 @@ def parse_arguments():
         help=(
             "Reference pdb corresponding to the off/apo/ground/dark state. "
             "Used for rigid-body refinement of both input MTZs to generate phases."
+            "Should match mtzoff well enough that molecular replacement is not necessary."
         ),
     )
 
@@ -286,6 +311,8 @@ def parse_arguments():
         default=False,
         help=(
             "Include this flag to align 'off' data onto 'on' data. By default, 'off' data is stationary and 'on' data is moved."
+            "For matchmaps.mr, this only applies to the post-molecular-replacement alignment; "
+            "all maps will be placed in the spacegroup of mtzoff."
         ),
     )
 
@@ -318,7 +345,7 @@ def parse_arguments():
         required=False,
         action="store_true",
         default=False,
-        help="Include this flag to print out scaleit and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.",
+        help="Include this flag to print out phenix.phaser and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.",
     )
 
     parser.add_argument(
@@ -329,6 +356,7 @@ def parse_arguments():
         nargs="*",
         help=(
             "Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group. "
+            "For matchmaps.mr, everything will always be molecular replaced as a single rigid-body, but may then be refined as multiple rigid bodies."
         ),
     )
 
@@ -352,7 +380,7 @@ def main():
     if not os.path.exists(args.input_dir):
         raise ValueError(f"Input directory '{args.input_dir}' does not exist")
 
-    compute_realspace_difference_map(
+    compute_mr_difference_map(
         pdboff=args.pdboff,
         ligands=args.ligands,
         mtzoff=args.mtzoff[0],

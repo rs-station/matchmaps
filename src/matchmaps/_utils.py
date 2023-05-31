@@ -5,6 +5,7 @@ Functions make_floatgrid_from_mtz, rigid_body_refinement_wrapper, and align_grid
 are exported to python for use in prototyping and testing
 """
 
+import os
 import glob
 import shutil
 import subprocess
@@ -228,12 +229,23 @@ refinement {
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
 
     # check existing files because phenix doesn't like to overwrite things
+
+    # number = _find_available_suffix(prefix=f"{output_dir}/{nickname}_", suffix='_1.*')
+    # nickname += f'_{number}'
+
     similar_files = glob.glob(f"{output_dir}/{nickname}_[0-9]_1.*")
     if len(similar_files) == 0:
         nickname += "_0"
     else:
-        n = max([int(s.split("_")[-2]) for s in similar_files])
-        nickname += f"_{n+1}"
+        # n = max([int(s.split("_")[-2]) for s in similar_files])
+        # nickname += f"_{n+1}"
+        nums = []
+        for s in similar_files:
+            try:
+                nums.append(int(s.split("_")[-2]))
+            except ValueError:
+                pass
+        nickname += f"_{max(nums)+1}"
 
     # read in mtz to access cell parameters and spacegroup
     mtz = rs.read_mtz((output_dir if (off_labels is None) else input_dir) + mtzon)
@@ -367,6 +379,172 @@ def _renumber_waters(pdb, dir):
     print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
 
     return pdb_renumbered
+
+
+def _remove_waters(
+    input_pdb,
+    dir,
+):
+    output_pdb = input_pdb.removesuffix(".pdb") + "_dry"
+
+    subprocess.run(
+        f"phenix.pdbtools {dir}/{input_pdb} remove='water' \
+            output.prefix='{dir}/' \
+            output.suffix='{output_pdb}'",
+        shell=True,
+        capture_output=True,
+    )
+
+    return output_pdb + ".pdb"
+
+
+def phaser_wrapper(
+    mtzfile,
+    pdb,
+    input_dir,
+    output_dir,
+    off_labels,
+    eff=None,
+    verbose=False,
+):
+    """
+    Handle simple phaser run from the command line
+    """
+
+    if shutil.which("phenix.phaser") is None:
+        raise OSError(
+            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
+        )
+
+    if eff is None:
+        eff_contents = """
+phaser {
+  mode = ANO CCA EP_AUTO *MR_AUTO MR_FRF MR_FTF MR_PAK MR_RNP NMAXYZ SCEDS
+  hklin = mtz_input
+  labin = labels
+  model = pdb_input
+  model_identity = 100
+  component_copies = 1
+  search_copies = 1
+  chain_type = *protein dna rna
+  crystal_symmetry {
+    unit_cell = cell_parameters
+    space_group = sg
+  }
+  keywords {
+    general {
+      root = '''nickname'''
+      title = '''matchmaps_MR'''
+      mute = None
+      xyzout = True
+      xyzout_ensemble = True
+      hklout = True
+      jobs = 6
+    }
+  }
+}
+        """
+    else:
+        raise NotImplementedError("Custom phaser specifications are not yet supported")
+
+    nickname = f"{mtzfile.removesuffix('.mtz')}_phased_with_{pdb.removesuffix('.pdb')}"
+
+    similar_files = glob.glob(f"{output_dir}/{nickname}_*")
+    if len(similar_files) == 0:
+        nickname += "_0"
+    else:
+        nums = []
+        for s in similar_files:
+            try:
+                nums.append(int(s.split("_")[-1].split(".")[0]))
+            except ValueError:
+                pass
+        # n = max([int(s.split("_")[-1].split(".")[0]) for s in similar_files])
+        nickname += f"_{max(nums)+1}"
+
+    mtz = rs.read_mtz(input_dir + mtzfile)
+    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
+    sg = mtz.spacegroup.short_name()
+
+    eff = f"{output_dir}/params_{nickname}.eff"
+
+    params = {
+        "sg": sg,
+        "cell_parameters": cell_string,
+        "pdb_input": output_dir + pdb,
+        "mtz_input": input_dir + mtzfile,
+        "nickname": output_dir + nickname,
+        "labels": off_labels,  # should be prepackaged as a string
+    }
+
+    for key, value in params.items():
+        eff_contents = eff_contents.replace(key, value)
+
+    with open(eff, "w") as file:
+        file.write(eff_contents)
+
+    subprocess.run(
+        f"phenix.phaser {eff}",
+        shell=True,
+        capture_output=(not verbose),
+    )
+
+    return nickname
+
+
+def _restore_ligand_occupancy(
+    pdb_to_be_restored,
+    original_pdb,
+    output_dir,
+):
+    # do stuff
+    # replace with actual logical about ligands being present
+    # if len(ligands) == 0:
+    #     edited_pdb = pdb_to_be_restored
+
+    # else:
+    #     edited_pdb = pdb_to_be_restored.removesuffix(".pdb") + "_restoreligs"
+
+    #     ligand_names = [f"resname {l.removesuffix('.cif')}" for l in ligands]
+    #     selection = " or ".join(ligand_names)
+
+    #     print(ligand_names)
+    #     print(selection)
+
+    #     subprocess.run(
+    #         f"phenix.pdbtools {output_dir}/{pdb_to_be_restored} \
+    #             output.prefix='{output_dir}'  output.suffix='{edited_pdb}'\
+    #             modify.selection='{selection}' modify.occupancies.set=1",
+    #         shell=True,
+    #         capture_output=True,
+    #     )
+
+    # grab occupancies of all HETATMs in original_pdb
+    with open(output_dir + original_pdb, "r") as o:
+        original = o.readlines()
+    original_hetatm = []
+    for l in original:
+        if ("HETATM" in l) and (not "REMARK" in l):
+            original_hetatm.append(l)
+    original_occs = [h[56:60] for h in original_hetatm]
+    print(len(original_occs))
+
+    with open(output_dir + pdb_to_be_restored, "r") as p:
+        pdb = p.readlines()
+    pdb_hetatm = []
+    n = 0
+    for i in range(len(pdb)):
+        if ("HETATM" in pdb[i]) and (not "REMARK" in pdb[i]):
+            print(i, n)
+            pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
+            n += 1
+
+    edited_pdb = original_pdb.removesuffix(".pdb") + "_restorehetatms.pdb"
+
+    with open(output_dir + edited_pdb, "w") as output:
+        output.write("".join(pdb))
+
+    return edited_pdb
 
 
 def _realspace_align_and_subtract(
@@ -655,7 +833,9 @@ def _ncs_align_and_subtract(
     )
 
     write_maps(fg.array, f"{output_dir}/{name}_{ncs_chains[0]}.map")
-    write_maps(fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}.map")
+    write_maps(
+        fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}_onto_{ncs_chains[0]}.map"
+    )
 
     write_maps(
         fg2.array - fg.array,
@@ -669,3 +849,58 @@ def _ncs_align_and_subtract(
 
 def _quicknorm(array):
     return (array - array.mean()) / array.std()
+
+
+def _phaser_wrapper(
+    mtz,
+    pdb,
+    input_dir,
+    output_dir,
+    eff=None,
+    verbose=False,
+    ncopies=1,
+):
+    # confirm that phenix is active in the command-line environment
+    if shutil.which("phenix.phaser") is None:
+        raise OSError(
+            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
+        )
+
+    # if eff is None:
+    #     eff_contents = """
+
+    # """
+    return
+
+
+def _find_available_dirname(prefix):
+    existing = glob.glob(f"{prefix}_[0-9]/")
+
+    if len(existing) == 0:
+        new_suffix = "0"
+    else:
+        n = max([int(s.split("_")[-1].removesuffix("/")) for s in existing])
+        new_suffix = f"{n+1}"
+
+    return new_suffix
+
+    # def _clean_up_files(output_dir, prefix, mode='vanilla'):
+    """
+    I know exactly what files are produced by the vanilla version:
+
+
+    """
+
+
+#     n = _find_available_dirname(prefix='matchmapsfiles')
+#     cleanup_dir = f"{output_dir}/matchmaps_{n}"
+
+#     os.makedirs(cleanup_dir)
+
+#     files_to_move = []
+
+
+#     # for suffix in ()
+#     files_to_move.append(glob.glob(output_dir + ))
+
+#     return
