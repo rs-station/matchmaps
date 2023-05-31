@@ -31,9 +31,13 @@ source /path/to/phenix/phenix_env.sh
 
 At this point, you should be good to go! Please [file an issue on github](https://github.com/dennisbrookner/matchmaps/issues) is this is not working.
 
-## Using matchmaps
+## Using `matchmaps`
 
-Read about [using `matchmaps` in the command-line](cli.md)
+`matchmaps` consists of three command-line utilities. Usage for all three is documented [here](cli.md). All three produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:
+
+ - **`matchmaps`** takes in two mtzs containing similar data and which are nearly isomorphous and computes an unbiased real-space difference map between them
+ - **`matchmaps.mr`** takes in two mtzs containing similar data but which are in different spacegroups (or the same spacegroup but different crystal packing) and computes an unbiased real-space difference map between them.
+ - **`matchmaps.mr`** takes in a single mtz and computes an internal difference map across a defined non-crystallographic symmetry present in the data.
 
 ```{eval-rst}
 .. toctree::

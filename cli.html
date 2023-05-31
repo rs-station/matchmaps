@@ -21,7 +21,7 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="About the `matchmaps algorithm" href="about.html" />
+    <link rel="next" title="About the matchmaps algorithm" href="about.html" />
     <link rel="prev" title="matchmaps’s Documentation" href="index.html" /> 
 </head>
 
@@ -48,6 +48,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Command-line usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#matchmaps">matchmaps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#matchmaps-ncs">matchmaps.ncs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matchmaps-mr">matchmaps.mr</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
@@ -259,6 +260,96 @@
 </dd></dl>
 
 </section>
+<section id="matchmaps-mr">
+<h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Permalink to this heading"></a></h2>
+<p>Compute a real-space difference map between inputs in different space groups / crystal packings. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility If you’d like to make an internal difference map, see matchmaps.ncs</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.mr [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon</span>
+<span class="go">                    Fon SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
+<span class="go">                    [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
+<span class="go">                    [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
+<span class="go">                    [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
+<span class="go">                    [--eff EFF]</span>
+</pre></div>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-h">
+<span id="cmdoption-matchmaps-mr-h"></span><span id="cmdoption-matchmaps.mr-help"></span><span id="cmdoption-matchmaps-mr-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-h" title="Permalink to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-mtzoff">
+<span id="cmdoption-matchmaps-mr-mtzoff"></span><span id="cmdoption-matchmaps.mr-f"></span><span id="cmdoption-matchmaps-mr-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzoff" title="Permalink to this definition"></a></dt>
+<dd><p>MTZ containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-mtzon">
+<span id="cmdoption-matchmaps-mr-mtzon"></span><span id="cmdoption-matchmaps.mr-n"></span><span id="cmdoption-matchmaps-mr-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzon" title="Permalink to this definition"></a></dt>
+<dd><p>MTZ containing on/bound/excited/bright state data. Specified as [filename F SigF]This file may be in a different spacegroup / crystal packing than mtzoff</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-pdboff">
+<span id="cmdoption-matchmaps-mr-pdboff"></span><span id="cmdoption-matchmaps.mr-p"></span><span id="cmdoption-matchmaps-mr-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-pdboff" title="Permalink to this definition"></a></dt>
+<dd><p>Reference pdb corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.Should match mtzoff well enough that molecular replacement is not necessary.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-ligands">
+<span id="cmdoption-matchmaps-mr-ligands"></span><span id="cmdoption-matchmaps.mr-l"></span><span id="cmdoption-matchmaps-mr-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-ligands" title="Permalink to this definition"></a></dt>
+<dd><p>Any .cif restraint files needed for refinement</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-input-dir">
+<span id="cmdoption-matchmaps-mr-input-dir"></span><span id="cmdoption-matchmaps.mr-i"></span><span id="cmdoption-matchmaps-mr-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-input-dir" title="Permalink to this definition"></a></dt>
+<dd><p>Path to input mtzs and pdb. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-output-dir">
+<span id="cmdoption-matchmaps-mr-output-dir"></span><span id="cmdoption-matchmaps.mr-o"></span><span id="cmdoption-matchmaps-mr-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-output-dir" title="Permalink to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-on-as-stationary">
+<span id="cmdoption-matchmaps-mr-on-as-stationary"></span><span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-on-as-stationary" title="Permalink to this definition"></a></dt>
+<dd><p>Include this flag to align ‘off’ data onto ‘on’ data. By default, ‘off’ data is stationary and ‘on’ data is moved.For matchmaps.mr, this only applies to the post-molecular-replacement alignment; all maps will be placed in the spacegroup of mtzoff.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-spacing">
+<span id="cmdoption-matchmaps-mr-spacing"></span><span id="cmdoption-matchmaps.mr-s"></span><span id="cmdoption-matchmaps-mr-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-spacing" title="Permalink to this definition"></a></dt>
+<dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-dmin">
+<span id="cmdoption-matchmaps-mr-dmin"></span><span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-dmin" title="Permalink to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-verbose">
+<span id="cmdoption-matchmaps-mr-verbose"></span><span id="cmdoption-matchmaps.mr-v"></span><span id="cmdoption-matchmaps-mr-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-verbose" title="Permalink to this definition"></a></dt>
+<dd><p>Include this flag to print out phenix.phaser and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-rbr-selections">
+<span id="cmdoption-matchmaps-mr-rbr-selections"></span><span id="cmdoption-matchmaps.mr-r"></span><span id="cmdoption-matchmaps-mr-r"></span><span class="sig-name descname"><span class="pre">--rbr-selections</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-rbr-selections" title="Permalink to this definition"></a></dt>
+<dd><p>Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group. For matchmaps.mr, everything will always be molecular replaced as a single rigid-body, but may then be refined as multiple rigid bodies.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-eff">
+<span id="cmdoption-matchmaps-mr-eff"></span><span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-eff" title="Permalink to this definition"></a></dt>
+<dd><p>Custom .eff template for running phenix.refine.</p>
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -266,7 +357,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="matchmaps’s Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="about.html" class="btn btn-neutral float-right" title="About the `matchmaps algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="about.html" class="btn btn-neutral float-right" title="About the matchmaps algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

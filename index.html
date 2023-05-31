@@ -103,8 +103,13 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 </section>
 </section>
 <section id="using-matchmaps">
-<h2>Using matchmaps<a class="headerlink" href="#using-matchmaps" title="Permalink to this heading"></a></h2>
-<p>Read about <a class="reference internal" href="cli.html"><span class="std std-doc">using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> in the command-line</span></a></p>
+<h2>Using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code><a class="headerlink" href="#using-matchmaps" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three command-line utilities. Usage for all three is documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code></strong> takes in two mtzs containing similar data and which are nearly isomorphous and computes an unbiased real-space difference map between them</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></strong> takes in two mtzs containing similar data but which are in different spacegroups (or the same spacegroup but different crystal packing) and computes an unbiased real-space difference map between them.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></strong> takes in a single mtz and computes an internal difference map across a defined non-crystallographic symmetry present in the data.</p></li>
+</ul>
 <div class="toctree-wrapper compound">
 </div>
 </section>
