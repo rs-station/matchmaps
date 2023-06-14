@@ -519,9 +519,9 @@ def _restore_ligand_occupancy(
     #         shell=True,
     #         capture_output=True,
     #     )
-    
+
     # grab occupancies of all HETATMs in original_pdb
-    with open(output_dir + original_pdb, 'r') as o:
+    with open(output_dir + original_pdb, "r") as o:
         original = o.readlines()
     original_hetatm = []
     for l in original:
@@ -529,8 +529,8 @@ def _restore_ligand_occupancy(
             original_hetatm.append(l)
     original_occs = [h[56:60] for h in original_hetatm]
     print(len(original_occs))
-    
-    with open(output_dir + pdb_to_be_restored, 'r') as p:
+
+    with open(output_dir + pdb_to_be_restored, "r") as p:
         pdb = p.readlines()
     pdb_hetatm = []
     n = 0
@@ -539,11 +539,11 @@ def _restore_ligand_occupancy(
             pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
             n += 1
 
-    edited_pdb = original_pdb.removesuffix('.pdb') + '_restorehetatms.pdb'
-    
-    with open(output_dir + edited_pdb, 'w') as output:
-        output.write(''.join(pdb))
-       
+    edited_pdb = original_pdb.removesuffix(".pdb") + "_restorehetatms.pdb"
+
+    with open(output_dir + edited_pdb, "w") as output:
+        output.write("".join(pdb))
+
     return edited_pdb
 
 
