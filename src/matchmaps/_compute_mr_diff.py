@@ -145,7 +145,7 @@ def compute_mr_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
-        mr_naming=True
+        mr_naming=True,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
