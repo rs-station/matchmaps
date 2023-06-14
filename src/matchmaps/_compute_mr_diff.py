@@ -126,8 +126,8 @@ def compute_mr_difference_map(
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
         pdb_to_be_restored=phaser_nickname + ".1.pdb",
-        # original_pdb=pdboff,
-        ligands=ligands,
+        original_pdb=pdboff,
+        # ligands=ligands,
         output_dir=output_dir,
     )
 
@@ -145,6 +145,7 @@ def compute_mr_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
+        mr_naming=True,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")

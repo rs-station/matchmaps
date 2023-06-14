@@ -161,6 +161,7 @@ def rigid_body_refinement_wrapper(
     eff=None,
     verbose=False,
     rbr_selections=None,
+    mr_naming=False,
 ):
     # confirm that phenix is active in the command-line environment
     if shutil.which("phenix.refine") is None:
@@ -223,7 +224,7 @@ refinement {
         with open(input_dir + eff) as file:
             eff_contents = file.read()
 
-    if off_labels is None:
+    if (off_labels is None) or (mr_naming):
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_{pdboff.removesuffix('.pdb')}"
     else:
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
@@ -535,7 +536,6 @@ def _restore_ligand_occupancy(
     n = 0
     for i in range(len(pdb)):
         if ("HETATM" in pdb[i]) and (not "REMARK" in pdb[i]):
-            print(i, n)
             pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
             n += 1
 
