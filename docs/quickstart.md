@@ -51,7 +51,7 @@ Throughout this documentation, we will assume to be working with a pair of datas
 
 ## Basic usage
 
-If the above files are in your current directory, and you would like to write output files into your current directory, then you only need three arguments: `--mtzoff`, `--mtzon`, and `--pdboff`. For example:   
+If the above files are in your current directory, and you would like to write output files into your current directory, then you only need three arguments: `--mtzoff`, `--mtzon`, and `--pdboff`. For example:
 
 ```bash
 matchmaps --mtzoff apo_data.mtz Fobs SIGFobs --mtzon bound_data.mtz Fobs SIGFobs --pdboff apo.pdb
@@ -78,7 +78,7 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
 
 ## Other useful options
 
- - `--on-as-stationary`: The `matchmaps` algorithm always involves an alignment in real-space of the "on" and "off" maps. By default, the "off" map is stationary, and the "on" map is moved. This is typically desired, such that everything lines up with your "off" structural model. However, say that your structures are "apo" and "bound", and you would like to line up your maps with a "bound" structure (which you never have to supply to `matchmaps`!). In this case, you could use the `--on-as-stationary` flag. 
+ - `--on-as-stationary`: The `matchmaps` algorithm always involves an alignment in real-space of the "on" and "off" maps. By default, the "off" map is stationary, and the "on" map is moved. This is typically desired, such that everything lines up with your "off" structural model. However, say that your structures are "apo" and "bound", and you would like to line up your maps with a "bound" structure (which you never have to supply to `matchmaps`!). In this case, you could use the `--on-as-stationary` flag.
  - `--dimin`: The input `mtz` files are used without truncation during refinement. Then, prior to the Fourier transform to create real-space maps, the higher-resolution `mtz` is truncated such that the resolutions match. You can optionally truncate even more stringently using the `--dmin` flag.
  - `--spacing`: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.
  - `--verbose`: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it's very annoying, but it can be useful for debugging purposes.
@@ -100,13 +100,13 @@ Let's assume that your input files are called `off.mtz` and `on.mtz`. The follow
  - `on_before.map` / `off_before.map`: The real-space maps, prior to alignment. These maps may be useful a) if you're curious how much alignment was necessary, or b) to troubleshoot where in the pipeline something went wrong.
 
 Additionally, `matchmaps` produces ~15 other files which are unlikely to be useful. At some point in the future, there may be an option to either "clean up" these files or move them to a different directory.
-  
-Note that if you re-run `matchmaps` into the same output directory, the `.map` output files ***will*** be overwritten. 
+
+Note that if you re-run `matchmaps` into the same output directory, the `.map` output files ***will*** be overwritten.
 
 ### Working with `.map` files in Coot
 
 If you have experience with cryo-EM, you're probably familiar with `.map`/`.CCP4`/`.mrc` real-space map files. But if you're a crystallographer, you might not have worked with these at all! Crystallographers typically just open `.mtz` files directly in a software (like coot or PyMOL) that does the Fourier transform and computes the map "on the fly". But here you are, working with `matchmaps`, which by design produces real-space outputs.
-  
+
 `.map` files should be opened in Coot via "File > Open Map...":
 
 ![Open Map...](images/openmap.png)

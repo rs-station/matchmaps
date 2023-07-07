@@ -21,5 +21,5 @@ The [quickstart guide](quickstart.md) contains installation instructions and sam
    Quickstart guide <quickstart>
    Command-line options <cli>
    About the algorithm <about>
-    
+
 ```
