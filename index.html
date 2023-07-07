@@ -21,7 +21,7 @@
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="matchmaps command-line interface" href="cli.html" /> 
+    <link rel="next" title="Getting started with matchmaps" href="quickstart.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,7 +44,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
 </ul>
 
@@ -75,40 +76,14 @@
   <section class="tex2jax_ignore mathjax_ignore" id="matchmapss-documentation">
 <h1>matchmaps’s Documentation<a class="headerlink" href="#matchmapss-documentation" title="Permalink to this heading"></a></h1>
 <p>Welcome to the docs for <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, a python package for aligning and subtracting non-isomorphous crystallographic datasets. Do you have a pair of datasets for which an isomorphous difference maps doesn’t quite work due to changes in your unit cell dimensions? If so, this is the package for you.</p>
-<section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
-<p>The python dependencies for <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>matchmaps
-</pre></div>
-</div>
-<p>I recommend that you use a package manager such as <a class="reference external" href="https://docs.conda.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">conda</span></code></a> and always install into a fresh environment, e.g.:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>my-matchmaps-env
-conda<span class="w"> </span>activate<span class="w"> </span>my-matchmaps-env
-pip<span class="w"> </span>install<span class="w"> </span>matchmaps
-</pre></div>
-</div>
-<section id="additional-dependencies">
-<h3>Additional dependencies<a class="headerlink" href="#additional-dependencies" title="Permalink to this heading"></a></h3>
-<p>Though <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is a python package, it relies on two pieces of external software that are not (yet!) <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable. If they do become <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable in the future, I will excitedly update this package and save you the trouble. For the time being, you will need to install:</p>
-<ul class="simple">
-<li><p><a class="reference external" href="https://www.ccp4.ac.uk/download/#os=mac">ccp4</a></p></li>
-<li><p><a class="reference external" href="https://phenix-online.org/documentation/install-setup-run.html">phenix</a></p></li>
-</ul>
-<p>When actually using <code class="docutils literal notranslate"><span class="pre">mapreg</span></code> in the command-line, you’ll need to have both ccp4 and phenix active. Doing that will look something like:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/path/to/phenix/phenix_env.sh
-/path/to/ccp4/start
-</pre></div>
-</div>
-<p>At this point, you should be good to go! Please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue on github</a> is this is not working.</p>
-</section>
-</section>
-<section id="using-matchmaps">
-<h2>Using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code><a class="headerlink" href="#using-matchmaps" title="Permalink to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three command-line utilities. Usage for all three is documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
+<p>The <a class="reference internal" href="quickstart.html"><span class="std std-doc">quickstart guide</span></a> contains installation instructions and sample usage of the basic <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> utility, along with other useful tips.</p>
+<section id="the-matchmaps-functions-in-brief">
+<h2>The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> functions in brief<a class="headerlink" href="#the-matchmaps-functions-in-brief" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three command-line utilities. All options for all three utilites are documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code></strong> takes in two mtzs containing similar data and which are nearly isomorphous and computes an unbiased real-space difference map between them</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></strong> takes in two mtzs containing similar data but which are in different spacegroups (or the same spacegroup but different crystal packing) and computes an unbiased real-space difference map between them.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></strong> takes in a single mtz and computes an internal difference map across a defined non-crystallographic symmetry present in the data.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code></strong> takes in a single mtz and computes an internal difference map across a defined non-crystallographic symmetry present in the data.</p></li>
 </ul>
 <div class="toctree-wrapper compound">
 </div>
@@ -119,7 +94,7 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cli.html" class="btn btn-neutral float-right" title="matchmaps command-line interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="quickstart.html" class="btn btn-neutral float-right" title="Getting started with matchmaps" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

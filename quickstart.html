@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Getting started with matchmaps &mdash; matchmaps</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="matchmaps command-line interface" href="cli.html" />
+    <link rel="prev" title="matchmaps’s Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            matchmaps
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#additional-dependencies">Additional dependencies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#input-files">Input files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#a-note-on-on-and-off-data">A note on “on” and “off” data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#other-useful-options">Other useful options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-files">Output files</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#important-map-outputs">Important <code class="docutils literal notranslate"><span class="pre">.map</span></code> outputs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#working-with-map-files-in-coot">Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in Coot</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">matchmaps</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Getting started with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code></li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/quickstart.md" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="getting-started-with-matchmaps">
+<h1>Getting started with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code><a class="headerlink" href="#getting-started-with-matchmaps" title="Permalink to this heading"></a></h1>
+<p>On this page, we’ll explore how to use the basic <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> utility and examine its outputs.  Full documation of all options for all three command-line utilities can be found <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a> or by typing the command plus <code class="docutils literal notranslate"><span class="pre">--help</span></code> into the command line.</p>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> and its python dependencies can be installed via <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>matchmaps
+</pre></div>
+</div>
+<p>I recommend that you use a package manager such as <a class="reference external" href="https://docs.conda.io/en/latest/"><code class="docutils literal notranslate"><span class="pre">conda</span></code></a> and always install into a fresh environment, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>my-matchmaps-env
+conda<span class="w"> </span>activate<span class="w"> </span>my-matchmaps-env
+pip<span class="w"> </span>install<span class="w"> </span>matchmaps
+</pre></div>
+</div>
+<section id="additional-dependencies">
+<h3>Additional dependencies<a class="headerlink" href="#additional-dependencies" title="Permalink to this heading"></a></h3>
+<p>Though <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is a python package, it relies on two pieces of external software that are not (yet!) <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable. If they do become <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable in the future, I will excitedly update this package and save you the trouble. For the time being, you will need to install:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.ccp4.ac.uk/download/#os=mac">ccp4</a></p></li>
+<li><p><a class="reference external" href="https://phenix-online.org/documentation/install-setup-run.html">phenix</a></p></li>
+</ul>
+<p>When actually using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> in the command-line, you’ll need to have both ccp4 and phenix active. Doing that will look something like:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/path/to/phenix/phenix_env.sh
+/path/to/ccp4/start
+</pre></div>
+</div>
+<p>At this point, you should be good to go! Please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue on github</a> is this is not working.</p>
+</section>
+</section>
+<section id="input-files">
+<h2>Input files<a class="headerlink" href="#input-files" title="Permalink to this heading"></a></h2>
+<p>To run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, you will need:</p>
+<ul class="simple">
+<li><p>one <code class="docutils literal notranslate"><span class="pre">.pdb</span></code> file containing a refined structural model corresponding to your “off” data.</p></li>
+<li><p>two <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> files corresponding to your “on” and “off” data respectively.</p></li>
+</ul>
+<p>You will also need to know the names of the columns in these <code class="docutils literal notranslate"><span class="pre">mtz</span></code>s containing your observed structure factor amplitudes and uncertainties. Depending on what software you used to produce these files, this may be something like <code class="docutils literal notranslate"><span class="pre">FP</span></code>/<code class="docutils literal notranslate"><span class="pre">SIGFP</span></code>, <code class="docutils literal notranslate"><span class="pre">Fobs</span></code>/<code class="docutils literal notranslate"><span class="pre">SIGFobs</span></code>, or similar. If you don’t know these off-hand, you can figure it out using <a class="reference external" href="https://rs-station.github.io/reciprocalspaceship/"><code class="docutils literal notranslate"><span class="pre">reciprocalspaceship</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">rs.mtzdump</span></code> utility, which is installed along with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>. You can do this right in the command-line as:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rs.mtzdump<span class="w"> </span>mymtz.mtz
+</pre></div>
+</div>
+<p>which will print a summary of the contents of the <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> file.</p>
+<p>Finally, if your structure contains any ligands or solvent for which a restraint file (<code class="docutils literal notranslate"><span class="pre">.cif</span></code>) is needed, you will need those as well.</p>
+<section id="a-note-on-on-and-off-data">
+<h3>A note on “on” and “off” data<a class="headerlink" href="#a-note-on-on-and-off-data" title="Permalink to this heading"></a></h3>
+<p>Throughout this documentation, we will assume to be working with a pair of datasets that differ by some perturbation. These datasets could be apo/bound, light/dark, warm/cold, WT/mutant, etc. We will generalize these perturbations as representing either “off” or “on” data. Importantly, these datasets are not created equal! Your “off” data should be the data for which you have refined structural coordinates. For your “on” data, you do not need to provide a corresponding structure. This is the data which you hope to visualize in a model-bias-free manner.</p>
+</section>
+</section>
+<section id="basic-usage">
+<h2>Basic usage<a class="headerlink" href="#basic-usage" title="Permalink to this heading"></a></h2>
+<p>If the above files are in your current directory, and you would like to write output files into your current directory, then you only need three arguments: <code class="docutils literal notranslate"><span class="pre">--mtzoff</span></code>, <code class="docutils literal notranslate"><span class="pre">--mtzon</span></code>, and <code class="docutils literal notranslate"><span class="pre">--pdboff</span></code>. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>matchmaps<span class="w"> </span>--mtzoff<span class="w"> </span>apo_data.mtz<span class="w"> </span>Fobs<span class="w"> </span>SIGFobs<span class="w"> </span>--mtzon<span class="w"> </span>bound_data.mtz<span class="w"> </span>Fobs<span class="w"> </span>SIGFobs<span class="w"> </span>--pdboff<span class="w"> </span>apo.pdb
+</pre></div>
+</div>
+<p>Any necessary ligand restraints can be added via the <code class="docutils literal notranslate"><span class="pre">--ligands</span></code> flag, e.g.:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>matchmaps<span class="w"> </span>--mtzoff<span class="w"> </span>apo_data.mtz<span class="w"> </span>Fobs<span class="w"> </span>SIGFobs<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mtzon<span class="w"> </span>bound_data.mtz<span class="w"> </span>Fobs<span class="w"> </span>SIGFobs<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--pdboff<span class="w"> </span>apo.pdb<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--ligands<span class="w"> </span>weird_solvent_1.cif<span class="w"> </span>weird_solvent_2.cif
+</pre></div>
+</div>
+<p>If you’d like read or write files from somewhere other than your current directory, you can! Just use the <code class="docutils literal notranslate"><span class="pre">--input-dir</span></code> and <code class="docutils literal notranslate"><span class="pre">--output-dir</span></code> flags. However, note that 1) your input files should all live in the same directory, and 2) you <strong>must</strong> use these flags rather than supplying long relative paths directly to the flags. It is possible that long relative paths will be supported in a future release, but I can’t promise that. An example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>matchmaps<span class="w"> </span>--mtzoff<span class="w"> </span>apo_data.mtz<span class="w"> </span>Fobs<span class="w"> </span>SIGFobs<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mtzon<span class="w"> </span>bound_data.mtz<span class="w"> </span>Fobs<span class="w"> </span>SIGFobs<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--pdboff<span class="w"> </span>apo.pdb<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--input-dir<span class="w"> </span>analysis/matchmaps<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--output-dir<span class="w"> </span>../data/myproject
+</pre></div>
+</div>
+</section>
+<section id="other-useful-options">
+<h2>Other useful options<a class="headerlink" href="#other-useful-options" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code>: The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> algorithm always involves an alignment in real-space of the “on” and “off” maps. By default, the “off” map is stationary, and the “on” map is moved. This is typically desired, such that everything lines up with your “off” structural model. However, say that your structures are “apo” and “bound”, and you would like to line up your maps with a “bound” structure (which you never have to supply to <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>!). In this case, you could use the <code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dimin</span></code>: The input <code class="docutils literal notranslate"><span class="pre">mtz</span></code> files are used without truncation during refinement. Then, prior to the Fourier transform to create real-space maps, the higher-resolution <code class="docutils literal notranslate"><span class="pre">mtz</span></code> is truncated such that the resolutions match. You can optionally truncate even more stringently using the <code class="docutils literal notranslate"><span class="pre">--dmin</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--spacing</span></code>: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it’s very annoying, but it can be useful for debugging purposes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rbr-selections</span></code>: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue</a> if you have any trouble.</p></li>
+</ul>
+<p>Note that most of the command-line options have short and long versions, e.g. <code class="docutils literal notranslate"><span class="pre">-i</span></code> vs. <code class="docutils literal notranslate"><span class="pre">--input-dir</span></code>. For clarity, the long names have been used exclusively on this page. The <a class="reference internal" href="cli.html"><span class="std std-doc">full documentation</span></a> lits all short and long options.</p>
+</section>
+<section id="output-files">
+<h2>Output files<a class="headerlink" href="#output-files" title="Permalink to this heading"></a></h2>
+<p>Below is a quick tour of the output files that <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will produce and what you might want to do with them.</p>
+<section id="important-map-outputs">
+<h3>Important <code class="docutils literal notranslate"><span class="pre">.map</span></code> outputs<a class="headerlink" href="#important-map-outputs" title="Permalink to this heading"></a></h3>
+<p>Let’s assume that your input files are called <code class="docutils literal notranslate"><span class="pre">off.mtz</span></code> and <code class="docutils literal notranslate"><span class="pre">on.mtz</span></code>. The following files created by <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> may be of interest:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">on_minus_off.map</span></code>: This is your difference map! It should contain positive and negative signal in the vicinity of your protein model.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_minus_off_unmasked.map</span></code>: The same as the previous difference map, but before a solvent mask was applied. This file can be useful if you’re expecting signal far (&gt;5 A) away from your protein model. Please note that the behavior of this particular file may change in the near future.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on.map</span></code> / <code class="docutils literal notranslate"><span class="pre">off.map</span></code>: The real-space maps which are subtracted to produce the above difference maps. It is a good idea to open these files and inspect them. They should be generally aligned in space. Any interesting signal you expect to see in a difference map may also be apparent by inspecting these maps. Remember that both of these maps were computed using the “off” model, so structural features of the “off” data are likely to be more prominent.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">on_before.map</span></code> / <code class="docutils literal notranslate"><span class="pre">off_before.map</span></code>: The real-space maps, prior to alignment. These maps may be useful a) if you’re curious how much alignment was necessary, or b) to troubleshoot where in the pipeline something went wrong.</p></li>
+</ul>
+<p>Additionally, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> produces ~15 other files which are unlikely to be useful. At some point in the future, there may be an option to either “clean up” these files or move them to a different directory.</p>
+<p>Note that if you re-run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> into the same output directory, the <code class="docutils literal notranslate"><span class="pre">.map</span></code> output files <em><strong>will</strong></em> be overwritten.</p>
+</section>
+<section id="working-with-map-files-in-coot">
+<h3>Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in Coot<a class="headerlink" href="#working-with-map-files-in-coot" title="Permalink to this heading"></a></h3>
+<p>If you have experience with cryo-EM, you’re probably familiar with <code class="docutils literal notranslate"><span class="pre">.map</span></code>/<code class="docutils literal notranslate"><span class="pre">.CCP4</span></code>/<code class="docutils literal notranslate"><span class="pre">.mrc</span></code> real-space map files. But if you’re a crystallographer, you might not have worked with these at all! Crystallographers typically just open <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> files directly in a software (like coot or PyMOL) that does the Fourier transform and computes the map “on the fly”. But here you are, working with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, which by design produces real-space outputs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">.map</span></code> files should be opened in Coot via “File &gt; Open Map…”:</p>
+<p><img alt="Open Map..." src="_images/openmap.png" /></p>
+<p>If the map you are opening is a difference map, it is essential that you check the option “Is Difference Map” in the bottom left corner of the “Select Map…” dialog. If you don’t do this here, there is no way to do it later; you’ll have to close and reopen the map.</p>
+<p><img alt="Is difference map" src="_images/isdifferencemap.png" /></p>
+<p>Happy difference mapping! From here, working with a <code class="docutils literal notranslate"><span class="pre">.map</span></code> file should be no different than typical work in Coot with an <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> file.</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="matchmaps’s Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="matchmaps command-line interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dennis Brookner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
