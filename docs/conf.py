@@ -159,6 +159,9 @@ html_css_files = [
 html_sourcelink_suffix = ""
 html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
+
+html_favicon = "images/rs-favicon_32x32.png"
+
 # html_theme_options = {
 #     "launch_buttons": {
 #         "binderhub_url": "https://mybinder.org",
