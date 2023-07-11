@@ -66,7 +66,7 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
     --ligands weird_solvent_1.cif weird_solvent_2.cif
 ```
 
-If you'd like read or write files from somewhere other than your current directory, you can! Just use the `--input-dir` and `--output-dir` flags. However, note that 1) your input files should all live in the same directory, and 2) you **must** use these flags rather than supplying long relative paths directly to the flags. It is possible that long relative paths will be supported in a future release, but I can't promise that. An example:
+If you'd like read or write files from somewhere other than your current directory, you can! Just use the `--input-dir` and `--output-dir` flags. However, note that 1) your input files should all live in the same directory, and 2) you **must** use these flags rather than supplying a long relative path directly as the filename. It is possible that long relative paths will be supported in a future release, but I can't promise that. An example:
 
 ```bash
 matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
@@ -79,7 +79,7 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
 ## Other useful options
 
  - `--on-as-stationary`: The `matchmaps` algorithm always involves an alignment in real-space of the "on" and "off" maps. By default, the "off" map is stationary, and the "on" map is moved. This is typically desired, such that everything lines up with your "off" structural model. However, say that your structures are "apo" and "bound", and you would like to line up your maps with a "bound" structure (which you never have to supply to `matchmaps`!). In this case, you could use the `--on-as-stationary` flag.
- - `--dimin`: The input `mtz` files are used without truncation during refinement. Then, prior to the Fourier transform to create real-space maps, the higher-resolution `mtz` is truncated such that the resolutions match. You can optionally truncate even more stringently using the `--dmin` flag.
+ - `--dmin`: The input `mtz` files are used without truncation during refinement. Then, prior to the Fourier transform to create real-space maps, the higher-resolution `mtz` is truncated such that the resolutions match. You can optionally truncate even more stringently using the `--dmin` flag.
  - `--spacing`: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.
  - `--verbose`: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it's very annoying, but it can be useful for debugging purposes.
  - `--rbr-selections`: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please [file an issue](https://github.com/dennisbrookner/matchmaps/issues) if you have any trouble.
