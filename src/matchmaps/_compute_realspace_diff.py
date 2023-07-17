@@ -108,12 +108,25 @@ def compute_realspace_difference_map(
         shell=True,
         capture_output=(not verbose),
     )
-
+    
+    #### now that scaleit has run, let's swap out the spacegroup from the scaled file
+    mtzon_scaled_py = rs.read_mtz(f'{output_dir}/{mtzon_scaled}')
+    mtzon_original_py = rs.read_mtz(f'{input_dir}/{mtzon}')
+    
+    mtzon_scaled_truecell = mtzon_scaled.removesuffix(".mtz") + "_truecell" + ".mtz"
+    
+    mtzon_scaled_py.cell = mtzon_original_py.cell
+    mtzon_scaled_py.write_mtz(f'{output_dir}/{mtzon_scaled_truecell}')
+    
+    mtzon = mtzon_scaled_truecell
+    
+    print('Did cell swapping!')
+    
+    #### done with cell swapping
+    
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
     pdboff = _renumber_waters(pdboff, output_dir)
-
-    mtzon = mtzon_scaled
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 
