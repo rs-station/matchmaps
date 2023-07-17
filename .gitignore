@@ -109,3 +109,6 @@ src/matchmaps/_version.py
 
 .DS_Store
 .cruft.json
+
+# logo in illustrator
+docs/images/logo.ai
