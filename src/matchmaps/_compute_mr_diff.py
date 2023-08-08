@@ -19,6 +19,7 @@ from matchmaps._utils import (
     _rbr_selection_parser,
     _remove_waters,
     _restore_ligand_occupancy,
+    _validate_environment,
     phaser_wrapper,
 )
 
@@ -85,6 +86,8 @@ def compute_mr_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
+    
+    _validate_environment(ccp4=False)
 
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))

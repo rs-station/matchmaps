@@ -17,7 +17,27 @@ import gemmi
 import numpy as np
 import reciprocalspaceship as rs
 
+def _validate_environment(ccp4):
+    """
+    Check if the environment contains phenix (and if necessary, ccp4) and throw a helpful error if not
+    """
 
+    if shutil.which("phenix.refine") is None:
+        raise OSError(
+            "phenix is not active in your current environment. Please activate phenix and try again."
+            "\n"
+            "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
+        )
+        
+    if ccp4:
+        if shutil.which("scaleit") is None:
+            raise OSError(
+                "ccp4 is not active in your current environment. Please activate ccp4 and try again."
+                "\n"
+                "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
+            )
+    
+    
 def _rbr_selection_parser(rbr_selections):
     # end early and return nones if this feature isn't being used
     if rbr_selections is None:
@@ -163,11 +183,6 @@ def rigid_body_refinement_wrapper(
     rbr_selections=None,
     mr_naming=False,
 ):
-    # confirm that phenix is active in the command-line environment
-    if shutil.which("phenix.refine") is None:
-        raise OSError(
-            "Cannot find executable, phenix.refine. Please set up your phenix environment."
-        )
 
     if eff is None:
         eff_contents = """

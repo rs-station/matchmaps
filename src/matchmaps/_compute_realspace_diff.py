@@ -19,6 +19,7 @@ from matchmaps._utils import (
     _rbr_selection_parser,
     _renumber_waters,
     # _clean_up_files,
+    _validate_environment
 )
 
 
@@ -83,6 +84,9 @@ def compute_realspace_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
+    
+    _validate_environment(ccp4=True)
+    
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
 

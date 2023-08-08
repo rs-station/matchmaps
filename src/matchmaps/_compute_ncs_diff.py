@@ -20,6 +20,7 @@ from matchmaps._utils import (
     _rbr_selection_parser,
     _renumber_waters,
     _ncs_align_and_subtract,
+    _validate_environment
 )
 
 
@@ -40,6 +41,8 @@ def compute_ncs_difference_map(
     refine_ncs_separately=False,
     eff=None,
 ):
+    _validate_environment(ccp4=False)
+    
     # make sure directories have a trailing slash!
     if input_dir[-1] != "/":
         input_dir = input_dir + "/"
