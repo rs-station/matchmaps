@@ -113,7 +113,7 @@ def compute_realspace_difference_map(
         capture_output=(not verbose),
     )
     
-    #### now that scaleit has run, let's swap out the spacegroup from the scaled file
+    ## now that scaleit has run, let's swap out the spacegroup from the scaled file
     mtzon_scaled_py = rs.read_mtz(f'{output_dir}/{mtzon_scaled}')
     mtzon_original_py = rs.read_mtz(f'{input_dir}/{mtzon}')
     
@@ -123,10 +123,8 @@ def compute_realspace_difference_map(
     mtzon_scaled_py.write_mtz(f'{output_dir}/{mtzon_scaled_truecell}')
     
     mtzon = mtzon_scaled_truecell
-    
-    print('Did cell swapping!')
-    
-    #### done with cell swapping
+        
+    ## done with cell swapping
     
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
