@@ -101,6 +101,7 @@ def compute_realspace_difference_map(
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
+    ### scaleit
     mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
 
     print(
@@ -116,15 +117,31 @@ def compute_realspace_difference_map(
     ## now that scaleit has run, let's swap out the spacegroup from the scaled file
     mtzon_scaled_py = rs.read_mtz(f'{output_dir}/{mtzon_scaled}')
     mtzon_original_py = rs.read_mtz(f'{input_dir}/{mtzon}')
+    mtzoff_original_py = rs.read_mtz(f'{input_dir}/{mtzoff}')
     
-    mtzon_scaled_truecell = mtzon_scaled.removesuffix(".mtz") + "_truecell" + ".mtz"
+    mtzoff_trunc = mtzoff.removesuffix(".mtz") + "_trunc.mtz"
+    mtzon_scaled_truecell = mtzon_scaled.removesuffix(".mtz") + "_truecell.mtz"
     
     mtzon_scaled_py.cell = mtzon_original_py.cell
+    
+    mtzoff_original_py.compute_dHKL(inplace=True)
+    mtzon_scaled_py.compute_dHKL(inplace=True)
+    
+    # make resolutions match for mtzon_scaled_py and mtzon_original_py
+    resolution = max(
+        mtzoff_original_py["dHKL"].min(),
+        mtzon_scaled_py["dHKL"].min()
+    )
+    mtzoff_original_py = mtzoff_original_py.loc[mtzoff_original_py.dHKL >= resolution]
+    mtzon_scaled_py = mtzon_scaled_py.loc[mtzon_scaled_py.dHKL >= resolution]
+    
+    mtzoff_original_py.write_mtz(f'{output_dir}/{mtzoff_trunc}')
     mtzon_scaled_py.write_mtz(f'{output_dir}/{mtzon_scaled_truecell}')
     
+    # reset short nicknames to the latest files 
     mtzon = mtzon_scaled_truecell
-        
-    ## done with cell swapping
+    mtzoff = mtzoff_trunc
+    ## done with cell swapping and resolution matching
     
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
