@@ -264,7 +264,8 @@ refinement {
         nickname += f"_{max(nums)+1}"
 
     # read in mtz to access cell parameters and spacegroup
-    mtz = rs.read_mtz((output_dir if (off_labels is None) else input_dir) + mtzon)
+    #mtz = rs.read_mtz((output_dir if (off_labels is None) else input_dir) + mtzon)
+    mtz = rs.read_mtz(output_dir + mtzon)
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
@@ -275,7 +276,8 @@ refinement {
         "sg": sg,
         "cell_parameters": cell_string,
         "pdb_input": output_dir + pdboff,
-        "mtz_input": (output_dir if (off_labels is None) else input_dir) + mtzon,
+        "mtz_input": output_dir + mtzon,
+        #"mtz_input": (output_dir if (off_labels is None) else input_dir) + mtzon,
         "nickname": output_dir + nickname,
     }
 
