@@ -17,6 +17,7 @@ import gemmi
 import numpy as np
 import reciprocalspaceship as rs
 
+
 def _validate_environment(ccp4):
     """
     Check if the environment contains phenix (and if necessary, ccp4) and throw a helpful error if not
@@ -28,7 +29,7 @@ def _validate_environment(ccp4):
             "\n"
             "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
         )
-        
+
     if ccp4:
         if shutil.which("scaleit") is None:
             raise OSError(
@@ -36,8 +37,8 @@ def _validate_environment(ccp4):
                 "\n"
                 "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
             )
-    
-    
+
+
 def _rbr_selection_parser(rbr_selections):
     # end early and return nones if this feature isn't being used
     if rbr_selections is None:
@@ -181,9 +182,9 @@ def rigid_body_refinement_wrapper(
     eff=None,
     verbose=False,
     rbr_selections=None,
-    mr_naming=False,
+    mr_on=False,
+    mr_off=False,
 ):
-
     if eff is None:
         eff_contents = """
 refinement {
@@ -239,22 +240,20 @@ refinement {
         with open(input_dir + eff) as file:
             eff_contents = file.read()
 
-    if (off_labels is None) or (mr_naming):
+    if (off_labels is None) or (mr_on):
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_{pdboff.removesuffix('.pdb')}"
     else:
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
 
-    # check existing files because phenix doesn't like to overwrite things
-
-    # number = _find_available_suffix(prefix=f"{output_dir}/{nickname}_", suffix='_1.*')
-    # nickname += f'_{number}'
-
+    #### 
+    # update this logic in the future if matchmaps.mr changes
+    mtz_location = input_dir if (mr_on or mr_off) else output_dir
+    ####
+    
     similar_files = glob.glob(f"{output_dir}/{nickname}_[0-9]_1.*")
     if len(similar_files) == 0:
         nickname += "_0"
     else:
-        # n = max([int(s.split("_")[-2]) for s in similar_files])
-        # nickname += f"_{n+1}"
         nums = []
         for s in similar_files:
             try:
@@ -264,8 +263,7 @@ refinement {
         nickname += f"_{max(nums)+1}"
 
     # read in mtz to access cell parameters and spacegroup
-    #mtz = rs.read_mtz((output_dir if (off_labels is None) else input_dir) + mtzon)
-    mtz = rs.read_mtz(output_dir + mtzon)
+    mtz = rs.read_mtz(mtz_location + mtzon)
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
@@ -276,8 +274,7 @@ refinement {
         "sg": sg,
         "cell_parameters": cell_string,
         "pdb_input": output_dir + pdboff,
-        "mtz_input": output_dir + mtzon,
-        #"mtz_input": (output_dir if (off_labels is None) else input_dir) + mtzon,
+        "mtz_input": mtz_location + mtzon,
         "nickname": output_dir + nickname,
     }
 
