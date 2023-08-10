@@ -70,7 +70,6 @@ def _rbr_selection_parser(rbr_selections):
 
             phe = " or ".join([f"({p})" for p in phenixtemp])
 
-            # gem = [pg[1] for pg in phegem]
             gem = phegem[0][1]
 
             phenix_selections.append(phe)
@@ -245,11 +244,11 @@ refinement {
     else:
         nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
 
-    #### 
+    ####
     # update this logic in the future if matchmaps.mr changes
     mtz_location = input_dir if (mr_on or mr_off) else output_dir
     ####
-    
+
     similar_files = glob.glob(f"{output_dir}/{nickname}_[0-9]_1.*")
     if len(similar_files) == 0:
         nickname += "_0"
@@ -267,7 +266,7 @@ refinement {
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
-    # edit refinement template
+    # name for modified refinement file
     eff = f"{output_dir}/params_{nickname}.eff"
 
     params = {
@@ -281,7 +280,7 @@ refinement {
     if off_labels is None:
         params["columns"] = "FPH1,SIGFPH1"  # names from scaleit output
     else:
-        params["columns"] = off_labels
+        params["columns"] = off_labels # user-provided column nanes
 
     # if selection is not None:
     #     params["all"] = selection  # overwrite atom selection
@@ -330,8 +329,8 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
     ----------
     pdboff : str
         name of input pdb
-    path : str
-        Relative in/out path for files
+    input_dir : str
+    output_dir : str
     """
     pdb = gemmi.read_structure(input_dir + pdboff)
 
@@ -365,7 +364,7 @@ Alternatively, you can remove this atom from your structure altogether and try a
                             )
 
     pdboff_nospecialpositions = pdboff.removesuffix(".pdb") + "_nospecialpositions.pdb"
-
+    
     pdb.write_pdb(output_dir + pdboff_nospecialpositions)
 
     return pdboff_nospecialpositions
@@ -474,7 +473,6 @@ phaser {
                 nums.append(int(s.split("_")[-1].split(".")[0]))
             except ValueError:
                 pass
-        # n = max([int(s.split("_")[-1].split(".")[0]) for s in similar_files])
         nickname += f"_{max(nums)+1}"
 
     mtz = rs.read_mtz(input_dir + mtzfile)
@@ -512,27 +510,6 @@ def _restore_ligand_occupancy(
     original_pdb,
     output_dir,
 ):
-    # do stuff
-    # replace with actual logical about ligands being present
-    # if len(ligands) == 0:
-    #     edited_pdb = pdb_to_be_restored
-
-    # else:
-    #     edited_pdb = pdb_to_be_restored.removesuffix(".pdb") + "_restoreligs"
-
-    #     ligand_names = [f"resname {l.removesuffix('.cif')}" for l in ligands]
-    #     selection = " or ".join(ligand_names)
-
-    #     print(ligand_names)
-    #     print(selection)
-
-    #     subprocess.run(
-    #         f"phenix.pdbtools {output_dir}/{pdb_to_be_restored} \
-    #             output.prefix='{output_dir}'  output.suffix='{edited_pdb}'\
-    #             modify.selection='{selection}' modify.occupancies.set=1",
-    #         shell=True,
-    #         capture_output=True,
-    #     )
 
     # grab occupancies of all HETATMs in original_pdb
     with open(output_dir + original_pdb, "r") as o:
@@ -546,7 +523,6 @@ def _restore_ligand_occupancy(
 
     with open(output_dir + pdb_to_be_restored, "r") as p:
         pdb = p.readlines()
-    pdb_hetatm = []
     n = 0
     for i in range(len(pdb)):
         if ("HETATM" in pdb[i]) and (not "REMARK" in pdb[i]):
@@ -655,7 +631,10 @@ def _realspace_align_and_subtract(
 
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
     masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
-
+    
+    # normalize the difference array
+    
+    
     # and finally, write stuff out
 
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
@@ -865,30 +844,8 @@ def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
 
-def _phaser_wrapper(
-    mtz,
-    pdb,
-    input_dir,
-    output_dir,
-    eff=None,
-    verbose=False,
-    ncopies=1,
-):
-    # confirm that phenix is active in the command-line environment
-    if shutil.which("phenix.phaser") is None:
-        raise OSError(
-            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
-        )
-
-    # if eff is None:
-    #     eff_contents = """
-
-    # """
-    return
-
-
 def _find_available_dirname(prefix):
-    existing = glob.glob(f"{prefix}_[0-9]/")
+    existing = glob.glob(f"{prefix}_[0-9]*/")
 
     if len(existing) == 0:
         new_suffix = "0"
@@ -898,23 +855,23 @@ def _find_available_dirname(prefix):
 
     return new_suffix
 
-    # def _clean_up_files(output_dir, prefix, mode='vanilla'):
-    """
-    I know exactly what files are produced by the vanilla version:
+def _clean_up_files(output_dir, old_files):
+    
+    prefix='matchmapsfiles'
 
+    n = _find_available_dirname(prefix)
+    cleanup_dir = f"{output_dir}/prefix_{n}"
 
-    """
+    os.mkdir(cleanup_dir)
 
-
-#     n = _find_available_dirname(prefix='matchmapsfiles')
-#     cleanup_dir = f"{output_dir}/matchmaps_{n}"
-
-#     os.makedirs(cleanup_dir)
-
-#     files_to_move = []
-
-
-#     # for suffix in ()
-#     files_to_move.append(glob.glob(output_dir + ))
-
-#     return
+    candidate_files = []
+    for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
+        candidate_files.append(glob.glob(output_dir + '*' + suffix))
+        
+    files_to_move = list(filter(
+        lambda x: 
+            x not in old_files, 
+        candidate_files
+        )) 
+    
+    return

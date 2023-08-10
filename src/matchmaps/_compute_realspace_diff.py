@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import glob
 import subprocess
 import time
 from functools import partial
@@ -96,6 +97,8 @@ def compute_realspace_difference_map(
 
     if output_dir[-1] != "/":
         output_dir = output_dir + "/"
+        
+    output_dir_contents = glob.glob(output_dir + "*")
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
