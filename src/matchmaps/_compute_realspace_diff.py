@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import glob
 import subprocess
 import time
 from functools import partial
@@ -19,6 +20,7 @@ from matchmaps._utils import (
     _rbr_selection_parser,
     _renumber_waters,
     # _clean_up_files,
+    _validate_environment
 )
 
 
@@ -83,6 +85,9 @@ def compute_realspace_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
+    
+    _validate_environment(ccp4=True)
+    
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
 
@@ -92,11 +97,14 @@ def compute_realspace_difference_map(
 
     if output_dir[-1] != "/":
         output_dir = output_dir + "/"
+        
+    output_dir_contents = glob.glob(output_dir + "*")
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
+    ### scaleit
     mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
 
     print(
@@ -108,12 +116,39 @@ def compute_realspace_difference_map(
         shell=True,
         capture_output=(not verbose),
     )
-
+    
+    ## now that scaleit has run, let's swap out the spacegroup from the scaled file
+    mtzon_scaled_py = rs.read_mtz(f'{output_dir}/{mtzon_scaled}')
+    mtzon_original_py = rs.read_mtz(f'{input_dir}/{mtzon}')
+    mtzoff_original_py = rs.read_mtz(f'{input_dir}/{mtzoff}')
+    
+    mtzoff_trunc = mtzoff.removesuffix(".mtz") + "_trunc.mtz"
+    mtzon_scaled_truecell = mtzon_scaled.removesuffix(".mtz") + "_truecell.mtz"
+    
+    mtzon_scaled_py.cell = mtzon_original_py.cell
+    
+    mtzoff_original_py.compute_dHKL(inplace=True)
+    mtzon_scaled_py.compute_dHKL(inplace=True)
+    
+    # make resolutions match for mtzon_scaled_py and mtzon_original_py
+    resolution = max(
+        mtzoff_original_py["dHKL"].min(),
+        mtzon_scaled_py["dHKL"].min()
+    )
+    mtzoff_original_py = mtzoff_original_py.loc[mtzoff_original_py.dHKL >= resolution]
+    mtzon_scaled_py = mtzon_scaled_py.loc[mtzon_scaled_py.dHKL >= resolution]
+    
+    mtzoff_original_py.write_mtz(f'{output_dir}/{mtzoff_trunc}')
+    mtzon_scaled_py.write_mtz(f'{output_dir}/{mtzon_scaled_truecell}')
+    
+    # reset short nicknames to the latest files 
+    mtzon = mtzon_scaled_truecell
+    mtzoff = mtzoff_trunc
+    ## done with cell swapping and resolution matching
+    
     pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
     pdboff = _renumber_waters(pdboff, output_dir)
-
-    mtzon = mtzon_scaled
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 

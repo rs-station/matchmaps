@@ -19,6 +19,7 @@ from matchmaps._utils import (
     _rbr_selection_parser,
     _remove_waters,
     _restore_ligand_occupancy,
+    _validate_environment,
     phaser_wrapper,
 )
 
@@ -85,6 +86,8 @@ def compute_mr_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
+    
+    _validate_environment(ccp4=False)
 
     off_name = str(mtzoff.removesuffix(".mtz"))
     on_name = str(mtzon.removesuffix(".mtz"))
@@ -145,7 +148,7 @@ def compute_mr_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
-        mr_naming=True,
+        mr_on=True,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -160,6 +163,7 @@ def compute_mr_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
+        mr_off=True,
     )
 
     # from here down I just copied over the stuff from the normal version
