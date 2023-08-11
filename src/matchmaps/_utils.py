@@ -844,34 +844,34 @@ def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
 
-def _find_available_dirname(prefix):
-    existing = glob.glob(f"{prefix}_[0-9]*/")
+# def _find_available_dirname(prefix):
+#     existing = glob.glob(f"{prefix}_[0-9]*/")
 
-    if len(existing) == 0:
-        new_suffix = "0"
-    else:
-        n = max([int(s.split("_")[-1].removesuffix("/")) for s in existing])
-        new_suffix = f"{n+1}"
+#     if len(existing) == 0:
+#         new_suffix = "0"
+#     else:
+#         n = max([int(s.split("_")[-1].removesuffix("/")) for s in existing])
+#         new_suffix = f"{n+1}"
 
-    return new_suffix
+#     return new_suffix
 
-def _clean_up_files(output_dir, old_files):
+# def _clean_up_files(output_dir, old_files):
     
-    prefix='matchmapsfiles'
+#     prefix='matchmapsfiles'
 
-    n = _find_available_dirname(prefix)
-    cleanup_dir = f"{output_dir}/prefix_{n}"
+#     n = _find_available_dirname(prefix)
+#     cleanup_dir = f"{output_dir}/prefix_{n}"
 
-    os.mkdir(cleanup_dir)
+#     os.mkdir(cleanup_dir)
 
-    candidate_files = []
-    for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
-        candidate_files.append(glob.glob(output_dir + '*' + suffix))
+#     candidate_files = []
+#     for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
+#         candidate_files.append(glob.glob(output_dir + '*' + suffix))
         
-    files_to_move = list(filter(
-        lambda x: 
-            x not in old_files, 
-        candidate_files
-        )) 
-    
-    return
+#     files_to_move = list(filter(
+#         lambda x: 
+#             x not in old_files, 
+#         candidate_files
+#         )) 
+
+#     return
