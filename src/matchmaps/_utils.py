@@ -825,14 +825,14 @@ def _ncs_align_and_subtract(
         rs.io.write_ccp4_map, cell=fg.unit_cell, spacegroup=fg.spacegroup
     )
 
-    write_maps(fg.array, f"{output_dir}/{name}_{ncs_chains[0]}.map")
+    write_maps(fg.array, str(output_dir / (name + "_" + ncs_chains[0] + ".map")))
     write_maps(
-        fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}_onto_{ncs_chains[0]}.map"
+        fg2.array, str(output_dir / (name + "_" + ncs_chains[1] + "_onto_" + ncs_chains[0] + ".map"))
     )
 
     write_maps(
         fg2.array - fg.array,
-        f"{output_dir}/{name}_{ncs_chains[1]}_minus_{ncs_chains[0]}.map",
+       str(output_dir / (name + "_" + ncs_chains[1] + "_minus_" + ncs_chains[0] + ".map"))
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
@@ -857,19 +857,21 @@ def _validate_inputs(
 
     if not input_dir.exists():
         raise ValueError(f"Input directory '{input_dir}' does not exist")
+    
+    if ligands is not None:
+        ligands = [Path(ligand) for ligand in ligands]
+        
+        ligands = [ligand if ligand.is_absolute() else input_dir/ligand
+                for ligand in ligands]
 
-    ligands = [Path(ligand) for ligand in ligands]
+        for ligand in ligands:
+            if not ligand.exists():
+                raise ValueError(f"Input ligand '{ligand}' does not exist")
+        
     files = [Path(f) for f in files]
-    
-    ligands = [ligand if ligand.is_absolute() else input_dir/ligand
-               for ligand in ligands]
-    
+  
     files = [f if f.is_absolute() else input_dir/f
              for f in files]
-    
-    for ligand in ligands:
-        if not ligand.exists():
-            raise ValueError(f"Input ligand '{ligand}' does not exist")
     
     for f in files:
         if not f.exists():

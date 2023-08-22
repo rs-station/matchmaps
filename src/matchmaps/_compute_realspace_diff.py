@@ -172,11 +172,11 @@ def compute_realspace_difference_map(
 
     # read back in the files created by phenix
     # these have knowable names
-    mtzon = rs.read_mtz(f"{str(nickname_on)}_1.mtz")
-    mtzoff = rs.read_mtz(f"{str(nickname_off)}_1.mtz")
+    mtzon = rs.read_mtz(f"{nickname_on}_1.mtz")
+    mtzoff = rs.read_mtz(f"{nickname_off}_1.mtz")
 
-    pdbon = gemmi.read_structure(f"{str(nickname_on)}_1.pdb")
-    pdboff = gemmi.read_structure(f"{str(nickname_off)}_1.pdb")
+    pdbon = gemmi.read_structure(f"{nickname_on}_1.pdb")
+    pdboff = gemmi.read_structure(f"{nickname_off}_1.pdb")
 
     if dmin is None:
         dmin = max(
