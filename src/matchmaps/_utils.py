@@ -12,6 +12,7 @@ import subprocess
 import time
 import re
 from functools import partial
+from pathlib import Path
 
 import gemmi
 import numpy as np
@@ -240,41 +241,41 @@ refinement {
             eff_contents = file.read()
 
     if (off_labels is None) or (mr_on):
-        nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_{pdboff.removesuffix('.pdb')}"
+        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_{pdboff.name.removesuffix('.pdb')}"
     else:
-        nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
+        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_self"
 
     ####
     # update this logic in the future if matchmaps.mr changes
-    mtz_location = input_dir if (mr_on or mr_off) else output_dir
+    # mtz_location = input_dir if (mr_on or mr_off) else output_dir
     ####
 
-    similar_files = glob.glob(f"{output_dir}/{nickname}_[0-9]_1.*")
+    similar_files = list(output_dir.glob(f"{nickname}_[0-9]_1.*"))
     if len(similar_files) == 0:
         nickname += "_0"
     else:
         nums = []
         for s in similar_files:
             try:
-                nums.append(int(s.split("_")[-2]))
+                nums.append(int(str(s).split("_")[-2]))
             except ValueError:
                 pass
         nickname += f"_{max(nums)+1}"
 
     # read in mtz to access cell parameters and spacegroup
-    mtz = rs.read_mtz(mtz_location + mtzon)
+    mtz = rs.read_mtz(str(mtzon))
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
     # name for modified refinement file
-    eff = f"{output_dir}/params_{nickname}.eff"
+    eff = output_dir / f"params_{nickname}.eff"
 
     params = {
         "sg": sg,
         "cell_parameters": cell_string,
-        "pdb_input": output_dir + pdboff,
-        "mtz_input": mtz_location + mtzon,
-        "nickname": output_dir + nickname,
+        "pdb_input": str(pdboff),
+        "mtz_input": str(mtzon),
+        "nickname": str(output_dir / nickname),
     }
 
     if off_labels is None:
@@ -290,7 +291,7 @@ refinement {
 
     # either add ligands to .eff file or delete "ligands" placeholder
     if ligands is not None:
-        ligand_string = "\n".join([f"file_name = '{input_dir}/{l}'" for l in ligands])
+        ligand_string = "\n".join([f"file_name = '{l}'" for l in ligands])
         eff_contents = eff_contents.replace("ligands", ligand_string)
     else:
         eff_contents = eff_contents.replace("ligands", "")
@@ -315,10 +316,10 @@ refinement {
         capture_output=(not verbose),
     )
 
-    return nickname
+    return output_dir / nickname
 
 
-def _handle_special_positions(pdboff, input_dir, output_dir):
+def _handle_special_positions(pdboff, output_dir):
     """
     Check if any waters happen to sit on special positions, and if so, remove them.
     If any non-water atoms sit on special positions, throw a (hopefully helpful) error.
@@ -329,10 +330,9 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
     ----------
     pdboff : str
         name of input pdb
-    input_dir : str
     output_dir : str
     """
-    pdb = gemmi.read_structure(input_dir + pdboff)
+    pdb = gemmi.read_structure(str(pdboff))
 
     # gemmi pdb heirarchy is nonsense, but this is what we've got
     for model in pdb:
@@ -363,14 +363,14 @@ Alternatively, you can remove this atom from your structure altogether and try a
 """
                             )
 
-    pdboff_nospecialpositions = pdboff.removesuffix(".pdb") + "_nospecialpositions.pdb"
+    pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
     
-    pdb.write_pdb(output_dir + pdboff_nospecialpositions)
+    pdb.write_pdb(str(pdboff_nospecialpositions))
 
     return pdboff_nospecialpositions
 
 
-def _renumber_waters(pdb, dir):
+def _renumber_waters(pdb):
     """
     Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
 
@@ -382,10 +382,10 @@ def _renumber_waters(pdb, dir):
         directory in which pdb file lives
     """
 
-    pdb_renumbered = pdb.removesuffix(".pdb") + "_renumbered.pdb"
+    pdb_renumbered =  Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
 
     subprocess.run(
-        f"phenix.sort_hetatms file_name={dir}/{pdb} output_file={dir}/{pdb_renumbered}",
+        f"phenix.sort_hetatms file_name={pdb} output_file={pdb_renumbered}",
         shell=True,
         capture_output=True,
     )
@@ -584,13 +584,13 @@ def _realspace_align_and_subtract(
 
     rs.io.write_ccp4_map(
         fg_on.array,
-        output_dir + on_name + "_before.map",
+        str(output_dir / (on_name + "_before.map")),
         cell=fg_on.unit_cell,
         spacegroup=fg_on.spacegroup,
     )
     rs.io.write_ccp4_map(
         fg_off.array,
-        output_dir + off_name + "_before.map",
+        str(output_dir / (off_name + "_before.map")),
         cell=fg_off.unit_cell,
         spacegroup=fg_off.spacegroup,
     )
@@ -645,13 +645,13 @@ def _realspace_align_and_subtract(
         rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
     )
 
-    write_maps(fg_on.array, f"{output_dir}/{on_name}.map")
+    write_maps(fg_on.array, str(output_dir / (on_name + ".map")))
 
-    write_maps(fg_off.array, f"{output_dir}/{off_name}.map")
+    write_maps(fg_off.array, str(output_dir / (off_name + ".map")))
 
-    write_maps(masked_difference_array, f"{output_dir}/{on_name}_minus_{off_name}.map")
+    write_maps(masked_difference_array, str(output_dir / (on_name + '_minus_' + off_name + ".map")))
     write_maps(
-        difference_array, f"{output_dir}/{on_name}_minus_{off_name}_unmasked.map"
+        difference_array, str(output_dir / (on_name + '_minus_' + off_name + "_unmasked.map"))
     )
 
     return
@@ -843,6 +843,40 @@ def _ncs_align_and_subtract(
 def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
+def _validate_inputs(
+    input_dir,
+    output_dir,
+    ligands,
+    *files,
+):
+    # use pathlib to validate input files and directories
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    input_dir = Path(input_dir)
+
+    if not input_dir.exists():
+        raise ValueError(f"Input directory '{input_dir}' does not exist")
+
+    ligands = [Path(ligand) for ligand in ligands]
+    files = [Path(f) for f in files]
+    
+    ligands = [ligand if ligand.is_absolute() else input_dir/ligand
+               for ligand in ligands]
+    
+    files = [f if f.is_absolute() else input_dir/f
+             for f in files]
+    
+    for ligand in ligands:
+        if not ligand.exists():
+            raise ValueError(f"Input ligand '{ligand}' does not exist")
+    
+    for f in files:
+        if not f.exists():
+            raise ValueError(f"Input file '{f}' does not exist")
+        
+    return input_dir, output_dir, ligands, *files
+    
 
 # def _find_available_dirname(prefix):
 #     existing = glob.glob(f"{prefix}_[0-9]*/")
