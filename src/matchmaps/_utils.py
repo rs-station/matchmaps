@@ -396,20 +396,21 @@ def _renumber_waters(pdb):
 
 
 def _remove_waters(
-    input_pdb,
-    dir,
+    pdb,
+    output_dir,
 ):
-    output_pdb = input_pdb.removesuffix(".pdb") + "_dry"
+    pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
+    # output_pdb = input_pdb.removesuffix(".pdb") + "_dry"
 
     subprocess.run(
-        f"phenix.pdbtools {dir}/{input_pdb} remove='water' \
-            output.prefix='{dir}/' \
-            output.suffix='{output_pdb}'",
+        f"phenix.pdbtools {pdb} remove='water' \
+            output.prefix='{output_dir}/' \
+            output.suffix='{pdb_dry}'",
         shell=True,
         capture_output=True,
     )
 
-    return output_pdb + ".pdb"
+    return output_dir / (pdb_dry + ".pdb")
 
 
 def phaser_wrapper(
@@ -461,32 +462,32 @@ phaser {
     else:
         raise NotImplementedError("Custom phaser specifications are not yet supported")
 
-    nickname = f"{mtzfile.removesuffix('.mtz')}_phased_with_{pdb.removesuffix('.pdb')}"
+    nickname = f"{mtzfile.name.removesuffix('.mtz')}_phased_with_{pdb.name.removesuffix('.pdb')}"
 
-    similar_files = glob.glob(f"{output_dir}/{nickname}_*")
+    similar_files = list(output_dir.glob(f"{nickname}_*"))
     if len(similar_files) == 0:
         nickname += "_0"
     else:
         nums = []
         for s in similar_files:
             try:
-                nums.append(int(s.split("_")[-1].split(".")[0]))
+                nums.append(int(str(s).split("_")[-1].split(".")[0]))
             except ValueError:
                 pass
         nickname += f"_{max(nums)+1}"
 
-    mtz = rs.read_mtz(input_dir + mtzfile)
+    mtz = rs.read_mtz(str(mtzfile))
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
-    eff = f"{output_dir}/params_{nickname}.eff"
+    eff = output_dir / f"params_{nickname}.eff"
 
     params = {
         "sg": sg,
         "cell_parameters": cell_string,
-        "pdb_input": output_dir + pdb,
-        "mtz_input": input_dir + mtzfile,
-        "nickname": output_dir + nickname,
+        "pdb_input": str(pdb),
+        "mtz_input": str(mtzfile),
+        "nickname": str(output_dir / nickname),
         "labels": off_labels,  # should be prepackaged as a string
     }
 
@@ -502,7 +503,7 @@ phaser {
         capture_output=(not verbose),
     )
 
-    return nickname
+    return output_dir / nickname
 
 
 def _restore_ligand_occupancy(
@@ -512,7 +513,7 @@ def _restore_ligand_occupancy(
 ):
 
     # grab occupancies of all HETATMs in original_pdb
-    with open(output_dir + original_pdb, "r") as o:
+    with open(original_pdb, "r") as o:
         original = o.readlines()
     original_hetatm = []
     for l in original:
@@ -521,7 +522,7 @@ def _restore_ligand_occupancy(
     original_occs = [h[56:60] for h in original_hetatm]
     print(len(original_occs))
 
-    with open(output_dir + pdb_to_be_restored, "r") as p:
+    with open(pdb_to_be_restored, "r") as p:
         pdb = p.readlines()
     n = 0
     for i in range(len(pdb)):
@@ -529,9 +530,9 @@ def _restore_ligand_occupancy(
             pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
             n += 1
 
-    edited_pdb = original_pdb.removesuffix(".pdb") + "_restorehetatms.pdb"
+    edited_pdb = output_dir / (original_pdb.name.removesuffix(".pdb") + "_restorehetatms.pdb")
 
-    with open(output_dir + edited_pdb, "w") as output:
+    with open(edited_pdb, "w") as output:
         output.write("".join(pdb))
 
     return edited_pdb

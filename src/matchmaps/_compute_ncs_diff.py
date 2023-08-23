@@ -45,12 +45,7 @@ def compute_ncs_difference_map(
 ):
     _validate_environment(ccp4=False)
     
-    # make sure directories have a trailing slash!
-    # if input_dir[-1] != "/":
-    #     input_dir = input_dir + "/"
-
-    # if output_dir[-1] != "/":
-    #     output_dir = output_dir + "/"
+    output_dir_contents = output_dir.glob("*")
 
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 

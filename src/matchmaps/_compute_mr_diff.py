@@ -20,6 +20,7 @@ from matchmaps._utils import (
     _remove_waters,
     _restore_ligand_occupancy,
     _validate_environment,
+    _validate_inputs,
     phaser_wrapper,
 )
 
@@ -89,15 +90,10 @@ def compute_mr_difference_map(
     
     _validate_environment(ccp4=False)
 
-    off_name = str(mtzoff.removesuffix(".mtz"))
-    on_name = str(mtzon.removesuffix(".mtz"))
-
-    # make sure directories have a trailing slash!
-    if input_dir[-1] != "/":
-        input_dir = input_dir + "/"
-
-    if output_dir[-1] != "/":
-        output_dir = output_dir + "/"
+    off_name = mtzoff.name.removesuffix(".mtz")
+    on_name = mtzon.name.removesuffix(".mtz")
+    
+    output_dir_contents = output_dir.glob("*")
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
@@ -106,7 +102,7 @@ def compute_mr_difference_map(
     # this is where scaling takes place in the usual pipeline, but that doesn't make sense with different-spacegroup inputs
     # side note: I need to test the importance of scaling even in the normal case!! Might be more artifact than good, who knows
 
-    pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
+    pdboff = _handle_special_positions(pdboff, output_dir)
 
     # write this function as a wrapper around phenix.pdbtools
     # modified pdboff already moved to output_dir by _handle_special_positions
@@ -128,9 +124,8 @@ def compute_mr_difference_map(
 
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
-        pdb_to_be_restored=phaser_nickname + ".1.pdb",
+        pdb_to_be_restored= str(phaser_nickname) + ".1.pdb",
         original_pdb=pdboff,
-        # ligands=ligands,
         output_dir=output_dir,
     )
 
@@ -171,11 +166,11 @@ def compute_mr_difference_map(
 
     # read back in the files created by phenix
     # these have knowable names
-    mtzon = rs.read_mtz(f"{output_dir}/{nickname_on}_1.mtz")
-    mtzoff = rs.read_mtz(f"{output_dir}/{nickname_off}_1.mtz")
+    mtzon = rs.read_mtz(f"{nickname_on}_1.mtz")
+    mtzoff = rs.read_mtz(f"{nickname_off}_1.mtz")
 
-    pdbon = gemmi.read_structure(f"{output_dir}/{nickname_on}_1.pdb")
-    pdboff = gemmi.read_structure(f"{output_dir}/{nickname_off}_1.pdb")
+    pdbon = gemmi.read_structure(f"{nickname_on}_1.pdb")
+    pdboff = gemmi.read_structure(f"{nickname_off}_1.pdb")
 
     if dmin is None:
         dmin = max(
@@ -385,17 +380,26 @@ def main():
     if not os.path.exists(args.input_dir):
         raise ValueError(f"Input directory '{args.input_dir}' does not exist")
 
+    (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
+        args.input_dir,
+        args.output_dir,
+        args.ligands,
+        args.mtzoff[0],
+        args.mtzon[0],
+        args.pdboff,
+    )
+    
     compute_mr_difference_map(
-        pdboff=args.pdboff,
-        ligands=args.ligands,
-        mtzoff=args.mtzoff[0],
-        mtzon=args.mtzon[0],
+        pdboff=pdboff,
+        ligands=ligands,
+        mtzoff=mtzoff,
+        mtzon=mtzon,
         Foff=args.mtzoff[1],
         SigFoff=args.mtzoff[2],
         Fon=args.mtzon[1],
         SigFon=args.mtzon[2],
-        input_dir=args.input_dir,
-        output_dir=args.output_dir,
+        input_dir=input_dir,
+        output_dir=output_dir,
         verbose=args.verbose,
         rbr_selections=args.rbr_selections,
         eff=args.eff,
