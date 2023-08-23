@@ -14,7 +14,6 @@ import reciprocalspaceship as rs
 
 from matchmaps._utils import (
     _handle_special_positions,
-    # align_grids_from_model_transform,
     make_floatgrid_from_mtz,
     rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
