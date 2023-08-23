@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 from functools import partial
+from pathlib import Path
 
 import gemmi
 import numpy as np
@@ -13,14 +14,15 @@ import reciprocalspaceship as rs
 
 from matchmaps._utils import (
     _handle_special_positions,
-    # align_grids_from_model_transform,
     make_floatgrid_from_mtz,
     rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
     _renumber_waters,
     _ncs_align_and_subtract,
-    _validate_environment
+    _validate_environment,
+    _validate_inputs,
+    _clean_up_files,
 )
 
 
@@ -34,21 +36,17 @@ def compute_ncs_difference_map(
     name=None,
     dmin=None,
     spacing=0.5,
-    input_dir="./",
-    output_dir="./",
+    input_dir=Path("."),
+    output_dir=Path("."),
     verbose=False,
     ncs_chains=None,
     refine_ncs_separately=False,
     eff=None,
+    keep_temp_files=None
 ):
     _validate_environment(ccp4=False)
     
-    # make sure directories have a trailing slash!
-    if input_dir[-1] != "/":
-        input_dir = input_dir + "/"
-
-    if output_dir[-1] != "/":
-        output_dir = output_dir + "/"
+    output_dir_contents = list(output_dir.glob("*"))
 
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
@@ -56,9 +54,9 @@ def compute_ncs_difference_map(
         if not refine_ncs_separately:
             rbr_phenix = None
 
-        pdb = _handle_special_positions(pdb, input_dir, output_dir)
+        pdb = _handle_special_positions(pdb, output_dir)
 
-        pdb = _renumber_waters(pdb, output_dir)
+        pdb = _renumber_waters(pdb)
 
         print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine...")
 
@@ -78,16 +76,16 @@ def compute_ncs_difference_map(
         fname = "F-obs-filtered"
         phiname = "PH2FOFCWT"
 
-        mtzfilename = f"{output_dir}/{nickname}_1.mtz"
-        pdbfilename = f"{output_dir}/{nickname}_1.pdb"
+        mtzfilename = f"{nickname}_1.mtz"
+        pdbfilename = f"{nickname}_1.pdb"
 
     else:
         print(f"{time.strftime('%H:%M:%S')}: Using provided phases...")
         fname = F
         phiname = Phi
 
-        mtzfilename = f"{input_dir}/{mtz}"
-        pdbfilename = f"{input_dir}/{pdb}"
+        mtzfilename = str(mtz)
+        pdbfilename = str(pdb)
 
     # regardless of whether refinement was performed, read in these two files:
     mtz = rs.read_mtz(mtzfilename)
@@ -106,7 +104,14 @@ def compute_ncs_difference_map(
         output_dir=output_dir,
         name=name,
     )
+    
+    print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
+    print(keep_temp_files)
+    _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
+    print(f"{time.strftime('%H:%M:%S')}: Done!")
+
+    return
 
 def parse_arguments():
     """Parse commandline arguments."""
@@ -235,13 +240,32 @@ def parse_arguments():
         default=None,
         help=("Custom .eff template for running phenix.refine. "),
     )
-
+    
+    parser.add_argument(
+        "--keep-temp-files",
+        "-k",
+        required=False,
+        default=None,
+        help=(
+            "Do not delete intermediate matchmaps files, but rather place them in the supplied directory. "
+            "This directory is created as a subdirectory of the supplied output-dir."
+        )
+    )
+    
     return parser
 
 
 def main():
     parser = parse_arguments()
     args = parser.parse_args()
+
+    (input_dir, output_dir, ligands, mtz, pdb) = _validate_inputs(
+        args.input_dir,
+        args.output_dir,
+        args.ligands,
+        args.mtz[0],
+        args.pdb,
+    )
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
@@ -250,20 +274,21 @@ def main():
         raise ValueError(f"Input directory '{args.input_dir}' does not exist")
 
     compute_ncs_difference_map(
-        pdb=args.pdb,
-        mtz=args.mtz[0],
+        pdb=pdb,
+        mtz=mtz,
         F=args.mtz[1],
         SigF=args.mtz[2] if (len(args.mtz) == 3) else None,
         Phi=args.phases,
         name=args.mapname,
-        ligands=args.ligands,
-        input_dir=args.input_dir,
-        output_dir=args.output_dir,
+        ligands=ligands,
+        input_dir=input_dir,
+        output_dir=output_dir,
         verbose=args.verbose,
         ncs_chains=args.ncs_chains,
         eff=args.eff,
         dmin=args.dmin,
         spacing=args.spacing,
+        keep_temp_files=args.keep_temp_files,
     )
 
     return

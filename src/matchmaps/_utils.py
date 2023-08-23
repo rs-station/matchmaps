@@ -12,6 +12,7 @@ import subprocess
 import time
 import re
 from functools import partial
+from pathlib import Path
 
 import gemmi
 import numpy as np
@@ -240,41 +241,41 @@ refinement {
             eff_contents = file.read()
 
     if (off_labels is None) or (mr_on):
-        nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_{pdboff.removesuffix('.pdb')}"
+        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_{pdboff.name.removesuffix('.pdb')}"
     else:
-        nickname = f"{mtzon.removesuffix('.mtz')}_rbr_to_self"
+        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_self"
 
     ####
     # update this logic in the future if matchmaps.mr changes
-    mtz_location = input_dir if (mr_on or mr_off) else output_dir
+    # mtz_location = input_dir if (mr_on or mr_off) else output_dir
     ####
 
-    similar_files = glob.glob(f"{output_dir}/{nickname}_[0-9]_1.*")
+    similar_files = list(output_dir.glob(f"{nickname}_[0-9]_1.*"))
     if len(similar_files) == 0:
         nickname += "_0"
     else:
         nums = []
         for s in similar_files:
             try:
-                nums.append(int(s.split("_")[-2]))
+                nums.append(int(str(s).split("_")[-2]))
             except ValueError:
                 pass
         nickname += f"_{max(nums)+1}"
 
     # read in mtz to access cell parameters and spacegroup
-    mtz = rs.read_mtz(mtz_location + mtzon)
+    mtz = rs.read_mtz(str(mtzon))
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
     # name for modified refinement file
-    eff = f"{output_dir}/params_{nickname}.eff"
+    eff = output_dir / f"params_{nickname}.eff"
 
     params = {
         "sg": sg,
         "cell_parameters": cell_string,
-        "pdb_input": output_dir + pdboff,
-        "mtz_input": mtz_location + mtzon,
-        "nickname": output_dir + nickname,
+        "pdb_input": str(pdboff),
+        "mtz_input": str(mtzon),
+        "nickname": str(output_dir / nickname),
     }
 
     if off_labels is None:
@@ -290,7 +291,7 @@ refinement {
 
     # either add ligands to .eff file or delete "ligands" placeholder
     if ligands is not None:
-        ligand_string = "\n".join([f"file_name = '{input_dir}/{l}'" for l in ligands])
+        ligand_string = "\n".join([f"file_name = '{l}'" for l in ligands])
         eff_contents = eff_contents.replace("ligands", ligand_string)
     else:
         eff_contents = eff_contents.replace("ligands", "")
@@ -315,10 +316,10 @@ refinement {
         capture_output=(not verbose),
     )
 
-    return nickname
+    return output_dir / nickname
 
 
-def _handle_special_positions(pdboff, input_dir, output_dir):
+def _handle_special_positions(pdboff, output_dir):
     """
     Check if any waters happen to sit on special positions, and if so, remove them.
     If any non-water atoms sit on special positions, throw a (hopefully helpful) error.
@@ -329,10 +330,9 @@ def _handle_special_positions(pdboff, input_dir, output_dir):
     ----------
     pdboff : str
         name of input pdb
-    input_dir : str
     output_dir : str
     """
-    pdb = gemmi.read_structure(input_dir + pdboff)
+    pdb = gemmi.read_structure(str(pdboff))
 
     # gemmi pdb heirarchy is nonsense, but this is what we've got
     for model in pdb:
@@ -363,14 +363,14 @@ Alternatively, you can remove this atom from your structure altogether and try a
 """
                             )
 
-    pdboff_nospecialpositions = pdboff.removesuffix(".pdb") + "_nospecialpositions.pdb"
+    pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
     
-    pdb.write_pdb(output_dir + pdboff_nospecialpositions)
+    pdb.write_pdb(str(pdboff_nospecialpositions))
 
     return pdboff_nospecialpositions
 
 
-def _renumber_waters(pdb, dir):
+def _renumber_waters(pdb):
     """
     Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
 
@@ -382,10 +382,10 @@ def _renumber_waters(pdb, dir):
         directory in which pdb file lives
     """
 
-    pdb_renumbered = pdb.removesuffix(".pdb") + "_renumbered.pdb"
+    pdb_renumbered =  Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
 
     subprocess.run(
-        f"phenix.sort_hetatms file_name={dir}/{pdb} output_file={dir}/{pdb_renumbered}",
+        f"phenix.sort_hetatms file_name={pdb} output_file={pdb_renumbered}",
         shell=True,
         capture_output=True,
     )
@@ -396,20 +396,21 @@ def _renumber_waters(pdb, dir):
 
 
 def _remove_waters(
-    input_pdb,
-    dir,
+    pdb,
+    output_dir,
 ):
-    output_pdb = input_pdb.removesuffix(".pdb") + "_dry"
+    pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
+    # output_pdb = input_pdb.removesuffix(".pdb") + "_dry"
 
     subprocess.run(
-        f"phenix.pdbtools {dir}/{input_pdb} remove='water' \
-            output.prefix='{dir}/' \
-            output.suffix='{output_pdb}'",
+        f"phenix.pdbtools {pdb} remove='water' \
+            output.prefix='{output_dir}/' \
+            output.suffix='{pdb_dry}'",
         shell=True,
         capture_output=True,
     )
 
-    return output_pdb + ".pdb"
+    return output_dir / (pdb_dry + ".pdb")
 
 
 def phaser_wrapper(
@@ -461,32 +462,32 @@ phaser {
     else:
         raise NotImplementedError("Custom phaser specifications are not yet supported")
 
-    nickname = f"{mtzfile.removesuffix('.mtz')}_phased_with_{pdb.removesuffix('.pdb')}"
+    nickname = f"{mtzfile.name.removesuffix('.mtz')}_phased_with_{pdb.name.removesuffix('.pdb')}"
 
-    similar_files = glob.glob(f"{output_dir}/{nickname}_*")
+    similar_files = list(output_dir.glob(f"{nickname}_*"))
     if len(similar_files) == 0:
         nickname += "_0"
     else:
         nums = []
         for s in similar_files:
             try:
-                nums.append(int(s.split("_")[-1].split(".")[0]))
+                nums.append(int(str(s).split("_")[-1].split(".")[0]))
             except ValueError:
                 pass
         nickname += f"_{max(nums)+1}"
 
-    mtz = rs.read_mtz(input_dir + mtzfile)
+    mtz = rs.read_mtz(str(mtzfile))
     cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
     sg = mtz.spacegroup.short_name()
 
-    eff = f"{output_dir}/params_{nickname}.eff"
+    eff = output_dir / f"params_{nickname}.eff"
 
     params = {
         "sg": sg,
         "cell_parameters": cell_string,
-        "pdb_input": output_dir + pdb,
-        "mtz_input": input_dir + mtzfile,
-        "nickname": output_dir + nickname,
+        "pdb_input": str(pdb),
+        "mtz_input": str(mtzfile),
+        "nickname": str(output_dir / nickname),
         "labels": off_labels,  # should be prepackaged as a string
     }
 
@@ -502,7 +503,7 @@ phaser {
         capture_output=(not verbose),
     )
 
-    return nickname
+    return output_dir / nickname
 
 
 def _restore_ligand_occupancy(
@@ -512,7 +513,7 @@ def _restore_ligand_occupancy(
 ):
 
     # grab occupancies of all HETATMs in original_pdb
-    with open(output_dir + original_pdb, "r") as o:
+    with open(original_pdb, "r") as o:
         original = o.readlines()
     original_hetatm = []
     for l in original:
@@ -521,7 +522,7 @@ def _restore_ligand_occupancy(
     original_occs = [h[56:60] for h in original_hetatm]
     print(len(original_occs))
 
-    with open(output_dir + pdb_to_be_restored, "r") as p:
+    with open(pdb_to_be_restored, "r") as p:
         pdb = p.readlines()
     n = 0
     for i in range(len(pdb)):
@@ -529,9 +530,9 @@ def _restore_ligand_occupancy(
             pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
             n += 1
 
-    edited_pdb = original_pdb.removesuffix(".pdb") + "_restorehetatms.pdb"
+    edited_pdb = output_dir / (original_pdb.name.removesuffix(".pdb") + "_restorehetatms.pdb")
 
-    with open(output_dir + edited_pdb, "w") as output:
+    with open(edited_pdb, "w") as output:
         output.write("".join(pdb))
 
     return edited_pdb
@@ -584,13 +585,13 @@ def _realspace_align_and_subtract(
 
     rs.io.write_ccp4_map(
         fg_on.array,
-        output_dir + on_name + "_before.map",
+        str(output_dir / (on_name + "_before.map")),
         cell=fg_on.unit_cell,
         spacegroup=fg_on.spacegroup,
     )
     rs.io.write_ccp4_map(
         fg_off.array,
-        output_dir + off_name + "_before.map",
+        str(output_dir / (off_name + "_before.map")),
         cell=fg_off.unit_cell,
         spacegroup=fg_off.spacegroup,
     )
@@ -645,13 +646,13 @@ def _realspace_align_and_subtract(
         rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
     )
 
-    write_maps(fg_on.array, f"{output_dir}/{on_name}.map")
+    write_maps(fg_on.array, str(output_dir / (on_name + ".map")))
 
-    write_maps(fg_off.array, f"{output_dir}/{off_name}.map")
+    write_maps(fg_off.array, str(output_dir / (off_name + ".map")))
 
-    write_maps(masked_difference_array, f"{output_dir}/{on_name}_minus_{off_name}.map")
+    write_maps(masked_difference_array, str(output_dir / (on_name + '_minus_' + off_name + ".map")))
     write_maps(
-        difference_array, f"{output_dir}/{on_name}_minus_{off_name}_unmasked.map"
+        difference_array, str(output_dir / (on_name + '_minus_' + off_name + "_unmasked.map"))
     )
 
     return
@@ -825,14 +826,14 @@ def _ncs_align_and_subtract(
         rs.io.write_ccp4_map, cell=fg.unit_cell, spacegroup=fg.spacegroup
     )
 
-    write_maps(fg.array, f"{output_dir}/{name}_{ncs_chains[0]}.map")
+    write_maps(fg.array, str(output_dir / (name + "_" + ncs_chains[0] + ".map")))
     write_maps(
-        fg2.array, f"{output_dir}/{name}_{ncs_chains[1]}_onto_{ncs_chains[0]}.map"
+        fg2.array, str(output_dir / (name + "_" + ncs_chains[1] + "_onto_" + ncs_chains[0] + ".map"))
     )
 
     write_maps(
         fg2.array - fg.array,
-        f"{output_dir}/{name}_{ncs_chains[1]}_minus_{ncs_chains[0]}.map",
+       str(output_dir / (name + "_" + ncs_chains[1] + "_minus_" + ncs_chains[0] + ".map"))
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
@@ -843,35 +844,59 @@ def _ncs_align_and_subtract(
 def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
+def _validate_inputs(
+    input_dir,
+    output_dir,
+    ligands,
+    *files,
+):
+    # use pathlib to validate input files and directories
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-# def _find_available_dirname(prefix):
-#     existing = glob.glob(f"{prefix}_[0-9]*/")
+    input_dir = Path(input_dir)
 
-#     if len(existing) == 0:
-#         new_suffix = "0"
-#     else:
-#         n = max([int(s.split("_")[-1].removesuffix("/")) for s in existing])
-#         new_suffix = f"{n+1}"
-
-#     return new_suffix
-
-# def _clean_up_files(output_dir, old_files):
+    if not input_dir.exists():
+        raise ValueError(f"Input directory '{input_dir}' does not exist")
     
-#     prefix='matchmapsfiles'
-
-#     n = _find_available_dirname(prefix)
-#     cleanup_dir = f"{output_dir}/prefix_{n}"
-
-#     os.mkdir(cleanup_dir)
-
-#     candidate_files = []
-#     for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
-#         candidate_files.append(glob.glob(output_dir + '*' + suffix))
+    if ligands is not None:
+        ligands = [Path(ligand) for ligand in ligands]
         
-#     files_to_move = list(filter(
-#         lambda x: 
-#             x not in old_files, 
-#         candidate_files
-#         )) 
+        ligands = [ligand if ligand.is_absolute() else input_dir/ligand
+                for ligand in ligands]
 
-#     return
+        for ligand in ligands:
+            if not ligand.exists():
+                raise ValueError(f"Input ligand '{ligand}' does not exist")
+        
+    files = [Path(f) for f in files]
+  
+    files = [f if f.is_absolute() else input_dir/f
+             for f in files]
+    
+    for f in files:
+        if not f.exists():
+            raise ValueError(f"Input file '{f}' does not exist")
+        
+    return input_dir, output_dir, ligands, *files
+
+
+def _clean_up_files(output_dir, old_files, keep_temp_files):
+
+    candidate_files = []
+    for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
+        candidate_files.extend(list(output_dir.glob('*' + suffix)))
+        
+    files_to_delete = set(candidate_files) - set(old_files)
+    
+    if keep_temp_files is not None:
+        new_dir = output_dir / keep_temp_files
+        print(new_dir)
+        new_dir.mkdir(parents=True, exist_ok=True)
+        for f in files_to_delete:
+            f.rename(new_dir / f.name)
+    else:
+        for f in files_to_delete:
+            os.remove(f)    
+    
+    return

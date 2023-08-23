@@ -6,6 +6,7 @@ import glob
 import subprocess
 import time
 from functools import partial
+from pathlib import Path
 
 import gemmi
 import numpy as np
@@ -13,14 +14,14 @@ import reciprocalspaceship as rs
 
 from matchmaps._utils import (
     _handle_special_positions,
-    # align_grids_from_model_transform,
     make_floatgrid_from_mtz,
     rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
     _renumber_waters,
-    # _clean_up_files,
-    _validate_environment
+    _clean_up_files,
+    _validate_environment,
+    _validate_inputs,
 )
 
 
@@ -36,22 +37,23 @@ def compute_realspace_difference_map(
     dmin=None,
     spacing=0.5,
     on_as_stationary=False,
-    input_dir="./",
-    output_dir="./",
+    input_dir=Path("."),
+    output_dir=Path("."),
     verbose=False,
     rbr_selections=None,
     eff=None,
+    keep_temp_files=None,
 ):
     """
     Compute a real-space difference map from mtzs.
 
     Parameters
     ----------
-    pdboff : string
+    pdboff : pathlib.Path
         Name of input .pdb file to use for phasing
-    mtzoff : string
+    mtzoff : pathlib.Path
         Name of input .mtz file containing 'off' data
-    mtzon : string
+    mtzon : pathlib.Path
         Name of input .mtz file containing 'off' data
     Foff : string
         Column in mtzoff containing structure factor amplitudes
@@ -61,7 +63,7 @@ def compute_realspace_difference_map(
         Column in mtzon containing structure factor amplitudes
     SigFon : string
         Column in mtzon containing structure factor uncertainties
-    ligands : list of strings
+    ligands : list of pathlib.Path
         Filename(s) of any .cif ligand restraint files necessary for phenix.refine
         by default None, meaning only the .pdb is required for refinement
     dmin : float, optional
@@ -71,9 +73,9 @@ def compute_realspace_difference_map(
         Approximate size of real-space voxels in Angstroms, by default 0.5 A
     on_as_stationary : bool, optional
         If True, align "off" data onto "on" data, by default False
-    input_dir : str, optional
+    input_dir : pathlib.Path, optional
         Path to directory containing input files, by default "./" (current directory)
-    output_dir : str, optional
+    output_dir : pathlib.Path, optional
         Path to directory to which output files should be written, by default "./" (current directory)
     verbose : bool, optional
         If True, print outputs of scaleit and phenix.refine, by default False
@@ -85,70 +87,61 @@ def compute_realspace_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
-    
+
     _validate_environment(ccp4=True)
-    
-    off_name = str(mtzoff.removesuffix(".mtz"))
-    on_name = str(mtzon.removesuffix(".mtz"))
 
-    # make sure directories have a trailing slash!
-    if input_dir[-1] != "/":
-        input_dir = input_dir + "/"
+    off_name = mtzoff.name.removesuffix(".mtz")
+    on_name = mtzon.name.removesuffix(".mtz")
 
-    if output_dir[-1] != "/":
-        output_dir = output_dir + "/"
-        
-    output_dir_contents = glob.glob(output_dir + "*")
+    output_dir_contents = list(output_dir.glob("*"))
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
     ### scaleit
-    mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
+    #mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
+    mtzon_scaled = output_dir / (mtzon.name.removesuffix(".mtz") + "_scaled.mtz")
 
     print(
         f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data..."
     )
 
     subprocess.run(
-        f"rs.scaleit -r {input_dir}/{mtzoff} {Foff} {SigFoff} -i {input_dir}/{mtzon} {Fon} {SigFon} -o {output_dir}/{mtzon_scaled}",
+        f"rs.scaleit -r {mtzoff} {Foff} {SigFoff} -i {mtzon} {Fon} {SigFon} -o {mtzon_scaled}",
         shell=True,
         capture_output=(not verbose),
     )
-    
+
     ## now that scaleit has run, let's swap out the spacegroup from the scaled file
-    mtzon_scaled_py = rs.read_mtz(f'{output_dir}/{mtzon_scaled}')
-    mtzon_original_py = rs.read_mtz(f'{input_dir}/{mtzon}')
-    mtzoff_original_py = rs.read_mtz(f'{input_dir}/{mtzoff}')
+    mtzon_scaled_py = rs.read_mtz(str(mtzon_scaled))
+    mtzon_original_py = rs.read_mtz(str(mtzon))
+    mtzoff_original_py = rs.read_mtz(str(mtzoff))
     
-    mtzoff_trunc = mtzoff.removesuffix(".mtz") + "_trunc.mtz"
-    mtzon_scaled_truecell = mtzon_scaled.removesuffix(".mtz") + "_truecell.mtz"
+    mtzoff_trunc = output_dir / (mtzoff.name.removesuffix(".mtz") + "_trunc.mtz")
+    mtzon_scaled_truecell = output_dir / (mtzon_scaled.name.removesuffix(".mtz") + "_truecell.mtz")
     
     mtzon_scaled_py.cell = mtzon_original_py.cell
-    
+
     mtzoff_original_py.compute_dHKL(inplace=True)
     mtzon_scaled_py.compute_dHKL(inplace=True)
-    
+
     # make resolutions match for mtzon_scaled_py and mtzon_original_py
-    resolution = max(
-        mtzoff_original_py["dHKL"].min(),
-        mtzon_scaled_py["dHKL"].min()
-    )
+    resolution = max(mtzoff_original_py["dHKL"].min(), mtzon_scaled_py["dHKL"].min())
     mtzoff_original_py = mtzoff_original_py.loc[mtzoff_original_py.dHKL >= resolution]
     mtzon_scaled_py = mtzon_scaled_py.loc[mtzon_scaled_py.dHKL >= resolution]
-    
-    mtzoff_original_py.write_mtz(f'{output_dir}/{mtzoff_trunc}')
-    mtzon_scaled_py.write_mtz(f'{output_dir}/{mtzon_scaled_truecell}')
-    
-    # reset short nicknames to the latest files 
+
+    mtzoff_original_py.write_mtz(str(mtzoff_trunc))
+    mtzon_scaled_py.write_mtz(str(mtzon_scaled_truecell))
+
+    # reset short nicknames to the latest files
     mtzon = mtzon_scaled_truecell
     mtzoff = mtzoff_trunc
     ## done with cell swapping and resolution matching
-    
-    pdboff = _handle_special_positions(pdboff, input_dir, output_dir)
 
-    pdboff = _renumber_waters(pdboff, output_dir)
+    pdboff = _handle_special_positions(pdboff, output_dir)
+
+    pdboff = _renumber_waters(pdboff)
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 
@@ -179,11 +172,11 @@ def compute_realspace_difference_map(
 
     # read back in the files created by phenix
     # these have knowable names
-    mtzon = rs.read_mtz(f"{output_dir}/{nickname_on}_1.mtz")
-    mtzoff = rs.read_mtz(f"{output_dir}/{nickname_off}_1.mtz")
+    mtzon = rs.read_mtz(f"{nickname_on}_1.mtz")
+    mtzoff = rs.read_mtz(f"{nickname_off}_1.mtz")
 
-    pdbon = gemmi.read_structure(f"{output_dir}/{nickname_on}_1.pdb")
-    pdboff = gemmi.read_structure(f"{output_dir}/{nickname_off}_1.pdb")
+    pdbon = gemmi.read_structure(f"{nickname_on}_1.pdb")
+    pdboff = gemmi.read_structure(f"{nickname_off}_1.pdb")
 
     if dmin is None:
         dmin = max(
@@ -231,9 +224,9 @@ def compute_realspace_difference_map(
                 on_as_stationary=on_as_stationary,
                 selection=selection,
             )
-    # print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
-
-    # _clean_up_files()
+    
+    print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
+    _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
@@ -373,6 +366,17 @@ def parse_arguments():
         default=None,
         help=("Custom .eff template for running phenix.refine. "),
     )
+    
+    parser.add_argument(
+        "--keep-temp-files",
+        "-k",
+        required=False,
+        default=None,
+        help=(
+            "Do not delete intermediate matchmaps files, but rather place them in the supplied directory. "
+            "This directory is created as a subdirectory of the supplied output-dir."
+        )
+    )
 
     return parser
 
@@ -381,29 +385,33 @@ def main():
     parser = parse_arguments()
     args = parser.parse_args()
 
-    if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
-
-    if not os.path.exists(args.input_dir):
-        raise ValueError(f"Input directory '{args.input_dir}' does not exist")
+    (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
+        args.input_dir,
+        args.output_dir,
+        args.ligands,
+        args.mtzoff[0],
+        args.mtzon[0],
+        args.pdboff,
+    )
 
     compute_realspace_difference_map(
-        pdboff=args.pdboff,
-        ligands=args.ligands,
-        mtzoff=args.mtzoff[0],
-        mtzon=args.mtzon[0],
+        pdboff=pdboff,
+        ligands=ligands,
+        mtzoff=mtzoff,
+        mtzon=mtzon,
         Foff=args.mtzoff[1],
         SigFoff=args.mtzoff[2],
         Fon=args.mtzon[1],
         SigFon=args.mtzon[2],
-        input_dir=args.input_dir,
-        output_dir=args.output_dir,
+        input_dir=input_dir,
+        output_dir=output_dir,
         verbose=args.verbose,
         rbr_selections=args.rbr_selections,
         eff=args.eff,
         dmin=args.dmin,
         spacing=args.spacing,
         on_as_stationary=args.on_as_stationary,
+        keep_temp_files=args.keep_temp_files,
     )
 
     return
