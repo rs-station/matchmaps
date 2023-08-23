@@ -13,11 +13,11 @@
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=1912d1fe"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
@@ -81,274 +81,293 @@
            <div itemprop="articleBody">
              
   <section class="tex2jax_ignore mathjax_ignore" id="matchmaps-command-line-interface">
-<h1><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> command-line interface<a class="headerlink" href="#matchmaps-command-line-interface" title="Permalink to this heading"></a></h1>
+<h1><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> command-line interface<a class="headerlink" href="#matchmaps-command-line-interface" title="Link to this heading"></a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is built to be used from the command-line. See the following utilities below. You can also print these messages in the command-line via the <code class="docutils literal notranslate"><span class="pre">--help</span></code> option.</p>
 <section id="matchmaps">
-<h2>matchmaps<a class="headerlink" href="#matchmaps" title="Permalink to this heading"></a></h2>
+<h2>matchmaps<a class="headerlink" href="#matchmaps" title="Link to this heading"></a></h2>
 <p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. If you’d like to make an internal difference map instead, see matchmaps.ncs</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
 <span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
 <span class="go">                 [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
 <span class="go">                 [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
-<span class="go">                 [--eff EFF]</span>
+<span class="go">                 [--eff EFF] [--keep-temp-files KEEP_TEMP_FILES]</span>
 </pre></div>
 </div>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-h">
-<span id="cmdoption-matchmaps-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-h" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-h" title="Link to this definition"></a></dt>
 <dd><p>show this help message and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-mtzoff">
-<span id="cmdoption-matchmaps-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzoff" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzoff" title="Link to this definition"></a></dt>
 <dd><p>MTZ containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-mtzon">
-<span id="cmdoption-matchmaps-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzon" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzon" title="Link to this definition"></a></dt>
 <dd><p>MTZ containing on/bound/excited/bright state data. Specified as [filename F SigF]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-pdboff">
-<span id="cmdoption-matchmaps-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-pdboff" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-pdboff" title="Link to this definition"></a></dt>
 <dd><p>Reference pdb corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-ligands">
-<span id="cmdoption-matchmaps-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-ligands" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-ligands" title="Link to this definition"></a></dt>
 <dd><p>Any .cif restraint files needed for refinement</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-input-dir">
-<span id="cmdoption-matchmaps-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-input-dir" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-input-dir" title="Link to this definition"></a></dt>
 <dd><p>Path to input mtzs and pdb. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-output-dir">
-<span id="cmdoption-matchmaps-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-output-dir" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-output-dir" title="Link to this definition"></a></dt>
 <dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-on-as-stationary">
-<span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-on-as-stationary" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-on-as-stationary" title="Link to this definition"></a></dt>
 <dd><p>Include this flag to align ‘off’ data onto ‘on’ data. By default, ‘off’ data is stationary and ‘on’ data is moved.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-spacing">
-<span id="cmdoption-matchmaps-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-spacing" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-dmin">
-<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Link to this definition"></a></dt>
 <dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-verbose">
-<span id="cmdoption-matchmaps-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-verbose" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-verbose" title="Link to this definition"></a></dt>
 <dd><p>Include this flag to print out scaleit and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-rbr-selections">
-<span id="cmdoption-matchmaps-r"></span><span class="sig-name descname"><span class="pre">--rbr-selections</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-rbr-selections" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps-r"></span><span class="sig-name descname"><span class="pre">--rbr-selections</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-rbr-selections" title="Link to this definition"></a></dt>
 <dd><p>Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-eff">
-<span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-eff" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-eff" title="Link to this definition"></a></dt>
 <dd><p>Custom .eff template for running phenix.refine.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-keep-temp-files">
+<span id="cmdoption-matchmaps-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-keep-temp-files" title="Link to this definition"></a></dt>
+<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
 </dd></dl>
 
 </section>
 <section id="matchmaps-ncs">
-<h2>matchmaps.ncs<a class="headerlink" href="#matchmaps-ncs" title="Permalink to this heading"></a></h2>
+<h2>matchmaps.ncs<a class="headerlink" href="#matchmaps-ncs" title="Link to this heading"></a></h2>
 <p>Compute an ‘internal’ real-space difference map between NCS-related molecules. You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB file.Please note that both ccp4 and phenix must be installed and active in your environment for this function to run.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.ncs [-h] --mtz [MTZ ...] [--phases PHASES] --pdb PDB</span>
 <span class="go">                     --ncs-chains fixed_chain moving_chain [--mapname MAPNAME]</span>
 <span class="go">                     [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
 <span class="go">                     [--output-dir OUTPUT_DIR] [--spacing SPACING]</span>
 <span class="go">                     [--dmin DMIN] [--verbose] [--eff EFF]</span>
+<span class="go">                     [--keep-temp-files KEEP_TEMP_FILES]</span>
 </pre></div>
 </div>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-h">
-<span id="cmdoption-matchmaps-ncs-h"></span><span id="cmdoption-matchmaps.ncs-help"></span><span id="cmdoption-matchmaps-ncs-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-h" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-h" title="Link to this definition"></a></dt>
 <dd><p>show this help message and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-mtz">
-<span id="cmdoption-matchmaps-ncs-mtz"></span><span id="cmdoption-matchmaps.ncs-m"></span><span id="cmdoption-matchmaps-ncs-m"></span><span class="sig-name descname"><span class="pre">--mtz</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mtz" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-m"></span><span class="sig-name descname"><span class="pre">--mtz</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mtz" title="Link to this definition"></a></dt>
 <dd><p>MTZ file containing structure factor amplitudes. Specified as [filename F SigF] or [filename F]SigF is not necessary if phases are also provided</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-phases">
-<span id="cmdoption-matchmaps-ncs-phases"></span><span class="sig-name descname"><span class="pre">--phases</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;phases&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-phases" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--phases</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;phases&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-phases" title="Link to this definition"></a></dt>
 <dd><p>Optional. Column in MTZ file containing phases. If phases are not provided, phases will be computed via rigid-body refinement of the provided model and structure factor amplitudes.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-pdb">
-<span id="cmdoption-matchmaps-ncs-pdb"></span><span id="cmdoption-matchmaps.ncs-p"></span><span id="cmdoption-matchmaps-ncs-p"></span><span class="sig-name descname"><span class="pre">--pdb</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-pdb" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-p"></span><span class="sig-name descname"><span class="pre">--pdb</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-pdb" title="Link to this definition"></a></dt>
 <dd><p>Reference pdb. If phases are not provided, used for rigid-body refinement of input MTZ to generate phases.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-ncs-chains">
-<span id="cmdoption-matchmaps-ncs-ncs-chains"></span><span id="cmdoption-matchmaps.ncs-n"></span><span id="cmdoption-matchmaps-ncs-n"></span><span class="sig-name descname"><span class="pre">--ncs-chains</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ncs-chains" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-n"></span><span class="sig-name descname"><span class="pre">--ncs-chains</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ncs-chains" title="Link to this definition"></a></dt>
 <dd><p>NCS chains to overlay and subtract, specified as [fixed_chain, moving_chain].E.g. to overlay chain C onto chain B, specify: –ncs-chains B C</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-mapname">
-<span id="cmdoption-matchmaps-ncs-mapname"></span><span class="sig-name descname"><span class="pre">--mapname</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mapname&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mapname" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--mapname</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mapname&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mapname" title="Link to this definition"></a></dt>
 <dd><p>Base filename for the output map files.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-ligands">
-<span id="cmdoption-matchmaps-ncs-ligands"></span><span id="cmdoption-matchmaps.ncs-l"></span><span id="cmdoption-matchmaps-ncs-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ligands" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ligands" title="Link to this definition"></a></dt>
 <dd><p>Any .cif restraint files needed for refinement</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-input-dir">
-<span id="cmdoption-matchmaps-ncs-input-dir"></span><span id="cmdoption-matchmaps.ncs-i"></span><span id="cmdoption-matchmaps-ncs-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-input-dir" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-input-dir" title="Link to this definition"></a></dt>
 <dd><p>Path to input mtz and pdb. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-output-dir">
-<span id="cmdoption-matchmaps-ncs-output-dir"></span><span id="cmdoption-matchmaps.ncs-o"></span><span id="cmdoption-matchmaps-ncs-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-output-dir" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-output-dir" title="Link to this definition"></a></dt>
 <dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-spacing">
-<span id="cmdoption-matchmaps-ncs-spacing"></span><span id="cmdoption-matchmaps.ncs-s"></span><span id="cmdoption-matchmaps-ncs-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-spacing" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-dmin">
-<span id="cmdoption-matchmaps-ncs-dmin"></span><span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-dmin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-dmin" title="Link to this definition"></a></dt>
 <dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-verbose">
-<span id="cmdoption-matchmaps-ncs-verbose"></span><span id="cmdoption-matchmaps.ncs-v"></span><span id="cmdoption-matchmaps-ncs-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-verbose" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.ncs-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-verbose" title="Link to this definition"></a></dt>
 <dd><p>Include this flag to print out phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-eff">
-<span id="cmdoption-matchmaps-ncs-eff"></span><span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-eff" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-eff" title="Link to this definition"></a></dt>
 <dd><p>Custom .eff template for running phenix.refine.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-keep-temp-files">
+<span id="cmdoption-matchmaps.ncs-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-keep-temp-files" title="Link to this definition"></a></dt>
+<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
 </dd></dl>
 
 </section>
 <section id="matchmaps-mr">
-<h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Permalink to this heading"></a></h2>
+<h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Link to this heading"></a></h2>
 <p>Compute a real-space difference map between inputs in different space groups / crystal packings. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility If you’d like to make an internal difference map, see matchmaps.ncs</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.mr [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon</span>
 <span class="go">                    Fon SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                    [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
 <span class="go">                    [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
 <span class="go">                    [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
-<span class="go">                    [--eff EFF]</span>
+<span class="go">                    [--eff EFF] [--keep-temp-files KEEP_TEMP_FILES]</span>
 </pre></div>
 </div>
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-h">
-<span id="cmdoption-matchmaps-mr-h"></span><span id="cmdoption-matchmaps.mr-help"></span><span id="cmdoption-matchmaps-mr-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-h" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-h" title="Link to this definition"></a></dt>
 <dd><p>show this help message and exit</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-mtzoff">
-<span id="cmdoption-matchmaps-mr-mtzoff"></span><span id="cmdoption-matchmaps.mr-f"></span><span id="cmdoption-matchmaps-mr-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzoff" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzoff" title="Link to this definition"></a></dt>
 <dd><p>MTZ containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-mtzon">
-<span id="cmdoption-matchmaps-mr-mtzon"></span><span id="cmdoption-matchmaps.mr-n"></span><span id="cmdoption-matchmaps-mr-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzon" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzon" title="Link to this definition"></a></dt>
 <dd><p>MTZ containing on/bound/excited/bright state data. Specified as [filename F SigF]This file may be in a different spacegroup / crystal packing than mtzoff</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-pdboff">
-<span id="cmdoption-matchmaps-mr-pdboff"></span><span id="cmdoption-matchmaps.mr-p"></span><span id="cmdoption-matchmaps-mr-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-pdboff" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-pdboff" title="Link to this definition"></a></dt>
 <dd><p>Reference pdb corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.Should match mtzoff well enough that molecular replacement is not necessary.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-ligands">
-<span id="cmdoption-matchmaps-mr-ligands"></span><span id="cmdoption-matchmaps.mr-l"></span><span id="cmdoption-matchmaps-mr-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-ligands" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-l"></span><span class="sig-name descname"><span class="pre">--ligands</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-l</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ligands&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-ligands" title="Link to this definition"></a></dt>
 <dd><p>Any .cif restraint files needed for refinement</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-input-dir">
-<span id="cmdoption-matchmaps-mr-input-dir"></span><span id="cmdoption-matchmaps.mr-i"></span><span id="cmdoption-matchmaps-mr-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-input-dir" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-input-dir" title="Link to this definition"></a></dt>
 <dd><p>Path to input mtzs and pdb. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-output-dir">
-<span id="cmdoption-matchmaps-mr-output-dir"></span><span id="cmdoption-matchmaps.mr-o"></span><span id="cmdoption-matchmaps-mr-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-output-dir" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-output-dir" title="Link to this definition"></a></dt>
 <dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-on-as-stationary">
-<span id="cmdoption-matchmaps-mr-on-as-stationary"></span><span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-on-as-stationary" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-on-as-stationary" title="Link to this definition"></a></dt>
 <dd><p>Include this flag to align ‘off’ data onto ‘on’ data. By default, ‘off’ data is stationary and ‘on’ data is moved.For matchmaps.mr, this only applies to the post-molecular-replacement alignment; all maps will be placed in the spacegroup of mtzoff.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-spacing">
-<span id="cmdoption-matchmaps-mr-spacing"></span><span id="cmdoption-matchmaps.mr-s"></span><span id="cmdoption-matchmaps-mr-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-spacing" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-dmin">
-<span id="cmdoption-matchmaps-mr-dmin"></span><span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-dmin" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-dmin" title="Link to this definition"></a></dt>
 <dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-verbose">
-<span id="cmdoption-matchmaps-mr-verbose"></span><span id="cmdoption-matchmaps.mr-v"></span><span id="cmdoption-matchmaps-mr-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-verbose" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-v"></span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-verbose" title="Link to this definition"></a></dt>
 <dd><p>Include this flag to print out phenix.phaser and phenix.refine outputs to the terminal. Useful for troubleshooting, but annoying; defaults to False.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-rbr-selections">
-<span id="cmdoption-matchmaps-mr-rbr-selections"></span><span id="cmdoption-matchmaps.mr-r"></span><span id="cmdoption-matchmaps-mr-r"></span><span class="sig-name descname"><span class="pre">--rbr-selections</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-rbr-selections" title="Permalink to this definition"></a></dt>
+<span id="cmdoption-matchmaps.mr-r"></span><span class="sig-name descname"><span class="pre">--rbr-selections</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;rbr_selections&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-rbr-selections" title="Link to this definition"></a></dt>
 <dd><p>Specification of multiple rigid-body groups for refinement. By default, everything is refined as one rigid-body group. For matchmaps.mr, everything will always be molecular replaced as a single rigid-body, but may then be refined as multiple rigid bodies.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-eff">
-<span id="cmdoption-matchmaps-mr-eff"></span><span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-eff" title="Permalink to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">--eff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;eff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-eff" title="Link to this definition"></a></dt>
 <dd><p>Custom .eff template for running phenix.refine.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-keep-temp-files">
+<span id="cmdoption-matchmaps.mr-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-keep-temp-files" title="Link to this definition"></a></dt>
+<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
 </dd></dl>
 
 </section>

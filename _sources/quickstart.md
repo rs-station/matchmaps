@@ -65,15 +65,41 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
     --pdboff apo.pdb \
     --ligands weird_solvent_1.cif weird_solvent_2.cif
 ```
+ 
+If you'd like read or write files from somewhere other than your current directory, you can! There are three ways to specify input files:
+ - Provide relative paths directly for all input files
+ - Provide only file names, and add the `--input-dir` option to specify where those files live. If you do this, the same `--input-dir` will be preprended to all filenames, so your files should all live in the same place.
+ - Provide absolute paths to input files. For any input supplied as an absolute path, the `--input-dir` will be ignored.
 
-If you'd like read or write files from somewhere other than your current directory, you can! Just use the `--input-dir` and `--output-dir` flags. However, note that 1) your input files should all live in the same directory, and 2) you **must** use these flags rather than supplying a long relative path directly as the filename. It is possible that long relative paths will be supported in a future release, but I can't promise that. An example:
+To direct output files to a specific directory, use the `--output-dir` flag. By default, all of the temporary files created by `matchmaps` will be deleted when the program finishes. Only the `.map` files described below are kept. If you would like to keep all files, you may additionally supply a `--keep-temp-files` directory, which will be created inside of `--output-dir`.
 
+### Examples 
+
+Supply an input directory:
 ```bash
 matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
     --mtzon bound_data.mtz Fobs SIGFobs \
     --pdboff apo.pdb \
     --input-dir analysis/matchmaps \
     --output-dir ../data/myproject
+```
+
+Supply relative inputs; keep all files:
+```bash
+matchmaps --mtzoff input_files/apo_data.mtz Fobs SIGFobs \
+    --mtzon input_files/bound_data.mtz Fobs SIGFobs \
+    --pdboff different_dir_with_input_files/apo.pdb \
+    --output-dir ../data/myproject \
+    --keep-temp-files mmfiles
+```
+
+Supply a mix of relative and absolute inputs:
+```bash
+matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
+    --mtzon bound_data.mtz Fobs SIGFobs \
+    --pdboff /complicated/absolute/path/to/apo.pdb \
+    --input-dir input_files \
+    --output-dir ../data/myproject \
 ```
 
 ## Other useful options
