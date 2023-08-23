@@ -23,6 +23,7 @@ from matchmaps._utils import (
     _ncs_align_and_subtract,
     _validate_environment,
     _validate_inputs,
+    _clean_up_files,
 )
 
 
@@ -42,10 +43,11 @@ def compute_ncs_difference_map(
     ncs_chains=None,
     refine_ncs_separately=False,
     eff=None,
+    keep_temp_files=None
 ):
     _validate_environment(ccp4=False)
     
-    output_dir_contents = output_dir.glob("*")
+    output_dir_contents = list(output_dir.glob("*"))
 
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
@@ -103,7 +105,14 @@ def compute_ncs_difference_map(
         output_dir=output_dir,
         name=name,
     )
+    
+    print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
+    print(keep_temp_files)
+    _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
+    print(f"{time.strftime('%H:%M:%S')}: Done!")
+
+    return
 
 def parse_arguments():
     """Parse commandline arguments."""
@@ -232,7 +241,18 @@ def parse_arguments():
         default=None,
         help=("Custom .eff template for running phenix.refine. "),
     )
-
+    
+    parser.add_argument(
+        "--keep-temp-files",
+        "-k",
+        required=False,
+        default=None,
+        help=(
+            "Do not delete intermediate matchmaps files, but rather place them in the supplied directory. "
+            "This directory is created as a subdirectory of the supplied output-dir."
+        )
+    )
+    
     return parser
 
 
@@ -269,6 +289,7 @@ def main():
         eff=args.eff,
         dmin=args.dmin,
         spacing=args.spacing,
+        keep_temp_files=args.keep_temp_files,
     )
 
     return
