@@ -14,13 +14,12 @@ import reciprocalspaceship as rs
 
 from matchmaps._utils import (
     _handle_special_positions,
-    # align_grids_from_model_transform,
     make_floatgrid_from_mtz,
     rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
     _renumber_waters,
-    # _clean_up_files,
+    _clean_up_files,
     _validate_environment,
     _validate_inputs,
 )
@@ -43,6 +42,7 @@ def compute_realspace_difference_map(
     verbose=False,
     rbr_selections=None,
     eff=None,
+    keep_temp_files=None,
 ):
     """
     Compute a real-space difference map from mtzs.
@@ -93,7 +93,7 @@ def compute_realspace_difference_map(
     off_name = mtzoff.name.removesuffix(".mtz")
     on_name = mtzon.name.removesuffix(".mtz")
 
-    output_dir_contents = output_dir.glob("*")
+    output_dir_contents = list(output_dir.glob("*"))
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
@@ -224,9 +224,9 @@ def compute_realspace_difference_map(
                 on_as_stationary=on_as_stationary,
                 selection=selection,
             )
-    # print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
-
-    # _clean_up_files()
+    
+    print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
+    _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
@@ -366,6 +366,17 @@ def parse_arguments():
         default=None,
         help=("Custom .eff template for running phenix.refine. "),
     )
+    
+    parser.add_argument(
+        "--keep-temp-files",
+        "-k",
+        required=False,
+        default=None,
+        help=(
+            "Do not delete intermediate matchmaps files, but rather place them in the supplied directory. "
+            "This directory is created as a subdirectory of the supplied output-dir."
+        )
+    )
 
     return parser
 
@@ -400,6 +411,7 @@ def main():
         dmin=args.dmin,
         spacing=args.spacing,
         on_as_stationary=args.on_as_stationary,
+        keep_temp_files=args.keep_temp_files,
     )
 
     return

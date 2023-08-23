@@ -879,36 +879,23 @@ def _validate_inputs(
             raise ValueError(f"Input file '{f}' does not exist")
         
     return input_dir, output_dir, ligands, *files
-    
 
-# def _find_available_dirname(prefix):
-#     existing = glob.glob(f"{prefix}_[0-9]*/")
 
-#     if len(existing) == 0:
-#         new_suffix = "0"
-#     else:
-#         n = max([int(s.split("_")[-1].removesuffix("/")) for s in existing])
-#         new_suffix = f"{n+1}"
+def _clean_up_files(output_dir, old_files, keep_temp_files):
 
-#     return new_suffix
-
-# def _clean_up_files(output_dir, old_files):
-    
-#     prefix='matchmapsfiles'
-
-#     n = _find_available_dirname(prefix)
-#     cleanup_dir = f"{output_dir}/prefix_{n}"
-
-#     os.mkdir(cleanup_dir)
-
-#     candidate_files = []
-#     for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
-#         candidate_files.append(glob.glob(output_dir + '*' + suffix))
+    candidate_files = []
+    for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
+        candidate_files.extend(list(output_dir.glob('*' + suffix)))
         
-#     files_to_move = list(filter(
-#         lambda x: 
-#             x not in old_files, 
-#         candidate_files
-#         )) 
-
-#     return
+    files_to_delete = set(candidate_files) - set(old_files)
+    
+    if keep_temp_files is not None:
+        new_dir = output_dir / keep_temp_files
+        new_dir.mkdir(parents=True, exist_ok=True)
+        for f in files_to_delete:
+            f.rename(new_dir / f.name)
+    else:
+        for f in files_to_delete:
+            os.remove(f)    
+    
+    return
