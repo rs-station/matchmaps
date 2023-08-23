@@ -631,10 +631,11 @@ def _realspace_align_and_subtract(
         pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
 
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
-    masked_difference_array = np.logical_not(fg_mask_only.array) * difference_array
     
-    # normalize the difference array
-    
+    # mask difference array and normalize the unmasked part
+    boolean_mask = np.logical_not(fg_mask_only.array).astype(bool)
+    masked_difference_array = boolean_mask * difference_array
+    masked_difference_array[boolean_mask] = _quicknorm(masked_difference_array[boolean_mask])    
     
     # and finally, write stuff out
 
