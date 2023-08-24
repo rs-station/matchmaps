@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=75b50838"></script>
+        <script src="_static/documentation_options.js?v=6d90b28c"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -110,6 +110,10 @@ conda<span class="w"> </span>activate<span class="w"> </span>my-matchmaps-env
 pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 </pre></div>
 </div>
+<p>If you would like to use the latest version of <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> that hasn’t yet made it to PyPI, you can alternatively install directly from GitHub:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/rs-station/matchmaps.git
+</pre></div>
+</div>
 <section id="additional-dependencies">
 <h3>Additional dependencies<a class="headerlink" href="#additional-dependencies" title="Link to this heading"></a></h3>
 <p>Though <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is a python package, it relies on two pieces of external software that are not (yet!) <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable. If they do become <code class="docutils literal notranslate"><span class="pre">pip</span></code>-installable in the future, I will excitedly update this package and save you the trouble. For the time being, you will need to install:</p>
@@ -195,7 +199,7 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <h2>Other useful options<a class="headerlink" href="#other-useful-options" title="Link to this heading"></a></h2>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code>: The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> algorithm always involves an alignment in real-space of the “on” and “off” maps. By default, the “off” map is stationary, and the “on” map is moved. This is typically desired, such that everything lines up with your “off” structural model. However, say that your structures are “apo” and “bound”, and you would like to line up your maps with a “bound” structure (which you never have to supply to <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>!). In this case, you could use the <code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code> flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dmin</span></code>: The input <code class="docutils literal notranslate"><span class="pre">mtz</span></code> files are used without truncation during refinement. Then, prior to the Fourier transform to create real-space maps, the higher-resolution <code class="docutils literal notranslate"><span class="pre">mtz</span></code> is truncated such that the resolutions match. You can optionally truncate even more stringently using the <code class="docutils literal notranslate"><span class="pre">--dmin</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dmin</span></code>: The input <code class="docutils literal notranslate"><span class="pre">mtz</span></code> files are truncated to equal resolution by default. If you would like, the <code class="docutils literal notranslate"><span class="pre">mtz</span></code>s may be truncated even more stringently.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--spacing</span></code>: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it’s very annoying, but it can be useful for debugging purposes.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--rbr-selections</span></code>: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue</a> if you have any trouble.</p></li>
@@ -214,8 +218,8 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <li><p><code class="docutils literal notranslate"><span class="pre">on.map</span></code> / <code class="docutils literal notranslate"><span class="pre">off.map</span></code>: The real-space maps which are subtracted to produce the above difference maps. It is a good idea to open these files and inspect them. They should be generally aligned in space. Any interesting signal you expect to see in a difference map may also be apparent by inspecting these maps. Remember that both of these maps were computed using the “off” model, so structural features of the “off” data are likely to be more prominent.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">on_before.map</span></code> / <code class="docutils literal notranslate"><span class="pre">off_before.map</span></code>: The real-space maps, prior to alignment. These maps may be useful a) if you’re curious how much alignment was necessary, or b) to troubleshoot where in the pipeline something went wrong.</p></li>
 </ul>
-<p>Additionally, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> produces ~15 other files which are unlikely to be useful. At some point in the future, there may be an option to either “clean up” these files or move them to a different directory.</p>
-<p>Note that if you re-run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> into the same output directory, the <code class="docutils literal notranslate"><span class="pre">.map</span></code> output files <em><strong>will</strong></em> be overwritten.</p>
+<p>Additionally, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> produces ~15 other files which by default are deleted after the program finishes. If you would like to keep these files, you can use the <code class="docutils literal notranslate"><span class="pre">--keep-temp-files</span></code> flag described above.</p>
+<p>Note that if you re-run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> into the same output directory, the <code class="docutils literal notranslate"><span class="pre">.map</span></code> output files <em><strong>will</strong></em> be overwritten. I recommend directing each <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> run in to a unique, informatively-named output directory.</p>
 </section>
 <section id="working-with-map-files-in-coot">
 <h3>Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in Coot<a class="headerlink" href="#working-with-map-files-in-coot" title="Link to this heading"></a></h3>
