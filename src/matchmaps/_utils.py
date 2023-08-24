@@ -892,7 +892,6 @@ def _clean_up_files(output_dir, old_files, keep_temp_files):
     
     if keep_temp_files is not None:
         new_dir = output_dir / keep_temp_files
-        print(new_dir)
         new_dir.mkdir(parents=True, exist_ok=True)
         for f in files_to_delete:
             f.rename(new_dir / f.name)
