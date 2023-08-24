@@ -16,6 +16,11 @@ conda activate my-matchmaps-env
 pip install matchmaps
 ```
 
+If you would like to use the latest version of `matchmaps` that hasn't yet made it to PyPI, you can alternatively install directly from GitHub:
+```bash
+pip install git+https://github.com/rs-station/matchmaps.git
+```
+
 ### Additional dependencies
 
 Though `matchmaps` is a python package, it relies on two pieces of external software that are not (yet!) `pip`-installable. If they do become `pip`-installable in the future, I will excitedly update this package and save you the trouble. For the time being, you will need to install:
@@ -105,7 +110,7 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
 ## Other useful options
 
  - `--on-as-stationary`: The `matchmaps` algorithm always involves an alignment in real-space of the "on" and "off" maps. By default, the "off" map is stationary, and the "on" map is moved. This is typically desired, such that everything lines up with your "off" structural model. However, say that your structures are "apo" and "bound", and you would like to line up your maps with a "bound" structure (which you never have to supply to `matchmaps`!). In this case, you could use the `--on-as-stationary` flag.
- - `--dmin`: The input `mtz` files are used without truncation during refinement. Then, prior to the Fourier transform to create real-space maps, the higher-resolution `mtz` is truncated such that the resolutions match. You can optionally truncate even more stringently using the `--dmin` flag.
+ - `--dmin`: The input `mtz` files are truncated to equal resolution by default. If you would like, the `mtz`s may be truncated even more stringently.
  - `--spacing`: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.
  - `--verbose`: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it's very annoying, but it can be useful for debugging purposes.
  - `--rbr-selections`: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please [file an issue](https://github.com/dennisbrookner/matchmaps/issues) if you have any trouble.
@@ -125,9 +130,9 @@ Let's assume that your input files are called `off.mtz` and `on.mtz`. The follow
  - `on.map` / `off.map`: The real-space maps which are subtracted to produce the above difference maps. It is a good idea to open these files and inspect them. They should be generally aligned in space. Any interesting signal you expect to see in a difference map may also be apparent by inspecting these maps. Remember that both of these maps were computed using the "off" model, so structural features of the "off" data are likely to be more prominent.
  - `on_before.map` / `off_before.map`: The real-space maps, prior to alignment. These maps may be useful a) if you're curious how much alignment was necessary, or b) to troubleshoot where in the pipeline something went wrong.
 
-Additionally, `matchmaps` produces ~15 other files which are unlikely to be useful. At some point in the future, there may be an option to either "clean up" these files or move them to a different directory.
+Additionally, `matchmaps` produces ~15 other files which by default are deleted after the program finishes. If you would like to keep these files, you can use the `--keep-temp-files` flag described above.
 
-Note that if you re-run `matchmaps` into the same output directory, the `.map` output files ***will*** be overwritten.
+Note that if you re-run `matchmaps` into the same output directory, the `.map` output files ***will*** be overwritten. I recommend directing each `matchmaps` run in to a unique, informatively-named output directory.
 
 ### Working with `.map` files in Coot
 
