@@ -108,6 +108,8 @@ matchmaps/_version.py
 src/matchmaps/_version.py
 
 .DS_Store
+docs/.DS_Store
+src/.DS_Store
 .cruft.json
 
 # weird thing
