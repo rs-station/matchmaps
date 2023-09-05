@@ -524,7 +524,6 @@ def _restore_ligand_occupancy(
         if ("HETATM" in l) and (not "REMARK" in l):
             original_hetatm.append(l)
     original_occs = [h[56:60] for h in original_hetatm]
-    print(len(original_occs))
 
     with open(pdb_to_be_restored, "r") as p:
         pdb = p.readlines()
