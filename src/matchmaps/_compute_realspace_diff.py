@@ -22,7 +22,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
-    _cif_or_mtz_to_mtz,
+    #_cif_or_mtz_to_mtz,
 )
 
 
