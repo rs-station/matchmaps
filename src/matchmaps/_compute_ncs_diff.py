@@ -23,6 +23,7 @@ from matchmaps._utils import (
     _validate_environment,
     _validate_inputs,
     _clean_up_files,
+    _cif_or_pdb_to_pdb,
 )
 
 
@@ -47,7 +48,9 @@ def compute_ncs_difference_map(
     _validate_environment(ccp4=False)
     
     output_dir_contents = list(output_dir.glob("*"))
-
+    
+    pdb = _cif_or_pdb_to_pdb(pdb, output_dir)
+    
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
     if Phi is None:  # do rigid-body refinement to get phases
@@ -118,8 +121,11 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description=(
             "Compute an 'internal' real-space difference map between NCS-related molecules. "
-            "You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB file."
-            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
+            "You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file."
+            ""
+            "Please note that phenix must be installed and active in your environment for this function to run. "
+            ""
+            "More information can be found online at https://rs-station.github.io/matchmaps/index.html"
         )
     )
 
@@ -131,7 +137,7 @@ def parse_arguments():
         required=True,
         help=(
             "MTZ file containing structure factor amplitudes. "
-            "Specified as [filename F SigF] or [filename F]"
+            "Specified as [filename F SigF] or [filename F]. "
             "SigF is not necessary if phases are also provided"
         ),
     )
@@ -152,7 +158,7 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb. "
+            "Reference pdb/cif. "
             "If phases are not provided, used for rigid-body refinement of input MTZ to generate phases."
         ),
     )

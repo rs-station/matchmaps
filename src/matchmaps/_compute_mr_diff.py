@@ -22,6 +22,7 @@ from matchmaps._utils import (
     _validate_inputs,
     phaser_wrapper,
     _clean_up_files,
+    _cif_or_pdb_to_pdb,
 )
 
 
@@ -91,11 +92,13 @@ def compute_mr_difference_map(
     
     _validate_environment(ccp4=False)
 
+    output_dir_contents = list(output_dir.glob("*"))
+    
     off_name = mtzoff.name.removesuffix(".mtz")
     on_name = mtzon.name.removesuffix(".mtz")
     
-    output_dir_contents = list(output_dir.glob("*"))
-
+    pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
+    
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
@@ -237,10 +240,11 @@ def parse_arguments():
             "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
             "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
             "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
-            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
+            "The input file may be in .pdb or .cif format. "
+            "Please note that phenix must be installed and active in your environment for this function to run. "
             ""
-            "If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility "
-            "If you'd like to make an internal difference map, see matchmaps.ncs "
+            "If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility. "
+            "More information can be found online at https://rs-station.github.io/matchmaps/index.html"
         )
     )
 
@@ -274,8 +278,8 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb corresponding to the off/apo/ground/dark state. "
-            "Used for rigid-body refinement of both input MTZs to generate phases."
+            "Reference pdb/cif corresponding to the off/apo/ground/dark state. "
+            "Used as a molecular replacement solution for mtzon and for rigid-body refinement of both input MTZs to generate phases."
             "Should match mtzoff well enough that molecular replacement is not necessary."
         ),
     )

@@ -22,6 +22,8 @@ from matchmaps._utils import (
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
+    #_cif_or_mtz_to_mtz,
+    _cif_or_pdb_to_pdb,
 )
 
 
@@ -87,21 +89,25 @@ def compute_realspace_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
-
+    
     _validate_environment(ccp4=True)
+
+    output_dir_contents = list(output_dir.glob("*"))
 
     off_name = mtzoff.name.removesuffix(".mtz")
     on_name = mtzon.name.removesuffix(".mtz")
+    
+    pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
 
-    output_dir_contents = list(output_dir.glob("*"))
+    # off_name = _cif_or_mtz_to_mtz(mtzoff)
+    # on_name = _cif_or_mtz_to_mtz(mtzon)
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
     ### scaleit
-    #mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
-    mtzon_scaled = output_dir / (mtzon.name.removesuffix(".mtz") + "_scaled.mtz")
+    mtzon_scaled = output_dir / (on_name + "_scaled.mtz")
 
     print(
         f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data..."
@@ -242,9 +248,10 @@ def parse_arguments():
             "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
             "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
             "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
+            "The input file may be in .pdb or .cif format. "
             "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
             ""
-            "If you'd like to make an internal difference map instead, see matchmaps.ncs "
+            "More information can be found online at https://rs-station.github.io/matchmaps/index.html"
         )
     )
 
@@ -277,7 +284,7 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb corresponding to the off/apo/ground/dark state. "
+            "Reference pdb/cif corresponding to the off/apo/ground/dark state. "
             "Used for rigid-body refinement of both input MTZs to generate phases."
         ),
     )
