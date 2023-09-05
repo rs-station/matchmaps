@@ -134,7 +134,7 @@ def parse_arguments():
         required=True,
         help=(
             "MTZ file containing structure factor amplitudes. "
-            "Specified as [filename F SigF] or [filename F]"
+            "Specified as [filename F SigF] or [filename F]. "
             "SigF is not necessary if phases are also provided"
         ),
     )
