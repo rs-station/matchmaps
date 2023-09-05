@@ -121,8 +121,11 @@ def parse_arguments():
     parser = argparse.ArgumentParser(
         description=(
             "Compute an 'internal' real-space difference map between NCS-related molecules. "
-            "You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB file."
-            "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
+            "You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file."
+            ""
+            "Please note that phenix must be installed and active in your environment for this function to run. "
+            ""
+            "More information can be found online at https://rs-station.github.io/matchmaps/index.html"
         )
     )
 
@@ -155,7 +158,7 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb. "
+            "Reference pdb/cif. "
             "If phases are not provided, used for rigid-body refinement of input MTZ to generate phases."
         ),
     )

@@ -248,9 +248,10 @@ def parse_arguments():
             "though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. "
             "Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. "
             "You will, however, need an input model (assumed to correspond with the 'off' state) which will be used to determine phases. "
+            "The input file may be in .pdb or .cif format. "
             "Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. "
             ""
-            "If you'd like to make an internal difference map instead, see matchmaps.ncs "
+            "More information can be found online at https://rs-station.github.io/matchmaps/index.html"
         )
     )
 
@@ -283,7 +284,7 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb corresponding to the off/apo/ground/dark state. "
+            "Reference pdb/cif corresponding to the off/apo/ground/dark state. "
             "Used for rigid-body refinement of both input MTZs to generate phases."
         ),
     )
