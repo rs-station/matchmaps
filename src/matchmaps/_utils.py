@@ -325,11 +325,13 @@ def _handle_special_positions(pdboff, output_dir):
     If any non-water atoms sit on special positions, throw a (hopefully helpful) error.
 
     Regardless of whether any special positions were found, copy this file over to output_dir
+    
+    Additionally, regardless of whether the input is a .pdb or .cif file, write the output to a .pdb file for downstream use.
 
     Parameters
     ----------
-    pdboff : str
-        name of input pdb
+    pdboff : pathlib.Path
+        name of input pdb (or mmcif)
     output_dir : str
     """
     pdb = gemmi.read_structure(str(pdboff))
@@ -363,10 +365,13 @@ Alternatively, you can remove this atom from your structure altogether and try a
 """
                             )
 
-    pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
+    if pdboff.suffix in ('.cif', '.CIF'):
+        pdboff_nospecialpositions = output_dir / (pdboff.name.lower().removesuffix(".cif") + "_nospecialpositions.pdb")
+        pdb.make_mmcif_document().write_file(str(pdboff_nospecialpositions))
+    else:
+        pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
+        pdb.write_pdb(str(pdboff_nospecialpositions))
     
-    pdb.write_pdb(str(pdboff_nospecialpositions))
-
     return pdboff_nospecialpositions
 
 
@@ -880,6 +885,17 @@ def _validate_inputs(
             raise ValueError(f"Input file '{f}' does not exist")
         
     return input_dir, output_dir, ligands, *files
+
+
+# def _cif_or_mtz_to_mtz(path):
+    
+#     if path.suffix.lower() == '.mtz':
+#         reflections = rs.read_mtz(str(path))
+        
+#     elif path.suffix.lower() == '.cif':
+#         reflections = rs.read_cif(str(path))
+    
+#     return name
 
 
 def _clean_up_files(output_dir, old_files, keep_temp_files):

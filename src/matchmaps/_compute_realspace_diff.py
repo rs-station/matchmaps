@@ -22,6 +22,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
+    _cif_or_mtz_to_mtz,
 )
 
 
@@ -87,21 +88,22 @@ def compute_realspace_difference_map(
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
     """
-
+    
     _validate_environment(ccp4=True)
 
-    off_name = mtzoff.name.removesuffix(".mtz")
-    on_name = mtzon.name.removesuffix(".mtz")
-
     output_dir_contents = list(output_dir.glob("*"))
+
+    off_name = mtzoff.name.removesuffix(".mtz")#.removesuffix(".cif")
+    on_name = mtzon.name.removesuffix(".mtz")#.removesuffix(".cif")
+    # off_name = _cif_or_mtz_to_mtz(mtzoff)
+    # on_name = _cif_or_mtz_to_mtz(mtzon)
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
     ### scaleit
-    #mtzon_scaled = mtzon.removesuffix(".mtz") + "_scaled" + ".mtz"
-    mtzon_scaled = output_dir / (mtzon.name.removesuffix(".mtz") + "_scaled.mtz")
+    mtzon_scaled = output_dir / (on_name + "_scaled.mtz")
 
     print(
         f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data..."
