@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=2318964b"></script>
+        <script src="_static/documentation_options.js?v=aad97355"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -47,7 +47,20 @@
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">About the algorithm</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">About the algorithm</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#excerpts-from-the-pre-print">Excerpts from the pre-print</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#abstract">Abstract</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#algorithm-description">Algorithm description</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#matchmaps-variants"><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> variants</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#matchmaps-mr"><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#matchmaps-ncs"><code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#questions-or-thoughts">Questions or thoughts?</a></li>
+</ul>
+</li>
 </ul>
 
         </div>
@@ -76,7 +89,51 @@
              
   <section class="tex2jax_ignore mathjax_ignore" id="about-the-matchmaps-algorithm">
 <h1>About the <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> algorithm<a class="headerlink" href="#about-the-matchmaps-algorithm" title="Link to this heading"></a></h1>
-<p>More details here coming soon! Don’t hesitate to <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">reach out directly</a> if you have any questions in the mean time.</p>
+<p>If you want to learn more about the idea behind <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, along with some examples, please check out our new pre-print!</p>
+<blockquote>
+<div><p><a class="reference external" href="https://www.biorxiv.org/content/10.1101/2023.09.01.555333v1">MatchMaps: Non-isomorphous difference maps for X-ray crystallography</a></p>
+</div></blockquote>
+<section id="excerpts-from-the-pre-print">
+<h2>Excerpts from the pre-print<a class="headerlink" href="#excerpts-from-the-pre-print" title="Link to this heading"></a></h2>
+<section id="abstract">
+<h3>Abstract<a class="headerlink" href="#abstract" title="Link to this heading"></a></h3>
+<p>Conformational change mediates the biological functions of proteins. Crystallographic measurements can map these changes with extraordinary sensitivity as a function of mutations, ligands, and time. The isomorphous difference map remains the gold standard for detecting structural differences between datasets. Isomorphous difference maps combine the phases of a chosen reference state with the observed changes in structure factor amplitudes to yield a map of changes in electron density. Such maps are much more sensitive to conformational change than structure refinement is, and are unbiased in the sense that observed differences do not depend on refinement of the perturbed state. However, even minute changes in unit cell dimensions can render isomorphous difference maps useless. This is unnecessary. Here we describe a generalized procedure for calculating observed difference maps that retains the high sensitivity to conformational change and avoids structure refinement of the perturbed state. We have implemented this procedure in an open-source python package, MatchMaps, that can be run in any software environment supporting PHENIX and CCP4. Through examples, we show that MatchMaps “rescues” observed difference electron density maps for near-isomorphous crystals, corrects artifacts in nominally isomorphous difference maps, and extends to detecting differences across copies within the asymmetric unit, or across altogether different crystal forms.</p>
+</section>
+<section id="algorithm-description">
+<h3>Algorithm description<a class="headerlink" href="#algorithm-description" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Place both sets of structure factor amplitudes on a common scale using CCP4’s <code class="docutils literal notranslate"><span class="pre">SCALEIT</span></code> utility and truncate the data to the same resolution range.</p></li>
+<li><p>Generate phases for each dataset via the <code class="docutils literal notranslate"><span class="pre">phenix.refine</span></code> program. For each dataset, the OFF starting model is used, and only rigid-body refinement is permitted to prevent the introduction of model bias.</p></li>
+<li><p>Fourier-transform each set of complex structure factors into a real-space electron density map using the python packages <code class="docutils literal notranslate"><span class="pre">reciprocalspaceship</span></code> and <code class="docutils literal notranslate"><span class="pre">gemmi</span></code>.</p></li>
+<li><p>Compute the translation and rotation necessary to overlay the two rigid-body refined models. Apply this translation-rotation to the ON real-space map such that it overlays with the OFF map. These computations are carried out using <code class="docutils literal notranslate"><span class="pre">gemmi</span></code>.</p></li>
+<li><p>Place both real-space maps on a common scale.</p></li>
+<li><p>Subtract real-space maps voxel-wise.</p></li>
+<li><p>Apply a solvent mask to the final difference map.</p></li>
+</ol>
+</section>
+</section>
+<section id="matchmaps-variants">
+<h2><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> variants<a class="headerlink" href="#matchmaps-variants" title="Link to this heading"></a></h2>
+<p>In addition to the core <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> utility, two additional command-line functions are available: <code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code> and <code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code>. The algorithm is modified slightly for each utility.</p>
+<section id="matchmaps-mr">
+<h3><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code><a class="headerlink" href="#matchmaps-mr" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code> can support two input reflection files that are in different crystal packings or spacegroups. Accordingly, step 1 above is replaced with a round of molecular replacement (using <code class="docutils literal notranslate"><span class="pre">phenix.phaser</span></code>) whereing the OFF starting model is used as a molecular replacement solution for the ON reflections. The algorithm proceeds essentially identically from this point.</p>
+<p>One small but important change in <code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code> is that all ordered water molecules in the OFF starting model are discarded. This is important, as the ordered water molecules in one spacegroup/crystal packing are often not appropriate in a different spacegroup/crystal packing.</p>
+</section>
+<section id="matchmaps-ncs">
+<h3><code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code><a class="headerlink" href="#matchmaps-ncs" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code> creates internal difference maps across a non-crystallographic symmetry operation. This function requires a number of modifications to the core algorithm:</p>
+<ul class="simple">
+<li><p>Step 1 is omitted; there is only one input reflection file, so no scaling is necessary.</p></li>
+<li><p>Step 2 is optional. If phases are not included, <code class="docutils literal notranslate"><span class="pre">phenix.refine</span></code> is run to generate phases. However, if phases are provided, they are used and refinement is skipped.</p></li>
+<li><p>In step 4, there is only one rigid-body refined model. Alignment is performed on the two regions of the model related by NCS (e.g., two different protein chains).</p></li>
+</ul>
+</section>
+</section>
+<section id="questions-or-thoughts">
+<h2>Questions or thoughts?<a class="headerlink" href="#questions-or-thoughts" title="Link to this heading"></a></h2>
+<p>If you have any questions, thoughts, or suggestions regarding this algorithm and software, we would love to hear from you! The easiest way to get in touch is by <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">opening an issue on GitHub</a></p>
+</section>
 </section>
 
 

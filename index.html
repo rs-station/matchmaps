@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>matchmaps’s Documentation &mdash; matchmaps</title>
+  <title>matchmaps Documentation &mdash; matchmaps</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=2318964b"></script>
+        <script src="_static/documentation_options.js?v=aad97355"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -64,7 +64,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">matchmaps’s Documentation</li>
+      <li class="breadcrumb-item active"><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> Documentation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.md" rel="nofollow"> View page source</a>
       </li>
@@ -74,13 +74,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section class="tex2jax_ignore mathjax_ignore" id="matchmapss-documentation">
-<h1>matchmaps’s Documentation<a class="headerlink" href="#matchmapss-documentation" title="Link to this heading"></a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="matchmaps-documentation">
+<h1><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> Documentation<a class="headerlink" href="#matchmaps-documentation" title="Link to this heading"></a></h1>
 <p>Welcome to the docs for <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, a python package for aligning and subtracting non-isomorphous crystallographic datasets. Do you have a pair of datasets for which an isomorphous difference maps doesn’t quite work due to changes in your unit cell dimensions? If so, this is the package for you.</p>
 <p>The <a class="reference internal" href="quickstart.html"><span class="std std-doc">quickstart guide</span></a> contains installation instructions and sample usage of the basic <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> utility, along with other useful tips.</p>
+<p>If you’d like to learn more about <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> and see the package in action, please check out our pre-print!</p>
+<blockquote>
+<div><p><a class="reference external" href="https://www.biorxiv.org/content/10.1101/2023.09.01.555333v1.full.pdf+html">MatchMaps: Non-isomorphous difference maps for X-ray crystallography</a></p>
+</div></blockquote>
+<p>This software is part of the <a class="reference external" href="https://rs-station.github.io/">Reciprocal Space Station</a> family of open-source crystallography software and was conceived in <a class="reference external" href="https://hekstralab.fas.harvard.edu/">Doeke Hekstra’s Lab</a> at Harvard by <a class="reference external" href="https://dennisbrookner.github.io/">Dennis Brookner</a></p>
 <section id="the-matchmaps-functions-in-brief">
 <h2>The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> functions in brief<a class="headerlink" href="#the-matchmaps-functions-in-brief" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three command-line utilities. All options for all three utilites are documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three command-line utilities. A walkthrough of the core utility can be found <a class="reference internal" href="quickstart.html"><span class="std std-doc">here</span></a>, and all options for all three utilites are documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three utilities produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code></strong> takes in two mtzs containing similar data and which are nearly isomorphous and computes an unbiased real-space difference map between them</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></strong> takes in two mtzs containing similar data but which are in different spacegroups (or the same spacegroup but different crystal packing) and computes an unbiased real-space difference map between them.</p></li>
