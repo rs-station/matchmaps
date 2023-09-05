@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=6d90b28c"></script>
+        <script src="_static/documentation_options.js?v=2318964b"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -85,7 +85,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is built to be used from the command-line. See the following utilities below. You can also print these messages in the command-line via the <code class="docutils literal notranslate"><span class="pre">--help</span></code> option.</p>
 <section id="matchmaps">
 <h2>matchmaps<a class="headerlink" href="#matchmaps" title="Link to this heading"></a></h2>
-<p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. If you’d like to make an internal difference map instead, see matchmaps.ncs</p>
+<p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. The input file may be in .pdb or .cif format. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
 <span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
@@ -115,7 +115,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-pdboff">
 <span id="cmdoption-matchmaps-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-pdboff" title="Link to this definition"></a></dt>
-<dd><p>Reference pdb corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.</p>
+<dd><p>Reference pdb/cif corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -181,7 +181,7 @@
 </section>
 <section id="matchmaps-ncs">
 <h2>matchmaps.ncs<a class="headerlink" href="#matchmaps-ncs" title="Link to this heading"></a></h2>
-<p>Compute an ‘internal’ real-space difference map between NCS-related molecules. You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB file.Please note that both ccp4 and phenix must be installed and active in your environment for this function to run.</p>
+<p>Compute an ‘internal’ real-space difference map between NCS-related molecules. You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file.Please note that phenix must be installed and active in your environment for this function to run. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.ncs [-h] --mtz [MTZ ...] [--phases PHASES] --pdb PDB</span>
 <span class="go">                     --ncs-chains fixed_chain moving_chain [--mapname MAPNAME]</span>
 <span class="go">                     [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
@@ -199,7 +199,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-mtz">
 <span id="cmdoption-matchmaps.ncs-m"></span><span class="sig-name descname"><span class="pre">--mtz</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mtz" title="Link to this definition"></a></dt>
-<dd><p>MTZ file containing structure factor amplitudes. Specified as [filename F SigF] or [filename F]SigF is not necessary if phases are also provided</p>
+<dd><p>MTZ file containing structure factor amplitudes. Specified as [filename F SigF] or [filename F]. SigF is not necessary if phases are also provided</p>
 </dd></dl>
 
 <dl class="std option">
@@ -211,7 +211,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-pdb">
 <span id="cmdoption-matchmaps.ncs-p"></span><span class="sig-name descname"><span class="pre">--pdb</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-pdb" title="Link to this definition"></a></dt>
-<dd><p>Reference pdb. If phases are not provided, used for rigid-body refinement of input MTZ to generate phases.</p>
+<dd><p>Reference pdb/cif. If phases are not provided, used for rigid-body refinement of input MTZ to generate phases.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -277,7 +277,7 @@
 </section>
 <section id="matchmaps-mr">
 <h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Link to this heading"></a></h2>
-<p>Compute a real-space difference map between inputs in different space groups / crystal packings. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility If you’d like to make an internal difference map, see matchmaps.ncs</p>
+<p>Compute a real-space difference map between inputs in different space groups / crystal packings. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. The input file may be in .pdb or .cif format. Please note that phenix must be installed and active in your environment for this function to run. If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.mr [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon</span>
 <span class="go">                    Fon SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                    [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
@@ -307,7 +307,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-pdboff">
 <span id="cmdoption-matchmaps.mr-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-pdboff" title="Link to this definition"></a></dt>
-<dd><p>Reference pdb corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.Should match mtzoff well enough that molecular replacement is not necessary.</p>
+<dd><p>Reference pdb/cif corresponding to the off/apo/ground/dark state. Used as a molecular replacement solution for mtzon and for rigid-body refinement of both input MTZs to generate phases.Should match mtzoff well enough that molecular replacement is not necessary.</p>
 </dd></dl>
 
 <dl class="std option">
