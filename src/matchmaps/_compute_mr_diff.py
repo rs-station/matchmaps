@@ -22,6 +22,7 @@ from matchmaps._utils import (
     _validate_inputs,
     phaser_wrapper,
     _clean_up_files,
+    _cif_or_pdb_to_pdb,
 )
 
 
@@ -91,11 +92,13 @@ def compute_mr_difference_map(
     
     _validate_environment(ccp4=False)
 
+    output_dir_contents = list(output_dir.glob("*"))
+    
     off_name = mtzoff.name.removesuffix(".mtz")
     on_name = mtzon.name.removesuffix(".mtz")
     
-    output_dir_contents = list(output_dir.glob("*"))
-
+    pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
+    
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)

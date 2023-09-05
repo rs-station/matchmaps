@@ -365,12 +365,12 @@ Alternatively, you can remove this atom from your structure altogether and try a
 """
                             )
 
-    if pdboff.suffix in ('.cif', '.CIF'):
-        pdboff_nospecialpositions = output_dir / (pdboff.name.lower().removesuffix(".cif") + "_nospecialpositions.pdb")
-        pdb.make_mmcif_document().write_file(str(pdboff_nospecialpositions))
-    else:
-        pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
-        pdb.write_pdb(str(pdboff_nospecialpositions))
+    # if pdboff.suffix in ('.cif', '.CIF'):
+    #     pdboff_nospecialpositions = output_dir / (pdboff.name.lower().removesuffix(".cif") + "_nospecialpositions.pdb")
+    #     pdb.make_mmcif_document().write_file(str(pdboff_nospecialpositions))
+    # else:
+    pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
+    pdb.write_pdb(str(pdboff_nospecialpositions))
     
     return pdboff_nospecialpositions
 
@@ -405,7 +405,6 @@ def _remove_waters(
     output_dir,
 ):
     pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
-    # output_pdb = input_pdb.removesuffix(".pdb") + "_dry"
 
     subprocess.run(
         f"phenix.pdbtools {pdb} remove='water' \
@@ -887,7 +886,7 @@ def _validate_inputs(
     return input_dir, output_dir, ligands, *files
 
 
-# def _cif_or_mtz_to_mtz(path):
+# def _cif_or_mtz_to_mtz(input_file, output_dir):
     
 #     if path.suffix.lower() == '.mtz':
 #         reflections = rs.read_mtz(str(path))
@@ -897,6 +896,25 @@ def _validate_inputs(
     
 #     return name
 
+def _cif_or_pdb_to_pdb(input_file, output_dir):
+    
+    if input_file.suffix.lower() == '.pdb':
+        
+        output_file = output_dir / (input_file.name)
+        
+        shutil.copy(input_file, output_file)
+        
+    elif input_file.suffix.lower() == '.cif':
+        
+        output_file = output_dir / (input_file.name.lower().removesuffix('.cif') + '.pdb')
+        
+        structure = gemmi.read_structure(str(input_file))
+        structure.write_pdb(str(output_file))
+    
+    else:
+        raise ValueError(f"Invalid file type {input_file.suffix} for starting model, must be '.pdb' or '.cif'")
+    
+    return output_file
 
 def _clean_up_files(output_dir, old_files, keep_temp_files):
 

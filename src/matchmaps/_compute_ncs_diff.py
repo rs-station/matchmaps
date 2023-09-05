@@ -23,6 +23,7 @@ from matchmaps._utils import (
     _validate_environment,
     _validate_inputs,
     _clean_up_files,
+    _cif_or_pdb_to_pdb,
 )
 
 
@@ -47,7 +48,9 @@ def compute_ncs_difference_map(
     _validate_environment(ccp4=False)
     
     output_dir_contents = list(output_dir.glob("*"))
-
+    
+    pdb = _cif_or_pdb_to_pdb(pdb, output_dir)
+    
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
     if Phi is None:  # do rigid-body refinement to get phases

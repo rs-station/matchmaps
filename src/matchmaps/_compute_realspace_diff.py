@@ -23,6 +23,7 @@ from matchmaps._utils import (
     _validate_environment,
     _validate_inputs,
     #_cif_or_mtz_to_mtz,
+    _cif_or_pdb_to_pdb,
 )
 
 
@@ -93,8 +94,11 @@ def compute_realspace_difference_map(
 
     output_dir_contents = list(output_dir.glob("*"))
 
-    off_name = mtzoff.name.removesuffix(".mtz")#.removesuffix(".cif")
-    on_name = mtzon.name.removesuffix(".mtz")#.removesuffix(".cif")
+    off_name = mtzoff.name.removesuffix(".mtz")
+    on_name = mtzon.name.removesuffix(".mtz")
+    
+    pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
+
     # off_name = _cif_or_mtz_to_mtz(mtzoff)
     # on_name = _cif_or_mtz_to_mtz(mtzon)
 
