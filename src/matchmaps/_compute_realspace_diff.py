@@ -22,7 +22,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
-    #_cif_or_mtz_to_mtz,
+    _cif_or_mtz_to_mtz,
     _cif_or_pdb_to_pdb,
 )
 
@@ -94,13 +94,13 @@ def compute_realspace_difference_map(
 
     output_dir_contents = list(output_dir.glob("*"))
 
-    off_name = mtzoff.name.removesuffix(".mtz")
-    on_name = mtzon.name.removesuffix(".mtz")
+    # off_name = mtzoff.name.removesuffix(".mtz")
+    # on_name = mtzon.name.removesuffix(".mtz")
     
     pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
 
-    # off_name = _cif_or_mtz_to_mtz(mtzoff)
-    # on_name = _cif_or_mtz_to_mtz(mtzon)
+    mtzoff, off_name = _cif_or_mtz_to_mtz(mtzoff, output_dir)
+    mtzon, on_name = _cif_or_mtz_to_mtz(mtzon, output_dir)
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
