@@ -23,6 +23,7 @@ from matchmaps._utils import (
     phaser_wrapper,
     _clean_up_files,
     _cif_or_pdb_to_pdb,
+    _cif_or_mtz_to_mtz,
 )
 
 
@@ -94,17 +95,16 @@ def compute_mr_difference_map(
 
     output_dir_contents = list(output_dir.glob("*"))
     
-    off_name = mtzoff.name.removesuffix(".mtz")
-    on_name = mtzon.name.removesuffix(".mtz")
-    
     pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
+    
+    mtzoff, off_name = _cif_or_mtz_to_mtz(mtzoff, output_dir)
+    mtzon, on_name = _cif_or_mtz_to_mtz(mtzon, output_dir)
     
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
 
     # this is where scaling takes place in the usual pipeline, but that doesn't make sense with different-spacegroup inputs
-    # side note: I need to test the importance of scaling even in the normal case!! Might be more artifact than good, who knows
 
     pdboff = _handle_special_positions(pdboff, output_dir)
 
@@ -133,8 +133,6 @@ def compute_mr_difference_map(
         output_dir=output_dir,
     )
 
-    # the refinement process *should* be identical. Waters are gone already
-    # I just need to make sure that the phaser outputs go together
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 
     nickname_on = rigid_body_refinement_wrapper(
@@ -166,7 +164,6 @@ def compute_mr_difference_map(
     )
 
     # from here down I just copied over the stuff from the normal version
-    # this should be proofread for compatibility but should all work
 
     # read back in the files created by phenix
     # these have knowable names

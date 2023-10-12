@@ -94,9 +94,6 @@ def compute_realspace_difference_map(
 
     output_dir_contents = list(output_dir.glob("*"))
 
-    # off_name = mtzoff.name.removesuffix(".mtz")
-    # on_name = mtzon.name.removesuffix(".mtz")
-    
     pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
 
     mtzoff, off_name = _cif_or_mtz_to_mtz(mtzoff, output_dir)

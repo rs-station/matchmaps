@@ -24,6 +24,7 @@ from matchmaps._utils import (
     _validate_inputs,
     _clean_up_files,
     _cif_or_pdb_to_pdb,
+    _cif_or_mtz_to_mtz,
 )
 
 
@@ -50,6 +51,8 @@ def compute_ncs_difference_map(
     output_dir_contents = list(output_dir.glob("*"))
     
     pdb = _cif_or_pdb_to_pdb(pdb, output_dir)
+    
+    mtz, _ = _cif_or_mtz_to_mtz(mtz, output_dir)
     
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
@@ -109,7 +112,7 @@ def compute_ncs_difference_map(
     )
     
     print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
-    print(keep_temp_files)
+
     _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")

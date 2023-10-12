@@ -891,9 +891,9 @@ def _cif_or_mtz_to_mtz(input_file, output_dir):
 
     Parameters
     ----------
-    input_file : _type_
+    input_file : pathlib.Path
         _description_
-    output_dir : _type_
+    output_dir : pathlib.Path
         _description_
 
     Returns
@@ -923,6 +923,24 @@ def _cif_or_mtz_to_mtz(input_file, output_dir):
             input_file.name.removesuffix(input_file.suffix))
 
 def _cif_or_pdb_to_pdb(input_file, output_dir):
+    """
+    _summary_
+
+    Parameters
+    ----------
+    input_file : pathlib.Path
+    output_dir : pathlib.Path
+
+    Returns
+    -------
+    pathlib.Path
+        path to output file
+
+    Raises
+    ------
+    ValueError
+        _description_
+    """
     
     if input_file.suffix.lower() == '.pdb':
         
