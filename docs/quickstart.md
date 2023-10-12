@@ -39,10 +39,10 @@ At this point, you should be good to go! Please [file an issue on github](https:
 ## Input files
 
 To run `matchmaps`, you will need:
- - one `.pdb` file containing a refined structural model corresponding to your "off" data.
- - two `.mtz` files corresponding to your "on" and "off" data respectively.
+ - one `.pdb` (or `.cif`) file containing a refined structural model corresponding to your "off" data.
+ - two `.mtz` (or `.cif`) files corresponding to your "on" and "off" data respectively.
 
-You will also need to know the names of the columns in these `mtz`s containing your observed structure factor amplitudes and uncertainties. Depending on what software you used to produce these files, this may be something like `FP`/`SIGFP`, `Fobs`/`SIGFobs`, or similar. If you don't know these off-hand, you can figure it out using [`reciprocalspaceship`](https://rs-station.github.io/reciprocalspaceship/)'s `rs.mtzdump` utility, which is installed along with `matchmaps`. You can do this right in the command-line as:
+You will also need to know the names of the columns in these `mtz`/`cif`s containing your observed structure factor amplitudes and uncertainties. Depending on what software you used to produce these files, this may be something like `FP`/`SIGFP`, `Fobs`/`SIGFobs`, or similar. If you don't know these off-hand and your input is an `.mtz` file, you can figure it out using [`reciprocalspaceship`](https://rs-station.github.io/reciprocalspaceship/)'s `rs.mtzdump` utility, which is installed along with `matchmaps`. You can do this right in the command-line as:
 ```bash
 rs.mtzdump mymtz.mtz
 ```

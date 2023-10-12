@@ -252,7 +252,7 @@ def parse_arguments():
         metavar=("mtzfileoff", "Foff", "SigFoff"),
         required=True,
         help=(
-            "MTZ containing off/apo/ground/dark state data. "
+            "MTZ or sfCIF containing off/apo/ground/dark state data. "
             "Specified as [filename F SigF]"
         ),
     )
@@ -264,7 +264,7 @@ def parse_arguments():
         metavar=("mtzfileon", "Fon", "SigFon"),
         required=True,
         help=(
-            "MTZ containing on/bound/excited/bright state data. "
+            "MTZ or SFCIF containing on/bound/excited/bright state data. "
             "Specified as [filename F SigF]"
             "This file may be in a different spacegroup / crystal packing than mtzoff"
         ),
@@ -275,7 +275,7 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb/cif corresponding to the off/apo/ground/dark state. "
+            "Reference PDB or mmCIF corresponding to the off/apo/ground/dark state. "
             "Used as a molecular replacement solution for mtzon and for rigid-body refinement of both input MTZs to generate phases."
             "Should match mtzoff well enough that molecular replacement is not necessary."
         ),
@@ -295,7 +295,7 @@ def parse_arguments():
         "-i",
         required=False,
         default="./",
-        help="Path to input mtzs and pdb. Optional, defaults to './' (current directory)",
+        help="Path to input files. Optional, defaults to './' (current directory)",
     )
 
     parser.add_argument(
