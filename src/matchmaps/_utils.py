@@ -885,17 +885,62 @@ def _validate_inputs(
     return input_dir, output_dir, ligands, *files
 
 
-# def _cif_or_mtz_to_mtz(input_file, output_dir):
+def _cif_or_mtz_to_mtz(input_file, output_dir):
+    """
+    Return a File() object and also the original file name as a string
+
+    Parameters
+    ----------
+    input_file : pathlib.Path
+        _description_
+    output_dir : pathlib.Path
+        _description_
+
+    Returns
+    -------
+    (output_file, filename)
+
+    """
     
-#     if path.suffix.lower() == '.mtz':
-#         reflections = rs.read_mtz(str(path))
+    if input_file.suffix.lower() == '.mtz':
         
-#     elif path.suffix.lower() == '.cif':
-#         reflections = rs.read_cif(str(path))
+        output_file = output_dir / (input_file.name)
+        
+        shutil.copy(input_file, output_file)
+                
+    elif input_file.suffix.lower() == '.cif':
+        
+        output_file = output_dir / (input_file.name.lower().removesuffix('.cif') + '.mtz')
+        
+        reflections = rs.read_cif(str(input_file))
+        
+        reflections.write_mtz(str(output_file))
+        
+    else:
+        raise ValueError(f"Invalid file type {input_file.suffix} for starting model, must be '.mtz' or '.cif'")
     
-#     return name
+    return (output_file, 
+            input_file.name.removesuffix(input_file.suffix))
 
 def _cif_or_pdb_to_pdb(input_file, output_dir):
+    """
+    _summary_
+
+    Parameters
+    ----------
+    input_file : pathlib.Path
+    output_dir : pathlib.Path
+
+    Returns
+    -------
+    pathlib.Path
+        path to output file
+
+    Raises
+    ------
+    ValueError
+        _description_
+    """
     
     if input_file.suffix.lower() == '.pdb':
         

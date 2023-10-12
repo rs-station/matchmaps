@@ -29,7 +29,7 @@ dynamic = ["version"]
 dependencies = [
     "numpy",
     "tqdm",
-    "reciprocalspaceship",
+    "reciprocalspaceship>=1.0.1",
     "rs-booster>=0.0.1",
     "gemmi"
 ]

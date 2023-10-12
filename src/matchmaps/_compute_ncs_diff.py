@@ -24,6 +24,7 @@ from matchmaps._utils import (
     _validate_inputs,
     _clean_up_files,
     _cif_or_pdb_to_pdb,
+    _cif_or_mtz_to_mtz,
 )
 
 
@@ -50,6 +51,8 @@ def compute_ncs_difference_map(
     output_dir_contents = list(output_dir.glob("*"))
     
     pdb = _cif_or_pdb_to_pdb(pdb, output_dir)
+    
+    mtz, _ = _cif_or_mtz_to_mtz(mtz, output_dir)
     
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
@@ -109,7 +112,7 @@ def compute_ncs_difference_map(
     )
     
     print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
-    print(keep_temp_files)
+
     _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
@@ -136,7 +139,7 @@ def parse_arguments():
         # metavar=("mtzfile", "F", "SigF"),
         required=True,
         help=(
-            "MTZ file containing structure factor amplitudes. "
+            "MTZ or sfCIF file containing structure factor amplitudes. "
             "Specified as [filename F SigF] or [filename F]. "
             "SigF is not necessary if phases are also provided"
         ),
@@ -147,7 +150,7 @@ def parse_arguments():
         required=False,
         default=None,
         help=(
-            "Optional. Column in MTZ file containing phases. "
+            "Optional. Column in MTZ/sfCIF file containing phases. "
             "If phases are not provided, phases will be computed via rigid-body refinement of "
             "the provided model and structure factor amplitudes."
         ),
@@ -158,8 +161,8 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb/cif. "
-            "If phases are not provided, used for rigid-body refinement of input MTZ to generate phases."
+            "Reference PDB or mmCIF. "
+            "If phases are not provided, used for rigid-body refinement of input MTZ/sfCIF to generate phases."
         ),
     )
 
@@ -197,7 +200,7 @@ def parse_arguments():
         "-i",
         required=False,
         default="./",
-        help="Path to input mtz and pdb. Optional, defaults to './' (current directory)",
+        help="Path to input files. Optional, defaults to './' (current directory)",
     )
 
     parser.add_argument(

@@ -22,7 +22,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
-    #_cif_or_mtz_to_mtz,
+    _cif_or_mtz_to_mtz,
     _cif_or_pdb_to_pdb,
 )
 
@@ -94,13 +94,10 @@ def compute_realspace_difference_map(
 
     output_dir_contents = list(output_dir.glob("*"))
 
-    off_name = mtzoff.name.removesuffix(".mtz")
-    on_name = mtzon.name.removesuffix(".mtz")
-    
     pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
 
-    # off_name = _cif_or_mtz_to_mtz(mtzoff)
-    # on_name = _cif_or_mtz_to_mtz(mtzon)
+    mtzoff, off_name = _cif_or_mtz_to_mtz(mtzoff, output_dir)
+    mtzon, on_name = _cif_or_mtz_to_mtz(mtzon, output_dir)
 
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
@@ -262,7 +259,7 @@ def parse_arguments():
         metavar=("mtzfileoff", "Foff", "SigFoff"),
         required=True,
         help=(
-            "MTZ containing off/apo/ground/dark state data. "
+            "MTZ or sfCIF containing off/apo/ground/dark state data. "
             "Specified as [filename F SigF]"
         ),
     )
@@ -274,7 +271,7 @@ def parse_arguments():
         metavar=("mtzfileon", "Fon", "SigFon"),
         required=True,
         help=(
-            "MTZ containing on/bound/excited/bright state data. "
+            "MTZ or sfCIF containing on/bound/excited/bright state data. "
             "Specified as [filename F SigF]"
         ),
     )
@@ -284,7 +281,7 @@ def parse_arguments():
         "-p",
         required=True,
         help=(
-            "Reference pdb/cif corresponding to the off/apo/ground/dark state. "
+            "Reference PDB or mmCIF corresponding to the off/apo/ground/dark state. "
             "Used for rigid-body refinement of both input MTZs to generate phases."
         ),
     )
@@ -303,7 +300,7 @@ def parse_arguments():
         "-i",
         required=False,
         default="./",
-        help="Path to input mtzs and pdb. Optional, defaults to './' (current directory)",
+        help="Path to input files. Optional, defaults to './' (current directory)",
     )
 
     parser.add_argument(
