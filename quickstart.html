@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=312cdd33"></script>
+        <script src="_static/documentation_options.js?v=8e3b2456"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -133,10 +133,10 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <h2>Input files<a class="headerlink" href="#input-files" title="Link to this heading"></a></h2>
 <p>To run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, you will need:</p>
 <ul class="simple">
-<li><p>one <code class="docutils literal notranslate"><span class="pre">.pdb</span></code> file containing a refined structural model corresponding to your “off” data.</p></li>
-<li><p>two <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> files corresponding to your “on” and “off” data respectively.</p></li>
+<li><p>one <code class="docutils literal notranslate"><span class="pre">.pdb</span></code> (or <code class="docutils literal notranslate"><span class="pre">.cif</span></code>) file containing a refined structural model corresponding to your “off” data.</p></li>
+<li><p>two <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> (or <code class="docutils literal notranslate"><span class="pre">.cif</span></code>) files corresponding to your “on” and “off” data respectively.</p></li>
 </ul>
-<p>You will also need to know the names of the columns in these <code class="docutils literal notranslate"><span class="pre">mtz</span></code>s containing your observed structure factor amplitudes and uncertainties. Depending on what software you used to produce these files, this may be something like <code class="docutils literal notranslate"><span class="pre">FP</span></code>/<code class="docutils literal notranslate"><span class="pre">SIGFP</span></code>, <code class="docutils literal notranslate"><span class="pre">Fobs</span></code>/<code class="docutils literal notranslate"><span class="pre">SIGFobs</span></code>, or similar. If you don’t know these off-hand, you can figure it out using <a class="reference external" href="https://rs-station.github.io/reciprocalspaceship/"><code class="docutils literal notranslate"><span class="pre">reciprocalspaceship</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">rs.mtzdump</span></code> utility, which is installed along with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>. You can do this right in the command-line as:</p>
+<p>You will also need to know the names of the columns in these <code class="docutils literal notranslate"><span class="pre">mtz</span></code>/<code class="docutils literal notranslate"><span class="pre">cif</span></code>s containing your observed structure factor amplitudes and uncertainties. Depending on what software you used to produce these files, this may be something like <code class="docutils literal notranslate"><span class="pre">FP</span></code>/<code class="docutils literal notranslate"><span class="pre">SIGFP</span></code>, <code class="docutils literal notranslate"><span class="pre">Fobs</span></code>/<code class="docutils literal notranslate"><span class="pre">SIGFobs</span></code>, or similar. If you don’t know these off-hand and your input is an <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> file, you can figure it out using <a class="reference external" href="https://rs-station.github.io/reciprocalspaceship/"><code class="docutils literal notranslate"><span class="pre">reciprocalspaceship</span></code></a>’s <code class="docutils literal notranslate"><span class="pre">rs.mtzdump</span></code> utility, which is installed along with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>. You can do this right in the command-line as:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>rs.mtzdump<span class="w"> </span>mymtz.mtz
 </pre></div>
 </div>

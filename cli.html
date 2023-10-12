@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=312cdd33"></script>
+        <script src="_static/documentation_options.js?v=8e3b2456"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -103,19 +103,19 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-mtzoff">
 <span id="cmdoption-matchmaps-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzoff" title="Link to this definition"></a></dt>
-<dd><p>MTZ containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
+<dd><p>MTZ or sfCIF containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-mtzon">
 <span id="cmdoption-matchmaps-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-mtzon" title="Link to this definition"></a></dt>
-<dd><p>MTZ containing on/bound/excited/bright state data. Specified as [filename F SigF]</p>
+<dd><p>MTZ or sfCIF containing on/bound/excited/bright state data. Specified as [filename F SigF]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-pdboff">
 <span id="cmdoption-matchmaps-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-pdboff" title="Link to this definition"></a></dt>
-<dd><p>Reference pdb/cif corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.</p>
+<dd><p>Reference PDB or mmCIF corresponding to the off/apo/ground/dark state. Used for rigid-body refinement of both input MTZs to generate phases.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -127,7 +127,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-input-dir">
 <span id="cmdoption-matchmaps-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-input-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to input mtzs and pdb. Optional, defaults to ‘./’ (current directory)</p>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
@@ -199,19 +199,19 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-mtz">
 <span id="cmdoption-matchmaps.ncs-m"></span><span class="sig-name descname"><span class="pre">--mtz</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtz&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-mtz" title="Link to this definition"></a></dt>
-<dd><p>MTZ file containing structure factor amplitudes. Specified as [filename F SigF] or [filename F]. SigF is not necessary if phases are also provided</p>
+<dd><p>MTZ or sfCIF file containing structure factor amplitudes. Specified as [filename F SigF] or [filename F]. SigF is not necessary if phases are also provided</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-phases">
 <span class="sig-name descname"><span class="pre">--phases</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;phases&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-phases" title="Link to this definition"></a></dt>
-<dd><p>Optional. Column in MTZ file containing phases. If phases are not provided, phases will be computed via rigid-body refinement of the provided model and structure factor amplitudes.</p>
+<dd><p>Optional. Column in MTZ/sfCIF file containing phases. If phases are not provided, phases will be computed via rigid-body refinement of the provided model and structure factor amplitudes.</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-pdb">
 <span id="cmdoption-matchmaps.ncs-p"></span><span class="sig-name descname"><span class="pre">--pdb</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdb&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-pdb" title="Link to this definition"></a></dt>
-<dd><p>Reference pdb/cif. If phases are not provided, used for rigid-body refinement of input MTZ to generate phases.</p>
+<dd><p>Reference PDB or mmCIF. If phases are not provided, used for rigid-body refinement of input MTZ/sfCIF to generate phases.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -235,7 +235,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-input-dir">
 <span id="cmdoption-matchmaps.ncs-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-input-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to input mtz and pdb. Optional, defaults to ‘./’ (current directory)</p>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
@@ -295,19 +295,19 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-mtzoff">
 <span id="cmdoption-matchmaps.mr-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;sigfoff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzoff" title="Link to this definition"></a></dt>
-<dd><p>MTZ containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
+<dd><p>MTZ or sfCIF containing off/apo/ground/dark state data. Specified as [filename F SigF]</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-mtzon">
 <span id="cmdoption-matchmaps.mr-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;sigfon&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-mtzon" title="Link to this definition"></a></dt>
-<dd><p>MTZ containing on/bound/excited/bright state data. Specified as [filename F SigF]This file may be in a different spacegroup / crystal packing than mtzoff</p>
+<dd><p>MTZ or SFCIF containing on/bound/excited/bright state data. Specified as [filename F SigF]This file may be in a different spacegroup / crystal packing than mtzoff</p>
 </dd></dl>
 
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-pdboff">
 <span id="cmdoption-matchmaps.mr-p"></span><span class="sig-name descname"><span class="pre">--pdboff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-p</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;pdboff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-pdboff" title="Link to this definition"></a></dt>
-<dd><p>Reference pdb/cif corresponding to the off/apo/ground/dark state. Used as a molecular replacement solution for mtzon and for rigid-body refinement of both input MTZs to generate phases.Should match mtzoff well enough that molecular replacement is not necessary.</p>
+<dd><p>Reference PDB or mmCIF corresponding to the off/apo/ground/dark state. Used as a molecular replacement solution for mtzon and for rigid-body refinement of both input MTZs to generate phases.Should match mtzoff well enough that molecular replacement is not necessary.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -319,7 +319,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-input-dir">
 <span id="cmdoption-matchmaps.mr-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-input-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to input mtzs and pdb. Optional, defaults to ‘./’ (current directory)</p>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
 </dd></dl>
 
 <dl class="std option">
