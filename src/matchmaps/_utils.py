@@ -854,11 +854,12 @@ def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
 def _validate_inputs(
-    input_dir,
-    output_dir,
+    input_dir : Path,
+    output_dir : Path,
     ligands,
     *files,
 ):
+
     # use pathlib to validate input files and directories
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
