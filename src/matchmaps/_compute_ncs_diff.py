@@ -29,22 +29,22 @@ from matchmaps._utils import (
 
 
 def compute_ncs_difference_map(
-    pdb,
-    mtz,
-    F,
-    SigF=None,
-    Phi=None,
-    ligands=None,
-    name=None,
-    dmin=None,
-    spacing=0.5,
+    pdb : Path,
+    mtz : Path,
+    F : str,
+    SigF : str = None,
+    Phi : str = None,
+    ligands : list = None,
+    name : str = None,
+    dmin : int = None,
+    spacing = 0.5,
     input_dir=Path("."),
     output_dir=Path("."),
     verbose=False,
-    ncs_chains=None,
-    refine_ncs_separately=False,
-    eff=None,
-    keep_temp_files=None
+    ncs_chains : list[str] = None,
+    refine_ncs_separately = False,
+    eff : str = None,
+    keep_temp_files : str = None
 ):
     _validate_environment(ccp4=False)
     

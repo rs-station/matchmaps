@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 from functools import partial
+from pathlib import Path
 
 import gemmi
 import numpy as np
@@ -28,24 +29,24 @@ from matchmaps._utils import (
 
 
 def compute_mr_difference_map(
-    pdboff,
-    mtzoff,
-    mtzon,
-    Foff,
-    SigFoff,
-    Fon,
-    SigFon,
-    ligands=None,
-    dmin=None,
-    spacing=0.5,
-    on_as_stationary=False,
-    input_dir="./",
-    output_dir="./",
-    verbose=False,
-    rbr_selections=None,
-    eff=None,
-    keep_temp_files=None,
-    radius=5,
+    pdboff : Path,
+    mtzoff : Path,
+    mtzon : Path,
+    Foff : str,
+    SigFoff : str,
+    Fon : str,
+    SigFon : str,
+    ligands: list = None,
+    dmin : int = None,
+    spacing = 0.5,
+    on_as_stationary = False,
+    input_dir = Path("."),
+    output_dir = Path("."),
+    verbose = False,
+    rbr_selections : list[str] = None,
+    eff : str = None,
+    keep_temp_files: str = None,
+    radius = 5,
 ):
     """
     Compute a real-space difference map from mtzs in different spacegroups.
