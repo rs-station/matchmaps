@@ -5,6 +5,7 @@ import os
 import subprocess
 import time
 from functools import partial
+from pathlib import Path
 
 import gemmi
 import numpy as np
@@ -28,23 +29,24 @@ from matchmaps._utils import (
 
 
 def compute_mr_difference_map(
-    pdboff,
-    mtzoff,
-    mtzon,
-    Foff,
-    SigFoff,
-    Fon,
-    SigFon,
-    ligands=None,
-    dmin=None,
-    spacing=0.5,
-    on_as_stationary=False,
-    input_dir="./",
-    output_dir="./",
-    verbose=False,
-    rbr_selections=None,
-    eff=None,
-    keep_temp_files=None,
+    pdboff : Path,
+    mtzoff : Path,
+    mtzon : Path,
+    Foff : str,
+    SigFoff : str,
+    Fon : str,
+    SigFon : str,
+    ligands: list = None,
+    dmin : int = None,
+    spacing = 0.5,
+    on_as_stationary = False,
+    input_dir = Path("."),
+    output_dir = Path("."),
+    verbose = False,
+    rbr_selections : list[str] = None,
+    eff : str = None,
+    keep_temp_files: str = None,
+    radius = 5,
 ):
     """
     Compute a real-space difference map from mtzs in different spacegroups.
@@ -89,6 +91,10 @@ def compute_mr_difference_map(
         Name of a file containing a template .eff parameter file for phenix.refine.
         If omitted, the sensible built-in .eff template is used. If you need to change something,
         I recommend copying the template from the source code and editing that.
+    keep_temp_files : bool, optional
+        If not None, the name of a subdirectory of the output_dir into which intermediate matchmaps files are moved upon program completion.
+    radius : float, optional
+        Maximum distance away from protein model to include voxels. Only applies to the "unmasked" difference map output.
     """
     
     _validate_environment(ccp4=False)
@@ -201,6 +207,7 @@ def compute_mr_difference_map(
             off_name=off_name,
             on_as_stationary=on_as_stationary,
             selection=rbr_gemmi,
+            radius=radius,
         )
 
     else:  # run helper function separately for each selection
@@ -218,6 +225,7 @@ def compute_mr_difference_map(
                 off_name=off_name_rbr,
                 on_as_stationary=on_as_stationary,
                 selection=selection,
+                radius=radius,
             )
     print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
 
@@ -338,6 +346,18 @@ def parse_arguments():
         help=(
             "Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. "
             "By default, cutoff is the resolution limit of the lower-resolution input MTZ. "
+        ),
+    )
+    
+    parser.add_argument(
+        "--unmasked-radius",
+        required=False,
+        type=float,
+        default=5,
+        help=(
+            "Maximum distance (in Anstroms) away from protein model to include voxels. Only applies to the 'unmasked' difference map output. "
+            "Defaults to 5. "
+            "Note that the regular difference map (e.g. the 'masked' version) is not affected by this parameter and maintains a solvent mask radius of 2 Angstroms."
         ),
     )
 

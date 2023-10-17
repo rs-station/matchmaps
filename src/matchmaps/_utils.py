@@ -551,6 +551,7 @@ def _realspace_align_and_subtract(
     off_name,
     on_as_stationary,
     selection,
+    radius,
 ):
     """
     Take in two floatgrids and two pdbs. Apply the alignment transformation and subtract.
@@ -559,24 +560,26 @@ def _realspace_align_and_subtract(
 
     Parameters
     ----------
-    output_dir : _type_
-        _description_
-    fg_off : _type_
-        _description_
-    fg_on : _type_
-        _description_
-    pdboff : _type_
-        _description_
-    pdbon : _type_
-        _description_
-    on_name : _type_
-        _description_
-    off_name : _type_
-        _description_
-    on_as_stationary : _type_
-        _description_
+    output_dir : pathlib.Path
+        Where to write output files
+    fg_off : gemmi.FloatGrid
+        FloatGrid containing electron density for "off" data
+    fg_on : gemmi.FloatGrid
+        FloatGrid containing electron density for "on" data
+    pdboff : gemmi.Structure
+        Reference structure, rigid-body-refined to the "off" data
+    pdbon : gemmi.Structure
+        Reference structure, rigid-body-refined to the "on" data
+    on_name : str
+        Original base name of the input "on" data
+    off_name : str
+        Original base name of the input "off" data
+    on_as_stationary : bool
+        If True, align "off" data onto "on" data. If False, align "on" data onto "off" data.
     selection : str or list of str
         If not None, should be a valid gemmi selection string or a list of valid gemmi selection strings
+    radius : float
+        Maximum distance away from protein model to include voxels. Only applies to the "unmasked" output.
     """
 
     if selection:
@@ -607,10 +610,10 @@ def _realspace_align_and_subtract(
         pdb_fixed = pdboff.clone()
 
     fg_off = align_grids_from_model_transform(
-        fg_fixed, fg_off, pdb_fixed, pdboff, selection
+        fg_fixed, fg_off, pdb_fixed, pdboff, selection, radius=radius
     )
     fg_on = align_grids_from_model_transform(
-        fg_fixed, fg_on, pdb_fixed, pdbon, selection
+        fg_fixed, fg_on, pdb_fixed, pdbon, selection, radius=radius
     )
 
     # do this again, because transformation + carving can mess up scales:
@@ -701,23 +704,25 @@ def _unit_cell_hack(cell):
         return cell
 
 
-def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selection):
+def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selection, radius):
     """
     This function is basically just a wrapper around `gemmi.interpolate_grid_of_aligned_model2`, which is an amazing thing that exists!!.
 
     Parameters
     ----------
     grid1 : gemmi.FloatGrid
-        _description_
+        FloatGrid containing reference (static) electron density
     grid2 : gemmi.FloatGrid
-        _description_
+        FloatGrid containing electron density to be moved
     structure1 : gemmi.Structure
-        _description_
+        Structure containing reference (static) protein model.
     structure2 : gemmi.Structure
-        _description_
+        Structure which, when aligned to structure1, reveals the necessary transformation to align grid2 onto grid1. 
     selection : str
         a string sufficient to describe the rbr selection to gemmi
         If the rbr selection contained multiple chains / spans, can just be the first chain / span
+    radius : float
+        Voxels up to this far away (in Angstroms) from the protein model will be kept in the "unmasked" output map
 
     Returns
     -------
@@ -754,7 +759,7 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
         src=grid2,
         tr=transform,
         dest_model=structure1[0],  # dest_model,
-        radius=3,
+        radius=radius,
         order=2,
     )
 
@@ -849,11 +854,12 @@ def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
 def _validate_inputs(
-    input_dir,
-    output_dir,
+    input_dir : Path,
+    output_dir : Path,
     ligands,
     *files,
 ):
+
     # use pathlib to validate input files and directories
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
