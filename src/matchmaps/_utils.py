@@ -233,9 +233,12 @@ refinement {
   main {
     number_of_macro_cycles = 1
     nproc = 8
+    bulk_solvent_and_scale=False
+    nqh_flips=False
   }
 }
     """
+        print('turned off BSS')
     else:
         with open(input_dir + eff) as file:
             eff_contents = file.read()
