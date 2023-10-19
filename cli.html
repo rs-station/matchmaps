@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=f6fff355"></script>
+        <script src="_static/documentation_options.js?v=7bf44f7d"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -89,8 +89,8 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
 <span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
-<span class="go">                 [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
-<span class="go">                 [--unmasked-radius UNMASKED_RADIUS] [--verbose]</span>
+<span class="go">                 [--on-as-stationary] [--no-bss] [--spacing SPACING]</span>
+<span class="go">                 [--dmin DMIN] [--unmasked-radius UNMASKED_RADIUS] [--verbose]</span>
 <span class="go">                 [--rbr-selections [RBR_SELECTIONS ...]] [--eff EFF]</span>
 <span class="go">                 [--keep-temp-files KEEP_TEMP_FILES]</span>
 </pre></div>
@@ -144,6 +144,12 @@
 </dd></dl>
 
 <dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-no-bss">
+<span class="sig-name descname"><span class="pre">--no-bss</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps-no-bss" title="Link to this definition"></a></dt>
+<dd><p>Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included.</p>
+</dd></dl>
+
+<dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-spacing">
 <span id="cmdoption-matchmaps-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
@@ -192,7 +198,7 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.ncs [-h] --mtz [MTZ ...] [--phases PHASES] --pdb PDB</span>
 <span class="go">                     --ncs-chains fixed_chain moving_chain [--mapname MAPNAME]</span>
 <span class="go">                     [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
-<span class="go">                     [--output-dir OUTPUT_DIR] [--spacing SPACING]</span>
+<span class="go">                     [--output-dir OUTPUT_DIR] [--no-bss] [--spacing SPACING]</span>
 <span class="go">                     [--dmin DMIN] [--verbose] [--eff EFF]</span>
 <span class="go">                     [--keep-temp-files KEEP_TEMP_FILES]</span>
 </pre></div>
@@ -252,6 +258,12 @@
 </dd></dl>
 
 <dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-no-bss">
+<span class="sig-name descname"><span class="pre">--no-bss</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-no-bss" title="Link to this definition"></a></dt>
+<dd><p>Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included.</p>
+</dd></dl>
+
+<dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-spacing">
 <span id="cmdoption-matchmaps.ncs-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
@@ -288,10 +300,10 @@
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.mr [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon</span>
 <span class="go">                    Fon SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                    [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
-<span class="go">                    [--on-as-stationary] [--spacing SPACING] [--dmin DMIN]</span>
-<span class="go">                    [--unmasked-radius UNMASKED_RADIUS] [--verbose]</span>
-<span class="go">                    [--rbr-selections [RBR_SELECTIONS ...]] [--eff EFF]</span>
-<span class="go">                    [--keep-temp-files KEEP_TEMP_FILES]</span>
+<span class="go">                    [--on-as-stationary] [--no-bss] [--spacing SPACING]</span>
+<span class="go">                    [--dmin DMIN] [--unmasked-radius UNMASKED_RADIUS]</span>
+<span class="go">                    [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
+<span class="go">                    [--eff EFF] [--keep-temp-files KEEP_TEMP_FILES]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -340,6 +352,12 @@
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-on-as-stationary">
 <span class="sig-name descname"><span class="pre">--on-as-stationary</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-on-as-stationary" title="Link to this definition"></a></dt>
 <dd><p>Include this flag to align ‘off’ data onto ‘on’ data. By default, ‘off’ data is stationary and ‘on’ data is moved.For matchmaps.mr, this only applies to the post-molecular-replacement alignment; all maps will be placed in the spacegroup of mtzoff.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-no-bss">
+<span class="sig-name descname"><span class="pre">--no-bss</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.mr-no-bss" title="Link to this definition"></a></dt>
+<dd><p>Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included.</p>
 </dd></dl>
 
 <dl class="std option">
