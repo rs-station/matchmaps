@@ -45,7 +45,7 @@ def compute_realspace_difference_map(
     rbr_selections : list[str] = None,
     eff : str = None,
     keep_temp_files : str = None,
-    radius : int = 5,
+    radius : float = 5,
     no_bss = False
 ):
     """

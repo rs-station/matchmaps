@@ -44,8 +44,51 @@ def compute_ncs_difference_map(
     ncs_chains : list[str] = None,
     refine_ncs_separately = False,
     eff : str = None,
-    keep_temp_files : str = None
+    keep_temp_files : str = None,
+    no_bss = False,
 ):
+    """
+    Compute an internal difference map across non-crystallographic symmetry
+
+    Parameters
+    ----------
+    pdb : Path
+        Name of input .pdb file to use for phasing
+    mtz : Path
+        Name of input .mtz file
+    F : str
+        Column in mtz containing structure factor amplitudes
+    SigF : str, optional
+        Column in mtz containing structure factor uncertainties (optional)
+    Phi : str, optional
+        Column in mtz containing structure factor phases (optional)
+    ligands : list, optional
+        Any necessary .cif restrain files for refinement, by default None
+    name : str, optional
+        Name prefix for the output maps, by default None
+    dmin : int, optional
+        Resolution cutoff for input mtz, by default None
+    spacing : float, optional
+        Approximate size of real-space voxels in Angstroms, by default 0.5 A
+    input_dir : pathlib.Path, optional
+        Path to directory containing input files, by default Path(".") (current directory), 
+    output_dir : pathlib.Path, optional
+        Path to directory containing input files, by default Path(".") (current directory), 
+    verbose : bool, optional
+        If True, print outputs of scaleit and phenix.refine, by default False
+    ncs_chains : list[str], optional
+        Chains in input pdb comparable by ncs
+    refine_ncs_separately : bool, optional
+        If True, refine each ncs selection as a separate rigid body, by default False
+    eff : str, optional
+        Name of a file containing a template .eff parameter file for phenix.refine.
+        If omitted, the sensible built-in .eff template is used. If you need to change something,
+        I recommend copying the template from the source code and editing that.
+    keep_temp_files : str, optional
+        If not None, the name of a subdirectory of the output_dir into which intermediate matchmaps files are moved upon program completion.
+    no_bss : bool, optional
+        If True, skip bulk solvent scaling feature of phenix.refine
+    """
     _validate_environment(ccp4=False)
     
     output_dir_contents = list(output_dir.glob("*"))
@@ -76,6 +119,7 @@ def compute_ncs_difference_map(
             verbose=verbose,
             rbr_selections=rbr_phenix,
             off_labels=f"{F},{SigF}",
+            no_bss=no_bss
         )
 
         # use phenix names for columns when computing FloatGrid
@@ -210,6 +254,16 @@ def parse_arguments():
         default="./",
         help="Path to which output files should be written. Optional, defaults to './' (current directory)",
     )
+    
+    parser.add_argument(
+        "--no-bss",
+        required=False,
+        action="store_true",
+        default=False,
+        help=(
+            "Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included."
+        ),
+    )
 
     parser.add_argument(
         "--spacing",
@@ -298,6 +352,7 @@ def main():
         dmin=args.dmin,
         spacing=args.spacing,
         keep_temp_files=args.keep_temp_files,
+        no_bss=args.no_bss,
     )
 
     return
