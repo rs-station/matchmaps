@@ -330,6 +330,16 @@ def parse_arguments():
             "all maps will be placed in the spacegroup of mtzoff."
         ),
     )
+    
+    parser.add_argument(
+        "--no-bss",
+        required=False,
+        action="store_true",
+        default=False,
+        help=(
+            "Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included."
+        ),
+    )
 
     parser.add_argument(
         "--spacing",
@@ -445,6 +455,7 @@ def main():
         spacing=args.spacing,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
+        no_bss = args.no_bss,
     )
 
     return
