@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 import glob
 import subprocess
 import time
@@ -425,7 +426,6 @@ def main():
     parser = parse_arguments()
     args = parser.parse_args()
     
-    embed()
 
     (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
         args.input_dir,
@@ -435,7 +435,7 @@ def main():
         args.mtzon[0],
         args.pdboff,
     )
-
+    
     compute_realspace_difference_map(
         pdboff=pdboff,
         ligands=ligands,
