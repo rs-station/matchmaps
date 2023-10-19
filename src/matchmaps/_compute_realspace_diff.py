@@ -12,6 +12,8 @@ import gemmi
 import numpy as np
 import reciprocalspaceship as rs
 
+from IPython import embed
+
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
@@ -422,6 +424,8 @@ def parse_arguments():
 def main():
     parser = parse_arguments()
     args = parser.parse_args()
+    
+    embed()
 
     (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
         args.input_dir,
