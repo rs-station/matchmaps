@@ -455,7 +455,7 @@ def main():
         spacing=args.spacing,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
-        no_bss = args.no_bs
+        no_bss = args.no_bss
     )
 
     return
