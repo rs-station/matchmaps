@@ -1002,7 +1002,7 @@ def _write_script(utility, arguments, script_name):
 
 {utility} {' '.join(arguments)}
 
-    """
+"""
     
     with open(script_name + '.sh', "w") as file:
         file.write(contents)
