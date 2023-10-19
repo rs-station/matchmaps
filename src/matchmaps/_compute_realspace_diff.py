@@ -27,6 +27,7 @@ from matchmaps._utils import (
     _validate_inputs,
     _cif_or_mtz_to_mtz,
     _cif_or_pdb_to_pdb,
+    _write_script,
 )
 
 
@@ -418,6 +419,16 @@ def parse_arguments():
             "This directory is created as a subdirectory of the supplied output-dir."
         )
     )
+    
+    parser.add_argument(
+        "--script",
+        required=False,
+        default='run_matchmaps',
+        help=(
+            "If included, write out a file {script}.sh which can be run to repeat this command. "
+            "Note that this file is written out in the current working directory, NOT the input or output directories"
+        )
+    )
 
     return parser
 
@@ -425,7 +436,6 @@ def parse_arguments():
 def main():
     parser = parse_arguments()
     args = parser.parse_args()
-    
 
     (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
         args.input_dir,
@@ -456,6 +466,13 @@ def main():
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss,
     )
+    
+    if args.script:
+        _write_script(
+            utility = 'matchmaps', 
+            arguments = sys.argv[1:],
+            script_name = args.script,
+            )
 
     return
 
