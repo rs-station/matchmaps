@@ -184,6 +184,7 @@ def rigid_body_refinement_wrapper(
     rbr_selections=None,
     mr_on=False,
     mr_off=False,
+    no_bss=False,
 ):
     if eff is None:
         eff_contents = """
@@ -233,9 +234,12 @@ refinement {
   main {
     number_of_macro_cycles = 1
     nproc = 8
+    bulk_solvent_and_scale=bss
+    nqh_flips=False
   }
 }
     """
+        # print('turned off BSS')
     else:
         with open(input_dir + eff) as file:
             eff_contents = file.read()
@@ -273,6 +277,7 @@ refinement {
     params = {
         "sg": sg,
         "cell_parameters": cell_string,
+        "bss": str(not no_bss),
         "pdb_input": str(pdboff),
         "mtz_input": str(mtzon),
         "nickname": str(output_dir / nickname),

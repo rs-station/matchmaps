@@ -46,7 +46,8 @@ def compute_mr_difference_map(
     rbr_selections : list[str] = None,
     eff : str = None,
     keep_temp_files: str = None,
-    radius = 5,
+    radius : float = 5,
+    no_bss = False,
 ):
     """
     Compute a real-space difference map from mtzs in different spacegroups.
@@ -95,6 +96,8 @@ def compute_mr_difference_map(
         If not None, the name of a subdirectory of the output_dir into which intermediate matchmaps files are moved upon program completion.
     radius : float, optional
         Maximum distance away from protein model to include voxels. Only applies to the "unmasked" difference map output.
+     no_bss : bool, optional
+        If True, skip bulk solvent scaling feature of phenix.refine
     """
     
     _validate_environment(ccp4=False)
@@ -152,6 +155,7 @@ def compute_mr_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
         mr_on=True,
+        no_bss=no_bss,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -167,6 +171,7 @@ def compute_mr_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
         mr_off=True,
+        no_bss=no_bss,
     )
 
     # from here down I just copied over the stuff from the normal version
@@ -325,6 +330,16 @@ def parse_arguments():
             "all maps will be placed in the spacegroup of mtzoff."
         ),
     )
+    
+    parser.add_argument(
+        "--no-bss",
+        required=False,
+        action="store_true",
+        default=False,
+        help=(
+            "Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included."
+        ),
+    )
 
     parser.add_argument(
         "--spacing",
@@ -440,6 +455,7 @@ def main():
         spacing=args.spacing,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
+        no_bss = args.no_bss
     )
 
     return
