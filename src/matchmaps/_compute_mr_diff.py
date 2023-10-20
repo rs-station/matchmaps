@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 import subprocess
 import time
 from functools import partial
@@ -25,6 +26,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
+    _write_script,
 )
 
 
@@ -415,6 +417,17 @@ def parse_arguments():
         )
     )
 
+    parser.add_argument(
+        "--script",
+        required=False,
+        default='run_matchmaps',
+        help=(
+            "Name for a file {script}.sh which can be run to repeat this command. "
+            "By default, this file is called `run_matchmaps.sh`. "
+            "Note that this file is written out in the current working directory, NOT the input or output directories"
+        )
+    )
+
     return parser
 
 
@@ -457,6 +470,13 @@ def main():
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss
     )
+    
+    if args.script:
+        _write_script(
+            utility = 'matchmaps.mr', 
+            arguments = sys.argv[1:],
+            script_name = args.script,
+            )
 
     return
 

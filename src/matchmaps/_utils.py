@@ -989,3 +989,22 @@ def _clean_up_files(output_dir, old_files, keep_temp_files):
             os.remove(f)    
     
     return
+
+def _write_script(utility, arguments, script_name):
+    
+    from matchmaps import __version__ as version
+    
+    contents = f"""#!/bin/bash
+
+# This file was produced by matchmaps version {version} on {time.strftime('%c')}
+# The command below was originally run in the following directory:
+# {os.getcwd()}
+
+{utility} {' '.join(arguments)}
+
+"""
+    
+    with open(script_name + '.sh', "w") as file:
+        file.write(contents)
+    
+    return

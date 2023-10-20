@@ -2,6 +2,7 @@
 
 import argparse
 import os
+import sys
 import glob
 import subprocess
 import time
@@ -11,6 +12,8 @@ from pathlib import Path
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
+
+from IPython import embed
 
 from matchmaps._utils import (
     _handle_special_positions,
@@ -24,6 +27,7 @@ from matchmaps._utils import (
     _validate_inputs,
     _cif_or_mtz_to_mtz,
     _cif_or_pdb_to_pdb,
+    _write_script,
 )
 
 
@@ -415,6 +419,17 @@ def parse_arguments():
             "This directory is created as a subdirectory of the supplied output-dir."
         )
     )
+    
+    parser.add_argument(
+        "--script",
+        required=False,
+        default='run_matchmaps',
+        help=(
+            "Name for a file {script}.sh which can be run to repeat this command. "
+            "By default, this file is called `run_matchmaps.sh`. "
+            "Note that this file is written out in the current working directory, NOT the input or output directories"
+        )
+    )
 
     return parser
 
@@ -431,7 +446,7 @@ def main():
         args.mtzon[0],
         args.pdboff,
     )
-
+    
     compute_realspace_difference_map(
         pdboff=pdboff,
         ligands=ligands,
@@ -452,6 +467,13 @@ def main():
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss,
     )
+    
+    if args.script:
+        _write_script(
+            utility = 'matchmaps', 
+            arguments = sys.argv[1:],
+            script_name = args.script,
+            )
 
     return
 
