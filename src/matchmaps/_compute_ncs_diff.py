@@ -322,7 +322,8 @@ def parse_arguments():
         required=False,
         default='run_matchmaps',
         help=(
-            "If included, write out a file {script}.sh which can be run to repeat this command. "
+            "Name for a file {script}.sh which can be run to repeat this command. "
+            "By default, this file is called `run_matchmaps.sh`. "
             "Note that this file is written out in the current working directory, NOT the input or output directories"
         )
     )
