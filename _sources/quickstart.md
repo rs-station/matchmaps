@@ -107,6 +107,11 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
     --output-dir ../data/myproject \
 ```
 
+### Running `matchmaps` from a script
+After your `matchmaps` run completes successfully, it will write out a file (called `run_matchmaps.sh` unless you specify a different name to the `--script` flag) which can be run to reproduce exactly the same command. Note that, to ensure the compatibility of input/output paths, this script is written to your ***current working directory***.
+
+If you'd then like to run `matchmaps` again with slightly different parameters, you can use this script as a starting point. No need to remember exactly which parameters you used the first time!
+
 ## Other useful options
 
  - `--on-as-stationary`: The `matchmaps` algorithm always involves an alignment in real-space of the "on" and "off" maps. By default, the "off" map is stationary, and the "on" map is moved. This is typically desired, such that everything lines up with your "off" structural model. However, say that your structures are "apo" and "bound", and you would like to line up your maps with a "bound" structure (which you never have to supply to `matchmaps`!). In this case, you could use the `--on-as-stationary` flag.

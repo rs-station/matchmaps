@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=7bf44f7d"></script>
+        <script src="_static/documentation_options.js?v=d534b31b"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -57,6 +57,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#basic-usage">Basic usage</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-matchmaps-from-a-script">Running <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> from a script</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#other-useful-options">Other useful options</a></li>
@@ -193,6 +194,11 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <span class="w">    </span>--output-dir<span class="w"> </span>../data/myproject<span class="w"> </span><span class="se">\</span>
 </pre></div>
 </div>
+</section>
+<section id="running-matchmaps-from-a-script">
+<h3>Running <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> from a script<a class="headerlink" href="#running-matchmaps-from-a-script" title="Link to this heading"></a></h3>
+<p>After your <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> run completes successfully, it will write out a file (called <code class="docutils literal notranslate"><span class="pre">run_matchmaps.sh</span></code> unless you specify a different name to the <code class="docutils literal notranslate"><span class="pre">--script</span></code> flag) which can be run to reproduce exactly the same command. Note that, to ensure the compatibility of input/output paths, this script is written to your <em><strong>current working directory</strong></em>.</p>
+<p>If you’d then like to run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> again with slightly different parameters, you can use this script as a starting point. No need to remember exactly which parameters you used the first time!</p>
 </section>
 </section>
 <section id="other-useful-options">

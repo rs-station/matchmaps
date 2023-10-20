@@ -15,7 +15,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=7bf44f7d"></script>
+        <script src="_static/documentation_options.js?v=d534b31b"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -92,7 +92,7 @@
 <span class="go">                 [--on-as-stationary] [--no-bss] [--spacing SPACING]</span>
 <span class="go">                 [--dmin DMIN] [--unmasked-radius UNMASKED_RADIUS] [--verbose]</span>
 <span class="go">                 [--rbr-selections [RBR_SELECTIONS ...]] [--eff EFF]</span>
-<span class="go">                 [--keep-temp-files KEEP_TEMP_FILES]</span>
+<span class="go">                 [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -191,6 +191,12 @@
 <dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
 </dd></dl>
 
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-script">
+<span class="sig-name descname"><span class="pre">--script</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;script&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-script" title="Link to this definition"></a></dt>
+<dd><p>Name for a file {script}.sh which can be run to repeat this command. By default, this file is called <code class="xref py py-obj docutils literal notranslate"><span class="pre">run_matchmaps.sh</span></code>. Note that this file is written out in the current working directory, NOT the input or output directories</p>
+</dd></dl>
+
 </section>
 <section id="matchmaps-ncs">
 <h2>matchmaps.ncs<a class="headerlink" href="#matchmaps-ncs" title="Link to this heading"></a></h2>
@@ -200,7 +206,7 @@
 <span class="go">                     [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
 <span class="go">                     [--output-dir OUTPUT_DIR] [--no-bss] [--spacing SPACING]</span>
 <span class="go">                     [--dmin DMIN] [--verbose] [--eff EFF]</span>
-<span class="go">                     [--keep-temp-files KEEP_TEMP_FILES]</span>
+<span class="go">                     [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -293,6 +299,12 @@
 <dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
 </dd></dl>
 
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-script">
+<span class="sig-name descname"><span class="pre">--script</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;script&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-script" title="Link to this definition"></a></dt>
+<dd><p>Name for a file {script}.sh which can be run to repeat this command. By default, this file is called <code class="xref py py-obj docutils literal notranslate"><span class="pre">run_matchmaps.sh</span></code>. Note that this file is written out in the current working directory, NOT the input or output directories</p>
+</dd></dl>
+
 </section>
 <section id="matchmaps-mr">
 <h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Link to this heading"></a></h2>
@@ -304,6 +316,7 @@
 <span class="go">                    [--dmin DMIN] [--unmasked-radius UNMASKED_RADIUS]</span>
 <span class="go">                    [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
 <span class="go">                    [--eff EFF] [--keep-temp-files KEEP_TEMP_FILES]</span>
+<span class="go">                    [--script SCRIPT]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -400,6 +413,12 @@
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-keep-temp-files">
 <span id="cmdoption-matchmaps.mr-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-keep-temp-files" title="Link to this definition"></a></dt>
 <dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-script">
+<span class="sig-name descname"><span class="pre">--script</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;script&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-script" title="Link to this definition"></a></dt>
+<dd><p>Name for a file {script}.sh which can be run to repeat this command. By default, this file is called <code class="xref py py-obj docutils literal notranslate"><span class="pre">run_matchmaps.sh</span></code>. Note that this file is written out in the current working directory, NOT the input or output directories</p>
 </dd></dl>
 
 </section>
