@@ -14,6 +14,8 @@ import re
 from functools import partial
 from pathlib import Path
 
+from IPython import embed
+
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
@@ -613,13 +615,17 @@ def _realspace_align_and_subtract(
     else:
         fg_fixed = fg_off.clone()
         pdb_fixed = pdboff.clone()
-
+    
+    # embed()    
+    
     fg_off = align_grids_from_model_transform(
         fg_fixed, fg_off, pdb_fixed, pdboff, selection, radius=radius
     )
     fg_on = align_grids_from_model_transform(
         fg_fixed, fg_on, pdb_fixed, pdbon, selection, radius=radius
     )
+    
+    # embed()
 
     # do this again, because transformation + carving can mess up scales:
     fg_on.normalize()
@@ -652,7 +658,7 @@ def _realspace_align_and_subtract(
 
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
     fg_fixed.unit_cell = _unit_cell_hack(fg_fixed.unit_cell)
-
+    
     # use partial function to guarantee I'm always using the same and correct cell
     write_maps = partial(
         rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
@@ -758,7 +764,9 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
     grid2_out = (
         grid1.clone()
     )  # this makes sure that grid2_out has a voxel frame matching grid1
-
+    
+    grid2_out.fill(0)
+    
     gemmi.interpolate_grid_of_aligned_model2(
         dest=grid2_out,
         src=grid2,
