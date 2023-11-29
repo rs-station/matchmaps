@@ -628,8 +628,8 @@ def _realspace_align_and_subtract(
     # embed()
     loose_mask = np.invert(fg_on.array == 0)
     
-    fg_on[loose_mask] = _quicknorm(fg_on[loose_mask])
-    fg_off[loose_mask] = _quicknorm(fg_off[loose_mask])
+    fg_on.array[loose_mask] = _quicknorm(fg_on.array[loose_mask])
+    fg_off.array[loose_mask] = _quicknorm(fg_off.array[loose_mask])
     
     # do this again, because transformation + carving can mess up scales:
     # fg_on.normalize()
