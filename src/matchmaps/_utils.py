@@ -626,15 +626,19 @@ def _realspace_align_and_subtract(
     )
     
     # embed()
-
+    loose_mask = np.invert(fg_on.array == 0)
+    
+    fg_on[loose_mask] = _quicknorm(fg_on[loose_mask])
+    fg_off[loose_mask] = _quicknorm(fg_off[loose_mask])
+    
     # do this again, because transformation + carving can mess up scales:
-    fg_on.normalize()
-    fg_off.normalize()
-
-    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
+    # fg_on.normalize()
+    # fg_off.normalize()
 
     difference_array = fg_on.array - fg_off.array
-
+    
+    difference_array[loose_mask] = _quicknorm(difference_array[loose_mask])
+    
     # all that's left is to mask out voxels that aren't near the model!
     # we can do this in gemmi
     fg_mask_only = fg_fixed.clone()
@@ -650,12 +654,13 @@ def _realspace_align_and_subtract(
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
     
     # mask difference array and normalize the unmasked part
-    boolean_mask = np.logical_not(fg_mask_only.array).astype(bool)
-    masked_difference_array = boolean_mask * difference_array
-    masked_difference_array[boolean_mask] = _quicknorm(masked_difference_array[boolean_mask])    
+    tight_mask = np.logical_not(fg_mask_only.array).astype(bool)
     
-    # and finally, write stuff out
-
+    masked_difference_array = tight_mask * difference_array
+    
+    # NOT doing this normalization for now:
+    # masked_difference_array[tight_mask] = _quicknorm(masked_difference_array[tight_mask])    
+    
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
     fg_fixed.unit_cell = _unit_cell_hack(fg_fixed.unit_cell)
     
@@ -663,6 +668,8 @@ def _realspace_align_and_subtract(
     write_maps = partial(
         rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
     )
+    
+    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
 
     write_maps(fg_on.array, str(output_dir / (on_name + ".map")))
 
