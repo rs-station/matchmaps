@@ -14,8 +14,6 @@ import re
 from functools import partial
 from pathlib import Path
 
-from IPython import embed
-
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
@@ -617,7 +615,7 @@ def _realspace_align_and_subtract(
     else:
         fg_fixed = fg_off.clone()
         pdb_fixed = pdboff.clone()
-    
+        
     # Use models to align grids
     # align_grids_from_model_transform is a light wrapper around gemmi.interpolate_grid_of_aligned_model2
     fg_off = align_grids_from_model_transform(
@@ -630,7 +628,7 @@ def _realspace_align_and_subtract(
     # These grids contain mostly zeros (as governed by the radius supplied above)
     # Store the locations of these zeros as a boolean array so we can ignore them
     loose_mask = np.invert(fg_on.array == 0)
-    
+        
     # Normalize the non-zero values in each grid
     fg_on.array[loose_mask] = _quicknorm(fg_on.array[loose_mask])
     fg_off.array[loose_mask] = _quicknorm(fg_off.array[loose_mask])
