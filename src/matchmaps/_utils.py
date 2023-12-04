@@ -598,6 +598,7 @@ def _realspace_align_and_subtract(
     else:
         print(f"{time.strftime('%H:%M:%S')}: Using models to rigid-body align maps...")
 
+    # write out "raw" maps, prior to any alignment
     rs.io.write_ccp4_map(
         fg_on.array,
         str(output_dir / (on_name + "_before.map")),
@@ -611,56 +612,68 @@ def _realspace_align_and_subtract(
         spacegroup=fg_off.spacegroup,
     )
 
+    # pick which grid/model is "fixed" 
     if on_as_stationary:
         fg_fixed = fg_on.clone()
         pdb_fixed = pdbon.clone()
     else:
         fg_fixed = fg_off.clone()
         pdb_fixed = pdboff.clone()
-
+        
+    # Use models to align grids
+    # align_grids_from_model_transform is a light wrapper around gemmi.interpolate_grid_of_aligned_model2
     fg_off = align_grids_from_model_transform(
         fg_fixed, fg_off, pdb_fixed, pdboff, selection, radius=radius
     )
     fg_on = align_grids_from_model_transform(
         fg_fixed, fg_on, pdb_fixed, pdbon, selection, radius=radius
     )
+    
+    # These grids contain mostly zeros (as governed by the radius supplied above)
+    # Store the locations of these zeros as a boolean array so we can ignore them
+    loose_mask = np.invert(fg_on.array == 0)
+        
+    # Normalize the non-zero values in each grid
+    fg_on.array[loose_mask] = _quicknorm(fg_on.array[loose_mask])
+    fg_off.array[loose_mask] = _quicknorm(fg_off.array[loose_mask])
 
-    # do this again, because transformation + carving can mess up scales:
-    fg_on.normalize()
-    fg_off.normalize()
-
-    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
-
+    # Subtract
     difference_array = fg_on.array - fg_off.array
-
-    # all that's left is to mask out voxels that aren't near the model!
-    # we can do this in gemmi
+    
+    # Normalize again, this time on the differences
+    # This ensures that the map looks the same in units of e/A^3 and sigma
+    difference_array[loose_mask] = _quicknorm(difference_array[loose_mask])
+    
+    # Use gemmi to compute a second, more stringent mask with a radius of 2
     fg_mask_only = fg_fixed.clone()
     masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
-    masker.rprobe = 2  # this should do it, idk, no need to make this a user parameter
-
-    # if selection is None:
+    masker.rprobe = 2  # the user's --unmasked-radius parameter does NOT change this value
+    
     if selection is None:
         pdb_for_mask = pdb_fixed[0]
     else:
         pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
-
+    
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
     
-    # mask difference array and normalize the unmasked part
-    boolean_mask = np.logical_not(fg_mask_only.array).astype(bool)
-    masked_difference_array = boolean_mask * difference_array
-    masked_difference_array[boolean_mask] = _quicknorm(masked_difference_array[boolean_mask])    
+    tight_mask = np.logical_not(fg_mask_only.array).astype(bool)
     
-    # and finally, write stuff out
-
+    # apply tighter mask to a the difference array
+    masked_difference_array = tight_mask * difference_array
+    
+    # NOT doing this final normalization for now:
+    # masked_difference_array[tight_mask] = _quicknorm(masked_difference_array[tight_mask])    
+    
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
     fg_fixed.unit_cell = _unit_cell_hack(fg_fixed.unit_cell)
-
+    
     # use partial function to guarantee I'm always using the same and correct cell
     write_maps = partial(
         rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
     )
+    
+    # write files!
+    print(f"{time.strftime('%H:%M:%S')}: Writing files...")
 
     write_maps(fg_on.array, str(output_dir / (on_name + ".map")))
 
@@ -762,7 +775,9 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
     grid2_out = (
         grid1.clone()
     )  # this makes sure that grid2_out has a voxel frame matching grid1
-
+    
+    grid2_out.fill(0)
+    
     gemmi.interpolate_grid_of_aligned_model2(
         dest=grid2_out,
         src=grid2,
