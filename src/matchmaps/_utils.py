@@ -244,7 +244,6 @@ refinement {
   }
 }
     """
-        print('including FoFc map')
     else:
         with open(input_dir + eff) as file:
             eff_contents = file.read()
