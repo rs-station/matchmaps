@@ -224,6 +224,11 @@ refinement {
       mtz_label_amplitudes = "2FOFCWT"
       mtz_label_phases = "PH2FOFCWT"
     }
+    map_coefficients {
+      map_type = "mFo-DFc"
+      mtz_label_amplitudes = "FOFCWT"
+      mtz_label_phases = "PHFOFCWT"
+    }
   }
   refine {
     strategy = *rigid_body
@@ -239,7 +244,6 @@ refinement {
   }
 }
     """
-        # print('turned off BSS')
     else:
         with open(input_dir + eff) as file:
             eff_contents = file.read()
