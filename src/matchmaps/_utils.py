@@ -108,7 +108,7 @@ def _subparser(selection):
 
 
 def make_floatgrid_from_mtz(
-    mtz, spacing, F, SigF, Phi, spacegroup="P1", dmin=None, alpha=0.2
+    mtz, spacing, F, SigF, Phi, spacegroup="P1", dmin=None, alpha=0
 ):
     """
     Make a gemmi.FloatGrid from an rs.DataSet.

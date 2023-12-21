@@ -480,6 +480,7 @@ def main():
         dmin=args.dmin,
         spacing=args.spacing,
         radius=args.unmasked_radius,
+        alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss,

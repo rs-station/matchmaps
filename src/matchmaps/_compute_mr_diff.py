@@ -379,6 +379,18 @@ def parse_arguments():
     )
 
     parser.add_argument(
+        "--alpha",
+        required=False,
+        type=float,
+        default=0,
+        help=(
+            "Alpha to use for error weighting of F-obs prior to Fourier Transform. "
+            "Weights are computed as: 1 / ((1+(alpha*(SigF^2)) / <SigF>^2). "
+            "Default value is alpha=0, e.g., no weighting is performed. "
+        )
+    )
+
+    parser.add_argument(
         "--verbose",
         "-v",
         required=False,
@@ -467,6 +479,7 @@ def main():
         dmin=args.dmin,
         spacing=args.spacing,
         radius=args.unmasked_radius,
+        alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss
