@@ -108,7 +108,7 @@ def _subparser(selection):
 
 
 def make_floatgrid_from_mtz(
-    mtz, spacing, F, SigF, Phi, spacegroup="P1", dmin=None, alpha=0
+    mtz, spacing, F, SigF, Phi, spacegroup="P1", dmin=None, alpha=0.2
 ):
     """
     Make a gemmi.FloatGrid from an rs.DataSet.
@@ -134,6 +134,7 @@ def make_floatgrid_from_mtz(
         Fourier transform of mtz, written out as a gemmi object containing a 3D voxel array
         and various other metadata and methods
     """
+
     # drop NAs in either of the specified columns
     # this has the secondary purpose of not silently modifying the input mtz
     new_mtz = mtz[~mtz[F].isnull()]
@@ -151,17 +152,22 @@ def make_floatgrid_from_mtz(
     ]
 
     # apply weighting
+    # note: if alpha==1, then these numbers all just become 1, e.g. no weighting
     weights = 1 / (
         1
         + (
-            0.05
-            * mtz["SIGF-obs-filtered"] ** 2
-            / np.mean(mtz["SIGF-obs-filtered"] ** 2)
+            alpha
+            * new_mtz[SigF] ** 2
+            / np.mean(new_mtz[SigF] ** 2)
         )
     )
+    
+    if 'weighted_Fobs' in new_mtz.columns:
+        raise NotImplementedError('Error: mtz already contains a column named weighted_Fobs; email Dennis bugging him to support this')
+    new_mtz['weighted_Fobs'] = new_mtz[F] * weights
 
     # perform FFT using the desired amplitudes and phases
-    new_mtz["Fcomplex"] = new_mtz.to_structurefactor(F, Phi)
+    new_mtz["Fcomplex"] = new_mtz.to_structurefactor("weighted_Fobs", Phi)
     reciprocal_grid = new_mtz.to_reciprocal_grid("Fcomplex", grid_size=gridsize)
     real_grid = np.real(np.fft.fftn(reciprocal_grid))
 
