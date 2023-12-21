@@ -107,7 +107,9 @@ def _subparser(selection):
     return phe, gem
 
 
-def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
+def make_floatgrid_from_mtz(
+    mtz, spacing, F, SigF, Phi, spacegroup="P1", dmin=None, alpha=0
+):
     """
     Make a gemmi.FloatGrid from an rs.DataSet.
 
@@ -147,6 +149,16 @@ def make_floatgrid_from_mtz(mtz, spacing, F, Phi, spacegroup="P1", dmin=None):
     gridsize = [
         int(dim // spacing) for dim in (new_mtz.cell.a, new_mtz.cell.b, new_mtz.cell.c)
     ]
+
+    # apply weighting
+    weights = 1 / (
+        1
+        + (
+            0.05
+            * mtz["SIGF-obs-filtered"] ** 2
+            / np.mean(mtz["SIGF-obs-filtered"] ** 2)
+        )
+    )
 
     # perform FFT using the desired amplitudes and phases
     new_mtz["Fcomplex"] = new_mtz.to_structurefactor(F, Phi)
@@ -290,7 +302,7 @@ refinement {
     if off_labels is None:
         params["columns"] = "FPH1,SIGFPH1"  # names from scaleit output
     else:
-        params["columns"] = off_labels # user-provided column nanes
+        params["columns"] = off_labels  # user-provided column nanes
 
     # if selection is not None:
     #     params["all"] = selection  # overwrite atom selection
@@ -334,7 +346,7 @@ def _handle_special_positions(pdboff, output_dir):
     If any non-water atoms sit on special positions, throw a (hopefully helpful) error.
 
     Regardless of whether any special positions were found, copy this file over to output_dir
-    
+
     Additionally, regardless of whether the input is a .pdb or .cif file, write the output to a .pdb file for downstream use.
 
     Parameters
@@ -378,9 +390,11 @@ Alternatively, you can remove this atom from your structure altogether and try a
     #     pdboff_nospecialpositions = output_dir / (pdboff.name.lower().removesuffix(".cif") + "_nospecialpositions.pdb")
     #     pdb.make_mmcif_document().write_file(str(pdboff_nospecialpositions))
     # else:
-    pdboff_nospecialpositions = output_dir / (pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb")
+    pdboff_nospecialpositions = output_dir / (
+        pdboff.name.removesuffix(".pdb") + "_nospecialpositions.pdb"
+    )
     pdb.write_pdb(str(pdboff_nospecialpositions))
-    
+
     return pdboff_nospecialpositions
 
 
@@ -396,7 +410,7 @@ def _renumber_waters(pdb):
         directory in which pdb file lives
     """
 
-    pdb_renumbered =  Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
+    pdb_renumbered = Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
 
     subprocess.run(
         f"phenix.sort_hetatms file_name={pdb} output_file={pdb_renumbered}",
@@ -524,7 +538,6 @@ def _restore_ligand_occupancy(
     original_pdb,
     output_dir,
 ):
-
     # grab occupancies of all HETATMs in original_pdb
     with open(original_pdb, "r") as o:
         original = o.readlines()
@@ -542,7 +555,9 @@ def _restore_ligand_occupancy(
             pdb[i] = pdb[i][:56] + original_occs[n] + pdb[i][60:]
             n += 1
 
-    edited_pdb = output_dir / (original_pdb.name.removesuffix(".pdb") + "_restorehetatms.pdb")
+    edited_pdb = output_dir / (
+        original_pdb.name.removesuffix(".pdb") + "_restorehetatms.pdb"
+    )
 
     with open(edited_pdb, "w") as output:
         output.write("".join(pdb))
@@ -612,14 +627,14 @@ def _realspace_align_and_subtract(
         spacegroup=fg_off.spacegroup,
     )
 
-    # pick which grid/model is "fixed" 
+    # pick which grid/model is "fixed"
     if on_as_stationary:
         fg_fixed = fg_on.clone()
         pdb_fixed = pdbon.clone()
     else:
         fg_fixed = fg_off.clone()
         pdb_fixed = pdboff.clone()
-        
+
     # Use models to align grids
     # align_grids_from_model_transform is a light wrapper around gemmi.interpolate_grid_of_aligned_model2
     fg_off = align_grids_from_model_transform(
@@ -628,50 +643,52 @@ def _realspace_align_and_subtract(
     fg_on = align_grids_from_model_transform(
         fg_fixed, fg_on, pdb_fixed, pdbon, selection, radius=radius
     )
-    
+
     # These grids contain mostly zeros (as governed by the radius supplied above)
     # Store the locations of these zeros as a boolean array so we can ignore them
     loose_mask = np.invert(fg_on.array == 0)
-        
+
     # Normalize the non-zero values in each grid
     fg_on.array[loose_mask] = _quicknorm(fg_on.array[loose_mask])
     fg_off.array[loose_mask] = _quicknorm(fg_off.array[loose_mask])
 
     # Subtract
     difference_array = fg_on.array - fg_off.array
-    
+
     # Normalize again, this time on the differences
     # This ensures that the map looks the same in units of e/A^3 and sigma
     difference_array[loose_mask] = _quicknorm(difference_array[loose_mask])
-    
+
     # Use gemmi to compute a second, more stringent mask with a radius of 2
     fg_mask_only = fg_fixed.clone()
     masker = gemmi.SolventMasker(gemmi.AtomicRadiiSet.Cctbx)
-    masker.rprobe = 2  # the user's --unmasked-radius parameter does NOT change this value
-    
+    masker.rprobe = (
+        2  # the user's --unmasked-radius parameter does NOT change this value
+    )
+
     if selection is None:
         pdb_for_mask = pdb_fixed[0]
     else:
         pdb_for_mask = _extract_pdb_selection(pdb_fixed[0], selection)
-    
+
     masker.put_mask_on_float_grid(fg_mask_only, pdb_for_mask)
-    
+
     tight_mask = np.logical_not(fg_mask_only.array).astype(bool)
-    
+
     # apply tighter mask to a the difference array
     masked_difference_array = tight_mask * difference_array
-    
+
     # NOT doing this final normalization for now:
-    # masked_difference_array[tight_mask] = _quicknorm(masked_difference_array[tight_mask])    
-    
+    # masked_difference_array[tight_mask] = _quicknorm(masked_difference_array[tight_mask])
+
     # coot refuses to render periodic boundaries for P1 maps with alpha=beta=gamma=90, sooooo
     fg_fixed.unit_cell = _unit_cell_hack(fg_fixed.unit_cell)
-    
+
     # use partial function to guarantee I'm always using the same and correct cell
     write_maps = partial(
         rs.io.write_ccp4_map, cell=fg_fixed.unit_cell, spacegroup=fg_fixed.spacegroup
     )
-    
+
     # write files!
     print(f"{time.strftime('%H:%M:%S')}: Writing files...")
 
@@ -679,9 +696,13 @@ def _realspace_align_and_subtract(
 
     write_maps(fg_off.array, str(output_dir / (off_name + ".map")))
 
-    write_maps(masked_difference_array, str(output_dir / (on_name + '_minus_' + off_name + ".map")))
     write_maps(
-        difference_array, str(output_dir / (on_name + '_minus_' + off_name + "_unmasked.map"))
+        masked_difference_array,
+        str(output_dir / (on_name + "_minus_" + off_name + ".map")),
+    )
+    write_maps(
+        difference_array,
+        str(output_dir / (on_name + "_minus_" + off_name + "_unmasked.map")),
     )
 
     return
@@ -726,7 +747,9 @@ def _unit_cell_hack(cell):
         return cell
 
 
-def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selection, radius):
+def align_grids_from_model_transform(
+    grid1, grid2, structure1, structure2, selection, radius
+):
     """
     This function is basically just a wrapper around `gemmi.interpolate_grid_of_aligned_model2`, which is an amazing thing that exists!!.
 
@@ -739,7 +762,7 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
     structure1 : gemmi.Structure
         Structure containing reference (static) protein model.
     structure2 : gemmi.Structure
-        Structure which, when aligned to structure1, reveals the necessary transformation to align grid2 onto grid1. 
+        Structure which, when aligned to structure1, reveals the necessary transformation to align grid2 onto grid1.
     selection : str
         a string sufficient to describe the rbr selection to gemmi
         If the rbr selection contained multiple chains / spans, can just be the first chain / span
@@ -775,9 +798,9 @@ def align_grids_from_model_transform(grid1, grid2, structure1, structure2, selec
     grid2_out = (
         grid1.clone()
     )  # this makes sure that grid2_out has a voxel frame matching grid1
-    
+
     grid2_out.fill(0)
-    
+
     gemmi.interpolate_grid_of_aligned_model2(
         dest=grid2_out,
         src=grid2,
@@ -861,12 +884,19 @@ def _ncs_align_and_subtract(
 
     write_maps(fg.array, str(output_dir / (name + "_" + ncs_chains[0] + ".map")))
     write_maps(
-        fg2.array, str(output_dir / (name + "_" + ncs_chains[1] + "_onto_" + ncs_chains[0] + ".map"))
+        fg2.array,
+        str(
+            output_dir
+            / (name + "_" + ncs_chains[1] + "_onto_" + ncs_chains[0] + ".map")
+        ),
     )
 
     write_maps(
         fg2.array - fg.array,
-       str(output_dir / (name + "_" + ncs_chains[1] + "_minus_" + ncs_chains[0] + ".map"))
+        str(
+            output_dir
+            / (name + "_" + ncs_chains[1] + "_minus_" + ncs_chains[0] + ".map")
+        ),
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Done!")
@@ -877,13 +907,13 @@ def _ncs_align_and_subtract(
 def _quicknorm(array):
     return (array - array.mean()) / array.std()
 
+
 def _validate_inputs(
-    input_dir : Path,
-    output_dir : Path,
+    input_dir: Path,
+    output_dir: Path,
     ligands,
     *files,
 ):
-
     # use pathlib to validate input files and directories
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -892,26 +922,26 @@ def _validate_inputs(
 
     if not input_dir.exists():
         raise ValueError(f"Input directory '{input_dir}' does not exist")
-    
+
     if ligands is not None:
         ligands = [Path(ligand) for ligand in ligands]
-        
-        ligands = [ligand if ligand.is_absolute() else input_dir/ligand
-                for ligand in ligands]
+
+        ligands = [
+            ligand if ligand.is_absolute() else input_dir / ligand for ligand in ligands
+        ]
 
         for ligand in ligands:
             if not ligand.exists():
                 raise ValueError(f"Input ligand '{ligand}' does not exist")
-        
+
     files = [Path(f) for f in files]
-  
-    files = [f if f.is_absolute() else input_dir/f
-             for f in files]
-    
+
+    files = [f if f.is_absolute() else input_dir / f for f in files]
+
     for f in files:
         if not f.exists():
             raise ValueError(f"Input file '{f}' does not exist")
-        
+
     return input_dir, output_dir, ligands, *files
 
 
@@ -931,26 +961,28 @@ def _cif_or_mtz_to_mtz(input_file, output_dir):
     (output_file, filename)
 
     """
-    
-    if input_file.suffix.lower() == '.mtz':
-        
+
+    if input_file.suffix.lower() == ".mtz":
         output_file = output_dir / (input_file.name)
-        
+
         shutil.copy(input_file, output_file)
-                
-    elif input_file.suffix.lower() == '.cif':
-        
-        output_file = output_dir / (input_file.name.lower().removesuffix('.cif') + '.mtz')
-        
+
+    elif input_file.suffix.lower() == ".cif":
+        output_file = output_dir / (
+            input_file.name.lower().removesuffix(".cif") + ".mtz"
+        )
+
         reflections = rs.read_cif(str(input_file))
-        
+
         reflections.write_mtz(str(output_file))
-        
+
     else:
-        raise ValueError(f"Invalid file type {input_file.suffix} for starting model, must be '.mtz' or '.cif'")
-    
-    return (output_file, 
-            input_file.name.removesuffix(input_file.suffix))
+        raise ValueError(
+            f"Invalid file type {input_file.suffix} for starting model, must be '.mtz' or '.cif'"
+        )
+
+    return (output_file, input_file.name.removesuffix(input_file.suffix))
+
 
 def _cif_or_pdb_to_pdb(input_file, output_dir):
     """
@@ -971,33 +1003,35 @@ def _cif_or_pdb_to_pdb(input_file, output_dir):
     ValueError
         _description_
     """
-    
-    if input_file.suffix.lower() == '.pdb':
-        
+
+    if input_file.suffix.lower() == ".pdb":
         output_file = output_dir / (input_file.name)
-        
+
         shutil.copy(input_file, output_file)
-        
-    elif input_file.suffix.lower() == '.cif':
-        
-        output_file = output_dir / (input_file.name.lower().removesuffix('.cif') + '.pdb')
-        
+
+    elif input_file.suffix.lower() == ".cif":
+        output_file = output_dir / (
+            input_file.name.lower().removesuffix(".cif") + ".pdb"
+        )
+
         structure = gemmi.read_structure(str(input_file))
         structure.write_pdb(str(output_file))
-    
+
     else:
-        raise ValueError(f"Invalid file type {input_file.suffix} for starting model, must be '.pdb' or '.cif'")
-    
+        raise ValueError(
+            f"Invalid file type {input_file.suffix} for starting model, must be '.pdb' or '.cif'"
+        )
+
     return output_file
 
-def _clean_up_files(output_dir, old_files, keep_temp_files):
 
+def _clean_up_files(output_dir, old_files, keep_temp_files):
     candidate_files = []
-    for suffix in ('eff', 'pdb', 'mtz', 'log', 'cif'):
-        candidate_files.extend(list(output_dir.glob('*' + suffix)))
-        
+    for suffix in ("eff", "pdb", "mtz", "log", "cif"):
+        candidate_files.extend(list(output_dir.glob("*" + suffix)))
+
     files_to_delete = set(candidate_files) - set(old_files)
-    
+
     if keep_temp_files is not None:
         new_dir = output_dir / keep_temp_files
         new_dir.mkdir(parents=True, exist_ok=True)
@@ -1005,14 +1039,14 @@ def _clean_up_files(output_dir, old_files, keep_temp_files):
             f.rename(new_dir / f.name)
     else:
         for f in files_to_delete:
-            os.remove(f)    
-    
+            os.remove(f)
+
     return
 
+
 def _write_script(utility, arguments, script_name):
-    
     from matchmaps import __version__ as version
-    
+
     contents = f"""#!/bin/bash
 
 # This file was produced by matchmaps version {version} on {time.strftime('%c')}
@@ -1022,8 +1056,8 @@ def _write_script(utility, arguments, script_name):
 {utility} {' '.join(arguments)}
 
 """
-    
-    with open(script_name + '.sh', "w") as file:
+
+    with open(script_name + ".sh", "w") as file:
         file.write(contents)
-    
+
     return
