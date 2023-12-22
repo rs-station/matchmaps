@@ -120,7 +120,7 @@ If you'd then like to run `matchmaps` again with slightly different parameters, 
  - `--no-bss`: If included, skip the bulk solvent scaling step of phenix.refine. Like `--unmasked-radius`, this option may be useful in situtations where you expect signal far away from your protein model. For example, bulk solvent scaling may "flatten" or otherwise alter signal for an unmodeled bound ligand.
  - `--spacing`: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.
  - `--verbose`: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it's very annoying, but it can be useful for debugging purposes.
- - `--rbr-selections`: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please [file an issue](https://github.com/dennisbrookner/matchmaps/issues) if you have any trouble.
+ - `--rbr-selections`: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please [file an issue](https://github.com/rs-station/matchmaps/issues)  if you have any trouble.
 
 Note that most of the command-line options have short and long versions, e.g. `-i` vs. `--input-dir`. For clarity, the long names have been used exclusively on this page. The [full documentation](cli.md) lits all short and long options.
 
@@ -140,17 +140,3 @@ Let's assume that your input files are called `off.mtz` and `on.mtz`. The follow
 Additionally, `matchmaps` produces ~15 other files which by default are deleted after the program finishes. If you would like to keep these files, you can use the `--keep-temp-files` flag described above.
 
 Note that if you re-run `matchmaps` into the same output directory, the `.map` output files ***will*** be overwritten. I recommend directing each `matchmaps` run in to a unique, informatively-named output directory.
-
-### Working with `.map` files in Coot
-
-If you have experience with cryo-EM, you're probably familiar with `.map`/`.CCP4`/`.mrc` real-space map files. But if you're a crystallographer, you might not have worked with these at all! Crystallographers typically just open `.mtz` files directly in a software (like coot or PyMOL) that does the Fourier transform and computes the map "on the fly". But here you are, working with `matchmaps`, which by design produces real-space outputs.
-
-`.map` files should be opened in Coot via "File > Open Map...":
-
-![Open Map...](images/openmap.png)
-
-If the map you are opening is a difference map, it is essential that you check the option "Is Difference Map" in the bottom left corner of the "Select Map..." dialog. If you don't do this here, there is no way to do it later; you'll have to close and reopen the map.
-
-![Is difference map](images/isdifferencemap.png)
-
-Happy difference mapping! From here, working with a `.map` file should be no different than typical work in Coot with an `.mtz` file.

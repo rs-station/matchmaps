@@ -17,7 +17,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=693b884f"></script>
+        <script src="_static/documentation_options.js?v=4c19a4e8"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -65,12 +65,12 @@
 <li class="toctree-l2"><a class="reference internal" href="#other-useful-options">Other useful options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#output-files">Output files</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#important-map-outputs">Important <code class="docutils literal notranslate"><span class="pre">.map</span></code> outputs</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#working-with-map-files-in-coot">Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in Coot</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
 </ul>
 
@@ -212,7 +212,7 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <li><p><code class="docutils literal notranslate"><span class="pre">--no-bss</span></code>: If included, skip the bulk solvent scaling step of phenix.refine. Like <code class="docutils literal notranslate"><span class="pre">--unmasked-radius</span></code>, this option may be useful in situtations where you expect signal far away from your protein model. For example, bulk solvent scaling may “flatten” or otherwise alter signal for an unmodeled bound ligand.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--spacing</span></code>: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it’s very annoying, but it can be useful for debugging purposes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--rbr-selections</span></code>: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue</a> if you have any trouble.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--rbr-selections</span></code>: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue</a>  if you have any trouble.</p></li>
 </ul>
 <p>Note that most of the command-line options have short and long versions, e.g. <code class="docutils literal notranslate"><span class="pre">-i</span></code> vs. <code class="docutils literal notranslate"><span class="pre">--input-dir</span></code>. For clarity, the long names have been used exclusively on this page. The <a class="reference internal" href="cli.html"><span class="std std-doc">full documentation</span></a> lits all short and long options.</p>
 </section>
@@ -230,15 +230,6 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 </ul>
 <p>Additionally, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> produces ~15 other files which by default are deleted after the program finishes. If you would like to keep these files, you can use the <code class="docutils literal notranslate"><span class="pre">--keep-temp-files</span></code> flag described above.</p>
 <p>Note that if you re-run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> into the same output directory, the <code class="docutils literal notranslate"><span class="pre">.map</span></code> output files <em><strong>will</strong></em> be overwritten. I recommend directing each <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> run in to a unique, informatively-named output directory.</p>
-</section>
-<section id="working-with-map-files-in-coot">
-<h3>Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in Coot<a class="headerlink" href="#working-with-map-files-in-coot" title="Link to this heading"></a></h3>
-<p>If you have experience with cryo-EM, you’re probably familiar with <code class="docutils literal notranslate"><span class="pre">.map</span></code>/<code class="docutils literal notranslate"><span class="pre">.CCP4</span></code>/<code class="docutils literal notranslate"><span class="pre">.mrc</span></code> real-space map files. But if you’re a crystallographer, you might not have worked with these at all! Crystallographers typically just open <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> files directly in a software (like coot or PyMOL) that does the Fourier transform and computes the map “on the fly”. But here you are, working with <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, which by design produces real-space outputs.</p>
-<p><code class="docutils literal notranslate"><span class="pre">.map</span></code> files should be opened in Coot via “File &gt; Open Map…”:</p>
-<p><img alt="Open Map..." src="_images/openmap.png" /></p>
-<p>If the map you are opening is a difference map, it is essential that you check the option “Is Difference Map” in the bottom left corner of the “Select Map…” dialog. If you don’t do this here, there is no way to do it later; you’ll have to close and reopen the map.</p>
-<p><img alt="Is difference map" src="_images/isdifferencemap.png" /></p>
-<p>Happy difference mapping! From here, working with a <code class="docutils literal notranslate"><span class="pre">.map</span></code> file should be no different than typical work in Coot with an <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> file.</p>
 </section>
 </section>
 </section>
