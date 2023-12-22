@@ -50,6 +50,7 @@ def compute_realspace_difference_map(
     eff : str = None,
     keep_temp_files : str = None,
     radius : float = 5,
+    alpha : float = 0,
     no_bss = False
 ):
     """
@@ -98,10 +99,12 @@ def compute_realspace_difference_map(
         If not None, the name of a subdirectory of the output_dir into which intermediate matchmaps files are moved upon program completion.
     radius : float, optional
         Maximum distance away from protein model to include voxels. Only applies to the "unmasked" difference map output.
+    alpha : float, optional
+        Alpha to use in error weighting of F-obs prior to Fourier Transform. Defaults to 0, e.g. no weighting.
     no_bss : bool, optional
         If True, skip bulk solvent scaling feature of phenix.refine
     """
-    
+
     _validate_environment(ccp4=True)
 
     output_dir_contents = list(output_dir.glob("*"))
@@ -206,11 +209,12 @@ def compute_realspace_difference_map(
     # TO-DO: Figure out why phenix outputs are sometimes still split into (+) and (-) columns, even when I specify that anomalous=False
     # As a workaround, even anomalous files have a single 'F-obs-filtered' column, so I can always just use that.
     fg_off = make_floatgrid_from_mtz(
-        mtzoff, spacing, F="F-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin
+        mtzoff, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin, alpha=alpha,
     )
     fg_on = make_floatgrid_from_mtz(
-        mtzon, spacing, F="F-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin
+        mtzon, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin, alpha=alpha,
     )
+    
 
     if rbr_gemmi is None:
         _realspace_align_and_subtract(
@@ -369,6 +373,18 @@ def parse_arguments():
             "By default, cutoff is the resolution limit of the lower-resolution input MTZ. "
         ),
     )
+    
+    parser.add_argument(
+        "--alpha",
+        required=False,
+        type=float,
+        default=0,
+        help=(
+            "Alpha to use for error weighting of F-obs prior to Fourier Transform. "
+            "Weights are computed as: 1 / ((1+(alpha*(SigF^2)) / <SigF>^2). "
+            "Default value is alpha=0, e.g., no weighting is performed. "
+        )
+    )
 
     parser.add_argument(
         "--unmasked-radius",
@@ -464,6 +480,7 @@ def main():
         dmin=args.dmin,
         spacing=args.spacing,
         radius=args.unmasked_radius,
+        alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss,
