@@ -17,7 +17,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=9c886213"></script>
+        <script src="_static/documentation_options.js?v=c25e3953"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -92,7 +92,8 @@
 <span class="go">                 SigFon --pdboff PDBOFF [--ligands [LIGANDS ...]]</span>
 <span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
 <span class="go">                 [--on-as-stationary] [--no-bss] [--spacing SPACING]</span>
-<span class="go">                 [--dmin DMIN] [--unmasked-radius UNMASKED_RADIUS] [--verbose]</span>
+<span class="go">                 [--dmin DMIN] [--alpha ALPHA]</span>
+<span class="go">                 [--unmasked-radius UNMASKED_RADIUS] [--verbose]</span>
 <span class="go">                 [--rbr-selections [RBR_SELECTIONS ...]] [--eff EFF]</span>
 <span class="go">                 [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
 </pre></div>
@@ -161,6 +162,12 @@
 <dt class="sig sig-object std" id="cmdoption-matchmaps-dmin">
 <span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Link to this definition"></a></dt>
 <dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-alpha">
+<span class="sig-name descname"><span class="pre">--alpha</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;alpha&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha to use for error weighting of F-obs prior to Fourier Transform. Weights are computed as: 1 / ((1+(alpha*(SigF^2)) / &lt;SigF&gt;^2). Default value is alpha=0, e.g., no weighting is performed.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -316,9 +323,9 @@
 <span class="go">                    [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
 <span class="go">                    [--on-as-stationary] [--no-bss] [--spacing SPACING]</span>
 <span class="go">                    [--dmin DMIN] [--unmasked-radius UNMASKED_RADIUS]</span>
-<span class="go">                    [--verbose] [--rbr-selections [RBR_SELECTIONS ...]]</span>
-<span class="go">                    [--eff EFF] [--keep-temp-files KEEP_TEMP_FILES]</span>
-<span class="go">                    [--script SCRIPT]</span>
+<span class="go">                    [--alpha ALPHA] [--verbose]</span>
+<span class="go">                    [--rbr-selections [RBR_SELECTIONS ...]] [--eff EFF]</span>
+<span class="go">                    [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -391,6 +398,12 @@
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-unmasked-radius">
 <span class="sig-name descname"><span class="pre">--unmasked-radius</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;unmasked_radius&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-unmasked-radius" title="Link to this definition"></a></dt>
 <dd><p>Maximum distance (in Anstroms) away from protein model to include voxels. Only applies to the ‘unmasked’ difference map output. Defaults to 5. Note that the regular difference map (e.g. the ‘masked’ version) is not affected by this parameter and maintains a solvent mask radius of 2 Angstroms.</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-alpha">
+<span class="sig-name descname"><span class="pre">--alpha</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;alpha&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-alpha" title="Link to this definition"></a></dt>
+<dd><p>Alpha to use for error weighting of F-obs prior to Fourier Transform. Weights are computed as: 1 / ((1+(alpha*(SigF^2)) / &lt;SigF&gt;^2). Default value is alpha=0, e.g., no weighting is performed.</p>
 </dd></dl>
 
 <dl class="std option">
