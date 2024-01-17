@@ -13,7 +13,7 @@ import time
 import re
 from functools import partial
 from pathlib import Path
-
+from IPython import embed
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
@@ -108,7 +108,7 @@ def _subparser(selection):
 
 
 def make_floatgrid_from_mtz(
-    mtz, spacing, F, SigF, Phi, spacegroup="P1", dmin=None, alpha=0
+    mtz, spacing, F, Phi, SigF=None, spacegroup="P1", dmin=None, alpha=0
 ):
     """
     Make a gemmi.FloatGrid from an rs.DataSet.
@@ -119,14 +119,19 @@ def make_floatgrid_from_mtz(
         mtz data to be transformed into real space
     spacing : float
         Approximate voxel size desired (will be rounded as necessary to create integer grid dimensions)
-    F : str, optional
+    F : str
         Column in mtz containing structure factor amplitudes to use for calculation
-    Phi : str, optional
+    Phi : str
         Column in mtz containing phases to be used for calculation
+    SigF : str, optional
+        Column in mtz containing uncertainties of structure factor amplitudes.
+        If provided, output map is weighted using the alpha value provided
     spacegroup : str, optional
         Spacegroup for the output FloatGrid. Defaults to P1.
     dmin: float, optional
         Highest resolution reflections to include in Fourier transform. Defaults to None, no cutoff.
+    alpha: float, optional
+        Alpha-factor to use in error-weighting of the output map. If SigF is not provided, this parameter is ignored.
 
     Returns
     -------
@@ -152,16 +157,19 @@ def make_floatgrid_from_mtz(
     ]
 
     # apply weighting
-    # note: if alpha==1, then these numbers all just become 1, e.g. no weighting
-    weights = 1 / (
-        1
-        + (
-            alpha
-            * new_mtz[SigF] ** 2
-            / np.mean(new_mtz[SigF] ** 2)
+    # note: if alpha==0, then these numbers all just become 1, e.g. no weighting
+    if SigF is not None:
+        weights = 1 / (
+            1
+            + (
+                alpha
+                * new_mtz[SigF] ** 2
+                / np.mean(new_mtz[SigF] ** 2)
+            )
         )
-    )
-    
+    else:
+        weights = 1
+        
     if 'weighted_Fobs' in new_mtz.columns:
         raise NotImplementedError('Error: mtz already contains a column named weighted_Fobs; email Dennis bugging him to support this')
     new_mtz['weighted_Fobs'] = new_mtz[F] * weights
@@ -971,8 +979,13 @@ def _cif_or_mtz_to_mtz(input_file, output_dir):
     if input_file.suffix.lower() == ".mtz":
         output_file = output_dir / (input_file.name)
 
-        shutil.copy(input_file, output_file)
-
+        try:
+            shutil.copy(input_file, output_file)
+        except shutil.SameFileError:
+            print(f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
+                   "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option")
+            pass
+        
     elif input_file.suffix.lower() == ".cif":
         output_file = output_dir / (
             input_file.name.lower().removesuffix(".cif") + ".mtz"
@@ -1012,8 +1025,13 @@ def _cif_or_pdb_to_pdb(input_file, output_dir):
 
     if input_file.suffix.lower() == ".pdb":
         output_file = output_dir / (input_file.name)
-
-        shutil.copy(input_file, output_file)
+        
+        try:
+            shutil.copy(input_file, output_file)
+        except shutil.SameFileError:
+            print(f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
+                   "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option")
+            pass
 
     elif input_file.suffix.lower() == ".cif":
         output_file = output_dir / (
