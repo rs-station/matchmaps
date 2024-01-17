@@ -13,7 +13,7 @@ import time
 import re
 from functools import partial
 from pathlib import Path
-
+from IPython import embed
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
@@ -971,8 +971,13 @@ def _cif_or_mtz_to_mtz(input_file, output_dir):
     if input_file.suffix.lower() == ".mtz":
         output_file = output_dir / (input_file.name)
 
-        shutil.copy(input_file, output_file)
-
+        try:
+            shutil.copy(input_file, output_file)
+        except shutil.SameFileError:
+            print(f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
+                   "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option")
+            pass
+        
     elif input_file.suffix.lower() == ".cif":
         output_file = output_dir / (
             input_file.name.lower().removesuffix(".cif") + ".mtz"
@@ -1012,8 +1017,13 @@ def _cif_or_pdb_to_pdb(input_file, output_dir):
 
     if input_file.suffix.lower() == ".pdb":
         output_file = output_dir / (input_file.name)
-
-        shutil.copy(input_file, output_file)
+        
+        try:
+            shutil.copy(input_file, output_file)
+        except shutil.SameFileError:
+            print(f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
+                   "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option")
+            pass
 
     elif input_file.suffix.lower() == ".cif":
         output_file = output_dir / (
