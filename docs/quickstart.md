@@ -1,6 +1,6 @@
 # Getting started with `matchmaps`
 
-On this page, we'll explore how to use the basic `matchmaps` utility and examine its outputs.  Full documation of all options for all three command-line utilities can be found [here](cli.md) or by typing the command plus `--help` into the command line.
+On this page, we'll explore how to use the basic `matchmaps` utility and examine its outputs.  Full documation of all options for all three command-line utilities can be found [here](cli.md) or by typing the command plus `--help` into the command line. A more detailed exploration of the `matchmaps` algorithm can be found [here](about.md).
 
 ## Installation
 
@@ -70,7 +70,7 @@ matchmaps --mtzoff apo_data.mtz Fobs SIGFobs \
     --pdboff apo.pdb \
     --ligands weird_solvent_1.cif weird_solvent_2.cif
 ```
- 
+
 If you'd like read or write files from somewhere other than your current directory, you can! There are three ways to specify input files:
  - Provide relative paths directly for all input files
  - Provide only file names, and add the `--input-dir` option to specify where those files live. If you do this, the same `--input-dir` will be preprended to all filenames, so your files should all live in the same place.
