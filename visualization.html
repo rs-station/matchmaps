@@ -17,7 +17,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=01ee4458"></script>
+        <script src="_static/documentation_options.js?v=1cbffccf"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -57,7 +57,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#working-with-map-files-in-pymol">Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in PyMOL</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#normalization">Normalization</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#symmetry-expansion">Symmetry expansion.</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#symmetry-expansion">Symmetry expansion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#pymol-wiki-pages-for-the-commands-mentioned">PyMOL Wiki pages for the commands mentioned</a></li>
 </ul>
 </li>
@@ -122,7 +122,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> outputs are <strong>already normalized</strong>. This means that when looking at <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> outputs, the <code class="docutils literal notranslate"><span class="pre">normalize_ccp4_maps</span></code> option should always be set to <code class="docutils literal notranslate"><span class="pre">off</span></code>. If this option is turned on, then the map’s contour levels are likely to be very different from, say, how they look in Coot.</p>
 </section>
 <section id="symmetry-expansion">
-<h3>Symmetry expansion.<a class="headerlink" href="#symmetry-expansion" title="Link to this heading"></a></h3>
+<h3>Symmetry expansion<a class="headerlink" href="#symmetry-expansion" title="Link to this heading"></a></h3>
 <p>As mentioned above, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> outputs are always in spacegroup P1. This means that the only relevant symmetry operation is the periodic boundary condition. But there is a catch - even though your map is always in P1, your structural model is unlikely to be! PyMOL looks for symmetry operations wherever it can find them. This means that if <code class="docutils literal notranslate"><span class="pre">map_auto_expand_sym</span></code> is on, and you use the <code class="docutils literal notranslate"><span class="pre">isomesh</span></code> command as such:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">isomesh</span> <span class="n">my_new_mesh</span><span class="p">,</span> <span class="n">map_from_matchmaps</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">pdb_in_high_symmetry_spacegroup</span> <span class="ow">and</span> <span class="n">resi</span> <span class="mi">20</span>
 </pre></div>

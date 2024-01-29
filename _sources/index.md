@@ -4,8 +4,8 @@ Welcome to the docs for `matchmaps`, a python package for aligning and subtracti
 
 The [quickstart guide](quickstart.md) contains installation instructions and sample usage of the basic `matchmaps` utility, along with other useful tips.
 
-If you'd like to learn more about `matchmaps` and see the package in action, please check out our pre-print!
-> [MatchMaps: Non-isomorphous difference maps for X-ray crystallography](https://www.biorxiv.org/content/10.1101/2023.09.01.555333v1.full.pdf+html)
+If you'd like to learn more about `matchmaps`, you can find our exploration of the package [here](about.md). For even more information, and see the package in action, please check out our pre-print!
+> [MatchMaps: Non-isomorphous difference maps for X-ray crystallography](https://www.biorxiv.org/content/10.1101/2023.09.01.555333v2.full.pdf+html)
 
 This software is part of the [Reciprocal Space Station](https://rs-station.github.io/) family of open-source crystallography software and was conceived in [Doeke Hekstra's Lab](https://hekstralab.fas.harvard.edu/) at Harvard by [Dennis Brookner](https://dennisbrookner.github.io/)
 
