@@ -36,7 +36,7 @@ isomesh differencemesh_positive, difference_map, 2, pdb and resi 20
 
 `matchmaps` outputs are **already normalized**. This means that when looking at `matchmaps` outputs, the `normalize_ccp4_maps` option should always be set to `off`. If this option is turned on, then the map's contour levels are likely to be very different from, say, how they look in Coot.
 
-### Symmetry expansion.
+### Symmetry expansion
 As mentioned above, `matchmaps` outputs are always in spacegroup P1. This means that the only relevant symmetry operation is the periodic boundary condition. But there is a catch - even though your map is always in P1, your structural model is unlikely to be! PyMOL looks for symmetry operations wherever it can find them. This means that if `map_auto_expand_sym` is on, and you use the `isomesh` command as such:
 
 ```
