@@ -26,11 +26,13 @@ classifiers = [
     "Typing :: Typed",
 ]
 dynamic = ["version"]
+
 dependencies = [
     "numpy",
     "tqdm",
     "reciprocalspaceship>=1.0.1",
-    "rs-booster>=0.0.1",
+    # "rs-booster>=0.0.1",
+    "rs-booster@git+https://github.com/rs-station/rs-booster.git@main",
     "gemmi"
 ]
 
@@ -70,3 +72,7 @@ matchmaps = "matchmaps._compute_realspace_diff:main"
 # https://hatch.pypa.io/latest/config/metadata/
 [tool.hatch.version]
 source = "vcs"
+
+# this can be deleted once a new rs-booster version has been released
+[tool.hatch.metadata]
+allow-direct-references = true

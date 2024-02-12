@@ -126,7 +126,7 @@ def compute_realspace_difference_map(
     )
 
     subprocess.run(
-        f"rs.scaleit -r {mtzoff} {Foff} {SigFoff} -i {mtzon} {Fon} {SigFon} -o {mtzon_scaled}",
+        f"rs.scaleit -r {mtzoff} {Foff} {SigFoff} -i {mtzon} {Fon} {SigFon} -o {mtzon_scaled} --ignore-isomorphism",
         shell=True,
         capture_output=(not verbose),
     )
