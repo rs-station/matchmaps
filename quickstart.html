@@ -17,7 +17,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=06159961"></script>
+        <script src="_static/documentation_options.js?v=dd5ca982"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -124,6 +124,10 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <li><p><a class="reference external" href="https://www.ccp4.ac.uk/download/#os=mac">ccp4</a></p></li>
 <li><p><a class="reference external" href="https://phenix-online.org/documentation/install-setup-run.html">phenix</a></p></li>
 </ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Please note that phenix 1.21 is <strong>not</strong> supported at this time. I hope to update <code class="xref py py-obj docutils literal notranslate"><span class="pre">matchmaps</span></code> to support this in the near future. In the meantime, make sure you’re using phenix 1.20 or earlier, and everything should work fine.</p>
+</div>
 <p>When actually using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> in the command-line, you’ll need to have both ccp4 and phenix active. Doing that will look something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/path/to/phenix/phenix_env.sh
 /path/to/ccp4/start
