@@ -28,6 +28,10 @@ Though `matchmaps` is a python package, it relies on two pieces of external soft
  - [ccp4](https://www.ccp4.ac.uk/download/#os=mac)
  - [phenix](https://phenix-online.org/documentation/install-setup-run.html)
 
+```{eval-rst}
+.. note::
+    Please note that phenix 1.21 is **not** supported at this time. I hope to update `matchmaps` to support this in the near future. In the meantime, make sure you're using phenix 1.20 or earlier, and everything should work fine. 
+```
 When actually using `matchmaps` in the command-line, you'll need to have both ccp4 and phenix active. Doing that will look something like:
 ```bash
 source /path/to/phenix/phenix_env.sh
