@@ -30,6 +30,17 @@ def _validate_environment(ccp4):
             "\n"
             "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
         )
+    else:
+        version_printout = subprocess.run(
+            "phenix.version | grep Version", shell=True, capture_output=True
+        )
+        
+        version_string = str(version_printout.stdout)
+        
+        if version_string.find('21') > 0:
+            raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
+                                      "\n"
+                                      "Please use phenix 1.20 or earlier.")
 
     if ccp4:
         if shutil.which("scaleit") is None:
