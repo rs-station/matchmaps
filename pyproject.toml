@@ -31,8 +31,7 @@ dependencies = [
     "numpy",
     "tqdm",
     "reciprocalspaceship>=1.0.1",
-    # "rs-booster>=0.0.1",
-    "rs-booster@git+https://github.com/rs-station/rs-booster.git@main",
+    "rs-booster>=0.1.2",
     "gemmi"
 ]
 
@@ -73,6 +72,6 @@ matchmaps = "matchmaps._compute_realspace_diff:main"
 [tool.hatch.version]
 source = "vcs"
 
-# this can be deleted once a new rs-booster version has been released
-[tool.hatch.metadata]
-allow-direct-references = true
+# # this can be deleted once a new rs-booster version has been released
+# [tool.hatch.metadata]
+# allow-direct-references = true
