@@ -122,8 +122,6 @@ Note that most of the command-line options have short and long versions, e.g. `-
 
 Below is a quick tour of the output files that `matchmaps` will produce and what you might want to do with them.
 
-### Important `.map` outputs
-
 Let's assume that your input files are called `off.mtz` and `on.mtz`. The following files created by `matchmaps` may be of interest:
 
  - `on_minus_off.map`: This is your difference map! It should contain positive and negative signal in the vicinity (>= 2 Angstroms) of your protein model.
