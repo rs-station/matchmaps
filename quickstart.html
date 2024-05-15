@@ -17,14 +17,14 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=6228cef1"></script>
+        <script src="_static/documentation_options.js?v=72cd6806"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="matchmaps command-line interface" href="cli.html" />
+    <link rel="next" title="Troubleshooting and advanced usage" href="troubleshooting.html" />
     <link rel="prev" title="matchmaps Documentation" href="index.html" /> 
 </head>
 
@@ -62,16 +62,13 @@
 <li class="toctree-l3"><a class="reference internal" href="#running-matchmaps-from-a-script">Running <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> from a script</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#other-useful-options">Other useful options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#output-files">Output files</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#important-map-outputs">Important <code class="docutils literal notranslate"><span class="pre">.map</span></code> outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#output-files">Output files</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting and advanced usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Full command-line API</a></li>
 </ul>
 
         </div>
@@ -126,14 +123,14 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Please note that phenix 1.21 is <strong>not</strong> supported at this time. I hope to update <code class="xref py py-obj docutils literal notranslate"><span class="pre">matchmaps</span></code> to support this in the near future. In the meantime, make sure you’re using phenix 1.20 or earlier, and everything should work fine.</p>
+<p>Please note that phenix 1.21 is <strong>not</strong> supported at this time. I hope to update <code class="xref py py-obj docutils literal notranslate"><span class="pre">matchmaps</span></code> to support this in the near future. In the meantime, make sure you’re using phenix 1.20 or earlier, and everything should work fine. As of <code class="xref py py-obj docutils literal notranslate"><span class="pre">matchmaps</span> <span class="pre">0.6.3</span></code>, an error should be thrown if you’re using phenix 1.21 reminding you to downgrade.</p>
 </div>
 <p>When actually using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> in the command-line, you’ll need to have both ccp4 and phenix active. Doing that will look something like:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">source</span><span class="w"> </span>/path/to/phenix/phenix_env.sh
 /path/to/ccp4/start
 </pre></div>
 </div>
-<p>At this point, you should be good to go! Please <a class="reference external" href="https://github.com/dennisbrookner/matchmaps/issues">file an issue on github</a> is this is not working.</p>
+<p>At this point, you should be good to go! Please <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue on github</a> is this is not working.</p>
 </section>
 </section>
 <section id="input-files">
@@ -205,26 +202,12 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <h3>Running <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> from a script<a class="headerlink" href="#running-matchmaps-from-a-script" title="Link to this heading"></a></h3>
 <p>After your <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> run completes successfully, it will write out a file (called <code class="docutils literal notranslate"><span class="pre">run_matchmaps.sh</span></code> unless you specify a different name to the <code class="docutils literal notranslate"><span class="pre">--script</span></code> flag) which can be run to reproduce exactly the same command. Note that, to ensure the compatibility of input/output paths, this script is written to your <em><strong>current working directory</strong></em>.</p>
 <p>If you’d then like to run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> again with slightly different parameters, you can use this script as a starting point. No need to remember exactly which parameters you used the first time!</p>
-</section>
-</section>
-<section id="other-useful-options">
-<h2>Other useful options<a class="headerlink" href="#other-useful-options" title="Link to this heading"></a></h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code>: The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> algorithm always involves an alignment in real-space of the “on” and “off” maps. By default, the “off” map is stationary, and the “on” map is moved. This is typically desired, such that everything lines up with your “off” structural model. However, say that your structures are “apo” and “bound”, and you would like to line up your maps with a “bound” structure (which you never have to supply to <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>!). In this case, you could use the <code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code> flag.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dmin</span></code>: The input <code class="docutils literal notranslate"><span class="pre">mtz</span></code> files are truncated to equal resolution by default. If you would like, the <code class="docutils literal notranslate"><span class="pre">mtz</span></code>s may be truncated even more stringently.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--unmasked-radius</span></code>: How far away from the protein model do you expect to see difference signal? Use this flag to change the behavior of the <code class="docutils literal notranslate"><span class="pre">_unmasked</span></code> difference map output to show more or less signal far from the protein. Defaults to 5 A. See <a class="reference internal" href="#important-map-outputs"><span class="xref myst">below</span></a> for more details.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--no-bss</span></code>: If included, skip the bulk solvent scaling step of phenix.refine. Like <code class="docutils literal notranslate"><span class="pre">--unmasked-radius</span></code>, this option may be useful in situtations where you expect signal far away from your protein model. For example, bulk solvent scaling may “flatten” or otherwise alter signal for an unmodeled bound ligand.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--spacing</span></code>: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it’s very annoying, but it can be useful for debugging purposes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--rbr-selections</span></code>: When doing rigid-body refinement, refine as multiple explicitly defined rigid bodies rather than a single rigid body containing everything. This flag is admittedly a little finnicky; please <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue</a>  if you have any trouble.</p></li>
-</ul>
 <p>Note that most of the command-line options have short and long versions, e.g. <code class="docutils literal notranslate"><span class="pre">-i</span></code> vs. <code class="docutils literal notranslate"><span class="pre">--input-dir</span></code>. For clarity, the long names have been used exclusively on this page. The <a class="reference internal" href="cli.html"><span class="std std-doc">full documentation</span></a> lits all short and long options.</p>
+</section>
 </section>
 <section id="output-files">
 <h2>Output files<a class="headerlink" href="#output-files" title="Link to this heading"></a></h2>
 <p>Below is a quick tour of the output files that <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will produce and what you might want to do with them.</p>
-<section id="important-map-outputs">
-<h3>Important <code class="docutils literal notranslate"><span class="pre">.map</span></code> outputs<a class="headerlink" href="#important-map-outputs" title="Link to this heading"></a></h3>
 <p>Let’s assume that your input files are called <code class="docutils literal notranslate"><span class="pre">off.mtz</span></code> and <code class="docutils literal notranslate"><span class="pre">on.mtz</span></code>. The following files created by <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> may be of interest:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">on_minus_off.map</span></code>: This is your difference map! It should contain positive and negative signal in the vicinity (&gt;= 2 Angstroms) of your protein model.</p></li>
@@ -236,14 +219,13 @@ pip<span class="w"> </span>install<span class="w"> </span>matchmaps
 <p>Note that if you re-run <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> into the same output directory, the <code class="docutils literal notranslate"><span class="pre">.map</span></code> output files <em><strong>will</strong></em> be overwritten. I recommend directing each <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> run in to a unique, informatively-named output directory.</p>
 </section>
 </section>
-</section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="index.html" class="btn btn-neutral float-left" title="matchmaps Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="cli.html" class="btn btn-neutral float-right" title="matchmaps command-line interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting and advanced usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

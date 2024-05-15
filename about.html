@@ -17,13 +17,14 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=6228cef1"></script>
+        <script src="_static/documentation_options.js?v=72cd6806"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="#" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="matchmaps command-line interface" href="cli.html" />
     <link rel="prev" title="Visualizing matchmaps results" href="visualization.html" /> 
 </head>
 
@@ -48,7 +49,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting and advanced usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">About the algorithm</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#abstract">Abstract</a></li>
@@ -69,6 +70,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#questions-or-thoughts">Questions or thoughts?</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Full command-line API</a></li>
 </ul>
 
         </div>
@@ -101,10 +103,10 @@
 <blockquote>
 <div><p><a class="reference external" href="https://www.biorxiv.org/content/10.1101/2023.09.01.555333v2">MatchMaps: Non-isomorphous difference maps for X-ray crystallography</a></p>
 </div></blockquote>
-<p>If what you’re looking for is a user’s guide, you can find that <a class="reference internal" href="quickstart.html"><span class="std std-doc">here</span></a>. But if you’re looking for more details about how <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> works, read on!</p>
+<p>If you’re looking for a user guide, you can find that <a class="reference internal" href="quickstart.html"><span class="std std-doc">here</span></a>. But if you’re looking for more details about how <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> works, read on!</p>
 <section id="abstract">
 <h2>Abstract<a class="headerlink" href="#abstract" title="Link to this heading"></a></h2>
-<p>Conformational change mediates the biological functions of macromolecules. Crystal-lographic measurements can map these changes with extraordinary sensitivity as a function of mutations, ligands, and time. The isomorphous difference map remains the gold standard for detecting structural differences between datasets. Isomorphous difference maps combine the phases of a chosen reference state with the observed changes in structure factor amplitudes to yield a map of changes in electron density. Such maps are much more sensitive to conformational change than structure refinement is, and are unbiased in the sense that observed differences do not depend on refinement of the perturbed state. However, even minute changes in unit cell properties can render isomorphous difference maps useless. This is unnecessary. Here we describe a generalized procedure for calculating observed difference maps that retains the high sensitivity to conformational change and avoids structure refinement of the perturbed state. We have implemented this procedure in an open-source python package, MatchMaps, that can be run in any software environment supporting PHENIX and CCP4. Through examples, we show that MatchMaps “rescues” observed difference electron density maps for poorly-isomorphous crystals, corrects artifacts in nominally isomorphous difference maps, and extends to detecting differences across copies within the asymmetric unit, or across altogether different crystal forms.</p>
+<p>Conformational change mediates the biological functions of macromolecules. Crystallographic measurements can map these changes with extraordinary sensitivity as a function of mutations, ligands, and time. A popular method for detecting structural differences between crystallographic datasets is the isomorphous difference map. Isomorphous difference maps combine the phases of a chosen reference state with the observed changes in structure factor amplitudes to yield a map of changes in electron density. Such maps are much more sensitive to conformational change than structure refinement is, and are unbiased in the sense that observed differences do not depend on refinement of the perturbed state. However, even modest changes in unit cell properties can render isomorphous difference maps useless. This is unnecessary. Here we describe a generalized procedure for calculating observed difference maps that retains the high sensitivity to conformational change and avoids structure refinement of the perturbed state. We have implemented this procedure in an open-source python package, MatchMaps, that can be run in any software environment supporting PHENIX and CCP4. Through examples, we show that MatchMaps “rescues” observed difference electron density maps for poorly-isomorphous crystals, corrects artifacts in nominally isomorphous difference maps, and extends to detecting differences across copies within the asymmetric unit, or across altogether different crystal forms.</p>
 </section>
 <section id="algorithm-overview">
 <h2>Algorithm overview<a class="headerlink" href="#algorithm-overview" title="Link to this heading"></a></h2>
@@ -177,6 +179,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="visualization.html" class="btn btn-neutral float-left" title="Visualizing matchmaps results" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="cli.html" class="btn btn-neutral float-right" title="matchmaps command-line interface" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

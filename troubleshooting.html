@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Troubleshooting and advanced usage &mdash; matchmaps</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e9b4edf4" />
+
+  
+    <link rel="shortcut icon" href="_static/rs-favicon_32x32.png"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=72cd6806"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+        <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+        <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Visualizing matchmaps results" href="visualization.html" />
+    <link rel="prev" title="Getting started with matchmaps" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            matchmaps
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Troubleshooting and advanced usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#solvent-masking-and-bulk-solvent-scaling">Solvent masking and bulk-solvent scaling</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#symmetry-related-molecules">Symmetry-related molecules</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#resolution-cuts-and-error-weighting">Resolution cuts and error weighting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#multiple-protein-chains">Multiple protein chains</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#refining-chains-individually">Refining chains individually</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#comparing-chains-to-each-other">Comparing chains to each other</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#miscellaneous-useful-options">Miscellaneous useful options</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Full command-line API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">matchmaps</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Troubleshooting and advanced usage</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/troubleshooting.md" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="troubleshooting-and-advanced-usage">
+<h1>Troubleshooting and advanced usage<a class="headerlink" href="#troubleshooting-and-advanced-usage" title="Link to this heading"></a></h1>
+<p>If you’ve read through the <a class="reference internal" href="quickstart.html"><span class="std std-doc">quickstart guide</span></a> and you still have questions or issues, read on for more information.</p>
+<section id="solvent-masking-and-bulk-solvent-scaling">
+<h2>Solvent masking and bulk-solvent scaling<a class="headerlink" href="#solvent-masking-and-bulk-solvent-scaling" title="Link to this heading"></a></h2>
+<p>The goal of <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is to visualize difference density around the protein molecule. However, the question remains: what does “around” mean exactly? To address this ambiguity, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> writes out two difference maps. The main difference map is solvent masked pretty strictly and only contains signal within 2 A of the protein model. The second difference map, which will include the suffix <code class="docutils literal notranslate"><span class="pre">_unmasked</span></code>, is solvent masked more laxly. The default masking radius for the <code class="docutils literal notranslate"><span class="pre">_unmasked</span></code> map is 5 A, but you can change this value using the <code class="docutils literal notranslate"><span class="pre">--unmasked-radius</span></code> flag. This might be useful if you expect to see signal farther away from your protein model, e.g. a bound ligand.</p>
+<p>Another important parameter for visualizing difference density far from your protein model is bulk-solvent scaling (BSS). BSS is a typical feature of crystallographic refinement, and including it will typically result in better refinement statistics and nicer maps. By default, <code class="docutils literal notranslate"><span class="pre">phenix.refine</span></code> will perform BSS prior to rigid-body refinement. However, if you expect to see signal far away from your protein model, you may find that BSS will “flatten” or otherwise alter this signal. You can disable BSS using the <code class="docutils literal notranslate"><span class="pre">--no-bss</span></code> flag. I strongly recommend this when analyzing an apo/bound pair via <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>.</p>
+<p>Also, for using <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> with bound ligands, see the <code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code> flag <a class="reference internal" href="#miscellaneous-useful-options"><span class="xref myst">below</span></a>.</p>
+<section id="symmetry-related-molecules">
+<h3>Symmetry-related molecules<a class="headerlink" href="#symmetry-related-molecules" title="Link to this heading"></a></h3>
+<p>A side effect of the <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> real-space alignment approach is that while the ON and OFF models will end up aligned, the <em>symmetry mates</em> of the ON and OFF models will necessarily end up <em>misaligned</em>. This is a big reason that solvent masking is so important: otherwise, difference density for the misaligned symmetry mates will dominate your maps. Unfortunately, even after strict solvent masking, your final difference map is likely to contain this artifactual signal. The good news is that this artifactual signal is pretty easy to identify and disregard. The bad news is that if you’re using a feature like Coot’s “find difference peaks,” you’re likely to see these a lot.</p>
+<p>In the medium-to-long term, I aim for the next generation of <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> masking approaches to resolve this issue more elegantly. If you have ideas about this, or if you just want to bug me about it, I would defintely welcome an <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">issue</a> and/or pull request on GitHub! In the shorter term, if this signal is becoming a large issue, you could try applying an even stricter solvent radius (say, 1 A) to the <code class="docutils literal notranslate"><span class="pre">--unmasked-radius</span></code> flag and see if that helps.</p>
+</section>
+</section>
+<section id="resolution-cuts-and-error-weighting">
+<h2>Resolution cuts and error weighting<a class="headerlink" href="#resolution-cuts-and-error-weighting" title="Link to this heading"></a></h2>
+<p>By default, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will simply truncate the two input reflection files to equal resolution. However, if you expect the highest-resolution reflections to still be noisy after this, or if your difference maps look very noisy, you might consider cutting resolution even further. You can do this by providing a resolution cut to the <code class="docutils literal notranslate"><span class="pre">--dmin</span></code> flag.</p>
+<p>Alternatively, rather than just truncating at a particular resolution, you can apply an error weighting to the reflections. Error weighting is performed immediately prior to the Fourier transform. Weights are computed via the following formula:</p>
+<div class="math notranslate nohighlight">
+\[\frac{1}{1 + \alpha \frac{{(\sigma F)}^2}{{&lt;\sigma F&gt;}^2}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma F\)</span> is the error estimate for the reflection, <span class="math notranslate nohighlight">\(&lt;\sigma F&gt;\)</span> is the average error estimate across all reflections, and <span class="math notranslate nohighlight">\(\alpha\)</span> is a weighting parameter. By default, <span class="math notranslate nohighlight">\(\alpha = 0\)</span>, e.g. no weighting. You can use the <code class="docutils literal notranslate"><span class="pre">--alpha</span></code> flag to supply your own value and thus include error-weighting.</p>
+</section>
+<section id="multiple-protein-chains">
+<h2>Multiple protein chains<a class="headerlink" href="#multiple-protein-chains" title="Link to this heading"></a></h2>
+<p>You may have multiple protein chains in your model. This presents you with some interesting opportunities for difference maps, but also some potential headaches.</p>
+<section id="refining-chains-individually">
+<h3>Refining chains individually<a class="headerlink" href="#refining-chains-individually" title="Link to this heading"></a></h3>
+<p>One possibility is that your <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> difference map contains essentially no signal for one protein chain, but strong signal throughout the other chain indicating a global motion. This signal is “real” – it tells you that the relative packing of these two chains together is different in your two datasets – but it probably doesn’t make for a very useful map. Instead, you might consider using the <code class="docutils literal notranslate"><span class="pre">--rbr-selections</span></code> flag to rigid-body refine each chain separately. If your chains are A and B, then you would use the flag as <code class="docutils literal notranslate"><span class="pre">--rbr-selections</span> <span class="pre">A</span> <span class="pre">B</span></code>. <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will then produce a difference map specific to each chain. This flag is admittedly a little finnicky; please <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue</a>  if you have any trouble.</p>
+</section>
+<section id="comparing-chains-to-each-other">
+<h3>Comparing chains to each other<a class="headerlink" href="#comparing-chains-to-each-other" title="Link to this heading"></a></h3>
+<p>Assuming your data is some sort of homo-multimer / non-crystallographic symmetry, another option is to use <code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code> to compare the protein chains within a dataset against each other. If you have multiple datasets, of course, you could still run <code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code> on each dataset and see how the difference map changes. See the full documentation for <code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code> <a class="reference internal" href="cli.html#matchmaps-ncs"><span class="std std-ref">here</span></a></p>
+</section>
+</section>
+<section id="miscellaneous-useful-options">
+<h2>Miscellaneous useful options<a class="headerlink" href="#miscellaneous-useful-options" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code>: The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> algorithm always involves an alignment in real-space of the “on” and “off” maps. By default, the “off” map is stationary, and the “on” map is moved. This is typically desired, such that everything lines up with your “off” structural model. However, say that your structures are “apo” and “bound”, and you would like to line up your maps with a “bound” structure (which you never have to supply to <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>!). In this case, you could use the <code class="docutils literal notranslate"><span class="pre">--on-as-stationary</span></code> flag.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--spacing</span></code>: This flag defines the approximate size of the voxels in your real-space maps. The default (0.5 A) is fine for most purposes. For making figures in PyMOL, you might want finer spacing (0.25 A or so); this comes at a cost of much larger file size. If your computer/coot is being really slow, you could consider increasing the spacing.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code>: Use this option to print out to the terminal all of the log output from CCP4 and phenix. This is disabled by default because it’s very annoying, but it can be useful for debugging purposes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--eff</span></code>: The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> source code contains a hard-coded <code class="docutils literal notranslate"><span class="pre">.eff</span></code> template which is modified, written to a file, and passed to <code class="docutils literal notranslate"><span class="pre">phenix.refine</span></code>. For most cases, this <code class="docutils literal notranslate"><span class="pre">.eff</span></code> template should do the trick. However, if there’s something specific that you would like phenix to do, you can pass your own custom <code class="docutils literal notranslate"><span class="pre">.eff</span></code> template to <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> via the <code class="docutils literal notranslate"><span class="pre">--eff</span></code> flag. There is a lot of potential for error here, because the code has very specific expectations for what the <code class="docutils literal notranslate"><span class="pre">.eff</span></code> file contains. If you’re interested in trying this out, I would recommend that you use the <a class="reference external" href="https://github.com/rs-station/matchmaps/blob/7531ff1b13da91b01ede273fa9b1f5a99d72a5ca/src/matchmaps/_utils.py#L227"><code class="docutils literal notranslate"><span class="pre">.eff</span></code> template in the source code</a> as a starting point. Don’t hesitate to <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue on GitHub</a> if anything isn’t working. Depending on what you’re trying to do, we may decide to try and implement your desired functionality directly, so you don’t need to provide a custom <code class="docutils literal notranslate"><span class="pre">.eff</span></code> in the long run.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Getting started with matchmaps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="visualization.html" class="btn btn-neutral float-right" title="Visualizing matchmaps results" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Dennis Brookner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

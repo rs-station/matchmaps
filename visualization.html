@@ -17,7 +17,7 @@
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=6228cef1"></script>
+        <script src="_static/documentation_options.js?v=72cd6806"></script>
         <script src="_static/doctools.js?v=9a2dae69"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -25,7 +25,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="About the matchmaps algorithm" href="about.html" />
-    <link rel="prev" title="matchmaps command-line interface" href="cli.html" /> 
+    <link rel="prev" title="Troubleshooting and advanced usage" href="troubleshooting.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -49,7 +49,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cli.html">Command-line options</a></li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting and advanced usage</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Visualizing results</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#working-with-map-files-in-coot">Working with <code class="docutils literal notranslate"><span class="pre">.map</span></code> files in Coot</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#periodic-boundary-conditions-in-coot">Periodic boundary conditions in Coot</a></li>
@@ -64,6 +64,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Full command-line API</a></li>
 </ul>
 
         </div>
@@ -103,7 +104,7 @@
 <p>Happy difference mapping! From here, working with a <code class="docutils literal notranslate"><span class="pre">.map</span></code> file should be no different than typical work in Coot with an <code class="docutils literal notranslate"><span class="pre">.mtz</span></code> file.</p>
 <section id="periodic-boundary-conditions-in-coot">
 <h3>Periodic boundary conditions in Coot<a class="headerlink" href="#periodic-boundary-conditions-in-coot" title="Link to this heading"></a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> always produces outputs in spacegroup P1, and thus will sometimes produces outputs in P1 and with an orthorhombic unit cell. Unfortunately, Coot assumes that P1 orthorhombic <code class="docutils literal notranslate"><span class="pre">.map</span></code> files are cryo-EM maps, and thus does not render periodic boundary conditions! This is an issue, because often we wish to visualize parts of the protein model which lie outside of the unit cell. As a workaround, any P1 orthorhombic maps produced by <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will artifically set <code class="docutils literal notranslate"><span class="pre">alpha=90.006</span></code>. This difference is imperceptible, but is enough to convince Coot that the map is crystallographic in origin. In all likelihood, a user of <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will not need to deal with this issue directly. However, it is good to keep in mind in case you are ever working with a <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> output for another purpose downstream, or if a related bug arises. Of course, if your maps in Coot are ever abruptly ending at the edge of the unit cells, please <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue on GitHub</a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> always produces outputs in spacegroup P1, and thus sometimes produces outputs in P1 and with an orthorhombic unit cell. Unfortunately, Coot assumes that P1 orthorhombic <code class="docutils literal notranslate"><span class="pre">.map</span></code> files are cryo-EM maps, and thus does not render periodic boundary conditions! This is an issue, because often we wish to visualize parts of the protein model which lie outside of the unit cell. As a workaround, any P1 orthorhombic maps produced by <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will artifically set <code class="docutils literal notranslate"><span class="pre">alpha=90.006</span></code>. This difference is imperceptible, but is enough to convince Coot that the map is crystallographic in origin. In all likelihood, a user of <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> will not need to deal with this issue directly. However, it is good to keep in mind in case you are ever working with a <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> output for another purpose downstream, or if a related bug arises. Of course, if your maps in Coot are ever abruptly ending at the edge of the unit cells, please <a class="reference external" href="https://github.com/rs-station/matchmaps/issues">file an issue on GitHub</a>.</p>
 </section>
 </section>
 <section id="working-with-map-files-in-pymol">
@@ -151,7 +152,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="cli.html" class="btn btn-neutral float-left" title="matchmaps command-line interface" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-left" title="Troubleshooting and advanced usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="about.html" class="btn btn-neutral float-right" title="About the matchmaps algorithm" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
