@@ -24,8 +24,10 @@ This software is part of the [Reciprocal Space Station](https://rs-station.githu
    :hidden:
 
    Quickstart guide <quickstart>
-   Command-line options <cli>
+   Troubleshooting and advanced usage <troubleshooting>
    Visualizing results <visualization>
    About the algorithm <about>
+   Full command-line API <cli>
+
 
 ```
