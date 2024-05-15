@@ -6,4 +6,4 @@
 [![CI](https://github.com/rs-station/matchmaps/actions/workflows/ci.yml/badge.svg)](https://github.com/rs-station/matchmaps/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/rs-station/matchmaps/branch/main/graph/badge.svg)](https://codecov.io/gh/rs-station/matchmaps)
 
-Make unbiased difference maps even for non-isomorphous inputs
+Make unbiased difference maps even for non-isomorphous inputs. Check out the [package documentation](https://rs-station.github.io/matchmaps/)

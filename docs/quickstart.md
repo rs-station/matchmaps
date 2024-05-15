@@ -38,7 +38,7 @@ source /path/to/phenix/phenix_env.sh
 /path/to/ccp4/start
 ```
 
-At this point, you should be good to go! Please [file an issue on github](https://github.com/dennisbrookner/matchmaps/issues) is this is not working.
+At this point, you should be good to go! Please [file an issue on github](https://github.com/rs-station/matchmaps/issues) is this is not working.
 
 ## Input files
 
