@@ -30,7 +30,7 @@ Though `matchmaps` is a python package, it relies on two pieces of external soft
 
 ```{eval-rst}
 .. note::
-    Please note that phenix 1.21 is **not** supported at this time. I hope to update `matchmaps` to support this in the near future. In the meantime, make sure you're using phenix 1.20 or earlier, and everything should work fine. 
+    Please note that phenix 1.21 is **not** supported at this time. I hope to update `matchmaps` to support this in the near future. In the meantime, make sure you're using phenix 1.20 or earlier, and everything should work fine. As of `matchmaps 0.6.3`, an error should be thrown if you're using phenix 1.21 reminding you to downgrade.
 ```
 When actually using `matchmaps` in the command-line, you'll need to have both ccp4 and phenix active. Doing that will look something like:
 ```bash
