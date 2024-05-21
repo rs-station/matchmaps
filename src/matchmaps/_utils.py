@@ -22,6 +22,8 @@ import reciprocalspaceship as rs
 def _validate_environment(ccp4):
     """
     Check if the environment contains phenix (and if necessary, ccp4) and throw a helpful error if not
+    
+    If the function runs successfully, it returns a string of form "X.XX" denoting the major and minor version of the phenix detected, e.g. "1.20" or "1.21".
     """
 
     if shutil.which("phenix.refine") is None:
@@ -37,11 +39,13 @@ def _validate_environment(ccp4):
         
         version_string = str(version_printout.stdout)
         
-        if version_string.find('21') > 0:
-            raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
-                                      "\n"
-                                      "Please use phenix 1.20 or earlier.")
+        # if version_string.find('21') > 0:
+        #     raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
+        #                               "\n"
+        #                               "Please use phenix 1.20 or earlier.")
 
+        phenix_version = '.'.join(version_string.split(': ')[1].split('.')[:-1])
+        
     if ccp4:
         if shutil.which("scaleit") is None:
             raise OSError(
@@ -50,6 +54,11 @@ def _validate_environment(ccp4):
                 "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
             )
 
+    print(f'Detected phenix {phenix_version} in your environment.',
+            '\n',
+            'If this is not the version you are using, please specify the version directly via the --phenix-version flag')
+    
+    return phenix_version
 
 def _rbr_selection_parser(rbr_selections):
     # end early and return nones if this feature isn't being used
