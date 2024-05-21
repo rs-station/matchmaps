@@ -51,7 +51,8 @@ def compute_realspace_difference_map(
     keep_temp_files : str = None,
     radius : float = 5,
     alpha : float = 0,
-    no_bss = False
+    no_bss = False,
+    phenix_version: str = None,
 ):
     """
     Compute a real-space difference map from mtzs.
@@ -103,9 +104,14 @@ def compute_realspace_difference_map(
         Alpha to use in error weighting of F-obs prior to Fourier Transform. Defaults to 0, e.g. no weighting.
     no_bss : bool, optional
         If True, skip bulk solvent scaling feature of phenix.refine
+    phenix_version: str, optional
+        Phenix version string to override the automatically detected version. I don't know why this would be necessary.
     """
 
-    _validate_environment(ccp4=True)
+    auto_phenix_version = _validate_environment(ccp4=True)
+
+    if not phenix_version:
+        phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
 
@@ -173,6 +179,7 @@ def compute_realspace_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         no_bss=no_bss,
+        phenix_version=phenix_version,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -188,6 +195,7 @@ def compute_realspace_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
         no_bss=no_bss,
+        phenix_version=phenix_version,
     )
 
     # read back in the files created by phenix
