@@ -18,10 +18,8 @@ from IPython import embed
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
-    rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
-    _renumber_waters,
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
@@ -29,6 +27,7 @@ from matchmaps._utils import (
     _cif_or_pdb_to_pdb,
     _write_script,
 )
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 
 
 def compute_realspace_difference_map(
@@ -179,7 +178,7 @@ def compute_realspace_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         no_bss=no_bss,
-        phenix_version=phenix_version,
+        phenix_style=phenix_version,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -195,7 +194,7 @@ def compute_realspace_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
         no_bss=no_bss,
-        phenix_version=phenix_version,
+        phenix_style=phenix_version,
     )
 
     # read back in the files created by phenix

@@ -15,19 +15,17 @@ import reciprocalspaceship as rs
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
-    rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
-    _remove_waters,
     _restore_ligand_occupancy,
     _validate_environment,
     _validate_inputs,
-    phaser_wrapper,
     _clean_up_files,
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
     _write_script,
 )
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, phaser_wrapper, _remove_waters
 
 
 def compute_mr_difference_map(
@@ -175,7 +173,6 @@ def compute_mr_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
-        mr_off=True,
         no_bss=no_bss,
     )
 

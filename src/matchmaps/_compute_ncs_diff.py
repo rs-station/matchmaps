@@ -16,10 +16,8 @@ import reciprocalspaceship as rs
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
-    rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
-    _renumber_waters,
     _ncs_align_and_subtract,
     _validate_environment,
     _validate_inputs,
@@ -28,6 +26,7 @@ from matchmaps._utils import (
     _cif_or_mtz_to_mtz,
     _write_script,
 )
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 
 
 def compute_ncs_difference_map(
