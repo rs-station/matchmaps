@@ -454,6 +454,16 @@ def parse_arguments():
             "Note that this file is written out in the current working directory, NOT the input or output directories"
         )
     )
+    
+    parser.add_argument(
+        "--phenix-version",
+        required=False,
+        help=(
+            "Specify phenix version as a string, e.g. '1.20'. "
+            "If omitted, matchmaps will attempt to automatically detect the version in use "
+            "by analyzing the output of phenix.version"
+        )
+    )
 
     return parser
 
@@ -492,6 +502,7 @@ def main():
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss,
+        phenix_version = args.phenix_version,
     )
     
     if args.script:
