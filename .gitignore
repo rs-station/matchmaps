@@ -118,3 +118,6 @@ src/.DS_Store
 # logo in illustrator
 docs/images/logo.ai
 docs/images/logo2.ai
+
+# PyCharm files
+.idea/*
