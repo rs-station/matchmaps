@@ -224,24 +224,8 @@ def rigid_body_refinement_wrapper(
     return output_dir / nickname
 
 
-def phaser_wrapper(
-        mtzfile,
-        pdb,
-        output_dir,
-        off_labels,
-        eff=None,
-        verbose=False,
-):
-    """
-    Handle simple phaser run from the command line
-    """
-
-    if shutil.which("phenix.phaser") is None:
-        raise OSError(
-            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
-        )
-
-    if eff is None:
+def _auto_eff_phaser_template(phenix_style):
+    if (phenix_style == '1.20') or (phenix_style == '1.21'):
         eff_contents = """
 phaser {
   mode = ANO CCA EP_AUTO *MR_AUTO MR_FRF MR_FTF MR_PAK MR_RNP NMAXYZ SCEDS
@@ -269,6 +253,39 @@ phaser {
   }
 }
         """
+    elif phenix_style == '1.21':
+        eff_contents = """"""
+
+    else:
+        raise NotImplementedError(f"Phenix version {phenix_style} not supported")
+
+    return eff_contents
+
+def phaser_wrapper(
+        mtzfile,
+        pdb,
+        output_dir,
+        off_labels,
+        phenix_style,
+        eff=None,
+        verbose=False,
+):
+    """
+    Handle simple phaser run from the command line
+
+    Args:
+        phenix_style:
+    """
+
+    # this should never be needed; environment is already checked
+    if shutil.which("phenix.phaser") is None:
+        raise OSError(
+            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
+        )
+
+    if eff is None:
+        eff_contents = _auto_eff_phaser_template(phenix_style=phenix_style)
+
     else:
         raise NotImplementedError("Custom phaser specifications are not yet supported")
 

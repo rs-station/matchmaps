@@ -158,6 +158,7 @@ def compute_mr_difference_map(
         off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
         mr_on=True,
         no_bss=no_bss,
+        phenix_style=phenix_version,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -173,6 +174,7 @@ def compute_mr_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
         no_bss=no_bss,
+        phenix_style=phenix_version,
     )
 
     # from here down I just copied over the stuff from the normal version
