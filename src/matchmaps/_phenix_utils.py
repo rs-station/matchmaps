@@ -120,6 +120,10 @@ refinement {
     bulk_solvent_and_scale=bss
     nqh_flips=False
   }
+  rigid_body {
+    bulk_solvent_and_scale=bss
+    high_resolution=None
+  }
 }
 output {
   prefix = '''nickname'''
