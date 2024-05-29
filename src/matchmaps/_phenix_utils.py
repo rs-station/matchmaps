@@ -5,72 +5,66 @@ from pathlib import Path
 
 import reciprocalspaceship as rs
 
-
-def rigid_body_refinement_wrapper(
-    mtzon,
-    pdboff,
-    input_dir,
-    output_dir,
-    phenix_style,
-    off_labels=None,
-    ligands=None,
-    eff=None,
-    verbose=False,
-    rbr_selections=None,
-    mr_on=False,
-    no_bss=False,
-):
-    if phenix_style == "1.20":
-
-        output = rigid_body_refinement_wrapper_120style(
-            eff,
-            input_dir,
-            ligands,
-            mr_on,
-            mtzon,
-            no_bss,
-            off_labels,
-            output_dir,
-            pdboff,
-            rbr_selections,
-            verbose,
-        )
-
-        return output
-
-    elif phenix_style == "1.21":
-
-        output = rigid_body_refinement_wrapper_121style(
-            eff,
-            input_dir,
-            ligands,
-            mr_on,
-            mtzon,
-            no_bss,
-            off_labels,
-            output_dir,
-            pdboff,
-            rbr_selections,
-            verbose,
-        )
-
-        return output
-
-
-def rigid_body_refinement_wrapper_121style(
-    eff,
-    input_dir,
-    ligands,
-    mr_on,
-    mtzon,
-    no_bss,
-    off_labels,
-    output_dir,
-    pdboff,
-    rbr_selections,
-    verbose,
-):
-    if eff is None:
+def _auto_eff_template(phenix_style: str):
+    if phenix_style == '1.20':
+        eff_contents =         """
+    refinement {
+      crystal_symmetry {
+        unit_cell = cell_parameters
+        space_group = sg
+      }
+      input {
+        pdb {
+          file_name = pdb_input
+        }
+        xray_data {
+          file_name = "mtz_input"
+          labels = columns
+          r_free_flags {
+            generate=True
+          }
+          force_anomalous_flag_to_be_equal_to = False
+        }
+        monomers {
+          ligands
+        }
+      }
+      output {
+        prefix = '''nickname'''
+        serial = 1
+        serial_format = "%d"
+        job_title = '''nickname'''
+        write_def_file = False
+        write_eff_file = False
+        write_geo_file = False
+      }
+      electron_density_maps {
+        map_coefficients {
+          map_type = "2mFo-DFc"
+          mtz_label_amplitudes = "2FOFCWT"
+          mtz_label_phases = "PH2FOFCWT"
+        }
+        map_coefficients {
+          map_type = "mFo-DFc"
+          mtz_label_amplitudes = "FOFCWT"
+          mtz_label_phases = "PHFOFCWT"
+        }
+      }
+      refine {
+        strategy = *rigid_body
+        sites {
+          rigid_body_sites
+        }
+      }
+      main {
+        number_of_macro_cycles = 1
+        nproc = 8
+        bulk_solvent_and_scale=bss
+        nqh_flips=False
+      }
+    }
+        """
+    elif phenix_style == '1.21':
         eff_contents = """
 data_manager {
   model {
@@ -133,150 +127,30 @@ output {
 }
     """
     else:
-        with open(input_dir + eff) as file:
-            eff_contents = file.read()
-    if (off_labels is None) or (mr_on):
-        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_{pdboff.name.removesuffix('.pdb')}"
-    else:
-        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_self"
-        ####
-        # update this logic in the future if matchmaps.mr changes
-        # mtz_location = input_dir if (mr_on or mr_off) else output_dir
-        ####
-    similar_files = list(output_dir.glob(f"{nickname}_[0-9]_1.*"))
-    if len(similar_files) == 0:
-        nickname += "_0"
-    else:
-        nums = []
-        for s in similar_files:
-            try:
-                nums.append(int(str(s).split("_")[-2]))
-            except ValueError:
-                pass
-        nickname += f"_{max(nums) + 1}"
-    # read in mtz to access cell parameters and spacegroup
-    mtz = rs.read_mtz(str(mtzon))
-    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
-    sg = mtz.spacegroup.short_name()
-    # name for modified refinement file
-    eff = output_dir / f"params_{nickname}.eff"
-    params = {
-        "sg": sg,
-        "cell_parameters": cell_string,
-        "bss": str(not no_bss),
-        "pdb_input": str(pdboff),
-        "mtz_input": str(mtzon),
-        "nickname": str(output_dir / nickname),
-    }
-    if off_labels is None:
-        params["columns"] = "FPH1,SIGFPH1"  # names from scaleit output
-    else:
-        params["columns"] = off_labels  # user-provided column nanes
-    # if selection is not None:
-    #     params["all"] = selection  # overwrite atom selection
-    for key, value in params.items():
-        eff_contents = eff_contents.replace(key, value)
-    # either add ligands to .eff file or delete "ligands" placeholder
-    if ligands is not None:
-        ligand_string = "\n".join([f"file_name = '{l}'" for l in ligands])
-        eff_contents = eff_contents.replace("ligands", ligand_string)
-    else:
-        eff_contents = eff_contents.replace("ligands", "")
-    if rbr_selections is not None:
-        selection_string = "\n".join(
-            [f"rigid_body = '{sel}'" for sel in rbr_selections]
-        )
-        eff_contents = eff_contents.replace("rigid_body_sites", selection_string)
-    else:
-        eff_contents = eff_contents.replace("rigid_body_sites", "rigid_body = all")
-    # write out customized .eff file for use by phenix
-    with open(eff, "w") as file:
-        file.write(eff_contents)
-    # run refinement!
-    # print refinement output to terminal if user supplied the --verbose flag
-    subprocess.run(
-        f"phenix.refine {eff}",
-        shell=True,
-        capture_output=(not verbose),
-    )
+        raise NotImplementedError('unsupported phenix version')
 
-    return output_dir / nickname
+    return eff_contents
 
-
-def rigid_body_refinement_wrapper_120style(
-    eff,
-    input_dir,
-    ligands,
-    mr_on,
+def rigid_body_refinement_wrapper(
     mtzon,
-    no_bss,
-    off_labels,
-    output_dir,
     pdboff,
-    rbr_selections,
-    verbose,
+    input_dir,
+    output_dir,
+    phenix_style,
+    off_labels=None,
+    ligands=None,
+    eff=None,
+    verbose=False,
+    rbr_selections=None,
+    mr_on=False,
+    no_bss=False,
 ):
     if eff is None:
-        eff_contents = """
-refinement {
-  crystal_symmetry {
-    unit_cell = cell_parameters
-    space_group = sg
-  }
-  input {
-    pdb {
-      file_name = pdb_input
-    }
-    xray_data {
-      file_name = "mtz_input"
-      labels = columns
-      r_free_flags {
-        generate=True
-      }
-      force_anomalous_flag_to_be_equal_to = False
-    }
-    monomers {
-      ligands
-    }
-  }
-  output {
-    prefix = '''nickname'''
-    serial = 1
-    serial_format = "%d"
-    job_title = '''nickname'''
-    write_def_file = False
-    write_eff_file = False
-    write_geo_file = False
-  }
-  electron_density_maps {
-    map_coefficients {
-      map_type = "2mFo-DFc"
-      mtz_label_amplitudes = "2FOFCWT"
-      mtz_label_phases = "PH2FOFCWT"
-    }
-    map_coefficients {
-      map_type = "mFo-DFc"
-      mtz_label_amplitudes = "FOFCWT"
-      mtz_label_phases = "PHFOFCWT"
-    }
-  }
-  refine {
-    strategy = *rigid_body
-    sites {
-      rigid_body_sites
-    }
-  }
-  main {
-    number_of_macro_cycles = 1
-    nproc = 8
-    bulk_solvent_and_scale=bss
-    nqh_flips=False
-  }
-}
-    """
+        eff_contents = _auto_eff_template(phenix_style=phenix_style)
     else:
         with open(input_dir + eff) as file:
             eff_contents = file.read()
+
     if (off_labels is None) or (mr_on):
         nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_{pdboff.name.removesuffix('.pdb')}"
     else:
