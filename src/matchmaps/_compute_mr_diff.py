@@ -104,7 +104,12 @@ def compute_mr_difference_map(
         If True, skip bulk solvent scaling feature of phenix.refine
     """
     
-    _validate_environment(ccp4=False)
+    auto_phenix_version = _validate_environment(ccp4=False)
+
+    if phenix_version:
+        pass
+    else:
+        phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
     
