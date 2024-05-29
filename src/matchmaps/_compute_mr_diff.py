@@ -49,7 +49,8 @@ def compute_mr_difference_map(
     radius : float = 5,
     alpha : float = 0,
     no_bss = False,
-):
+    phenix_version: str = None,
+    ):
     """
     Compute a real-space difference map from mtzs in different spacegroups.
 
@@ -129,7 +130,7 @@ def compute_mr_difference_map(
     )
 
     phaser_nickname = phaser_wrapper(mtzfile=mtzon, pdb=pdboff, output_dir=output_dir, off_labels=f"{Fon},{SigFon}",
-                                     eff=None, verbose=verbose)
+                                     phenix_style=phenix_version, eff=None, verbose=verbose)
 
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
@@ -433,6 +434,16 @@ def parse_arguments():
         )
     )
 
+    parser.add_argument(
+        "--phenix-version",
+        required=False,
+        help=(
+            "Specify phenix version as a string, e.g. '1.20'. "
+            "If omitted, matchmaps will attempt to automatically detect the version in use "
+            "by analyzing the output of phenix.version"
+        )
+    )
+
     return parser
 
 
@@ -475,7 +486,8 @@ def main():
         alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
-        no_bss = args.no_bss
+        no_bss = args.no_bss,
+        phenix_version = args.phenix_version,
     )
     
     if args.script:
