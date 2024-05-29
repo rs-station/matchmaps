@@ -5,9 +5,10 @@ from pathlib import Path
 
 import reciprocalspaceship as rs
 
-def _auto_eff_template(phenix_style: str):
+
+def _auto_eff_refinement_template(phenix_style: str):
     if phenix_style == '1.20':
-        eff_contents =         """
+        eff_contents = """
     refinement {
       crystal_symmetry {
         unit_cell = cell_parameters
@@ -127,31 +128,32 @@ output {
 }
     """
     else:
-        raise NotImplementedError('unsupported phenix version')
+        raise NotImplementedError('Unsupported phenix version')
 
     return eff_contents
 
+
 def rigid_body_refinement_wrapper(
-    mtzon,
-    pdboff,
-    input_dir,
-    output_dir,
-    phenix_style,
-    off_labels=None,
-    ligands=None,
-    eff=None,
-    verbose=False,
-    rbr_selections=None,
-    mr_on=False,
-    no_bss=False,
+        mtzon,
+        pdboff,
+        input_dir,
+        output_dir,
+        phenix_style,
+        off_labels=None,
+        ligands=None,
+        eff=None,
+        verbose=False,
+        rbr_selections=None,
+        mr_on=False,
+        no_bss=False,
 ):
     if eff is None:
-        eff_contents = _auto_eff_template(phenix_style=phenix_style)
+        eff_contents = _auto_eff_refinement_template(phenix_style=phenix_style)
     else:
         with open(input_dir + eff) as file:
             eff_contents = file.read()
 
-    if (off_labels is None) or (mr_on):
+    if (off_labels is None) or mr_on:
         nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_{pdboff.name.removesuffix('.pdb')}"
     else:
         nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_self"
@@ -171,9 +173,8 @@ def rigid_body_refinement_wrapper(
                 pass
         nickname += f"_{max(nums) + 1}"
     # read in mtz to access cell parameters and spacegroup
-    mtz = rs.read_mtz(str(mtzon))
-    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
-    sg = mtz.spacegroup.short_name()
+    cell_string, sg = _parse_mtz(mtzfile=str(mtzon))
+
     # name for modified refinement file
     eff = output_dir / f"params_{nickname}.eff"
     params = {
@@ -220,13 +221,13 @@ def rigid_body_refinement_wrapper(
 
 
 def phaser_wrapper(
-    mtzfile,
-    pdb,
-    input_dir,
-    output_dir,
-    off_labels,
-    eff=None,
-    verbose=False,
+        mtzfile,
+        pdb,
+        input_dir,
+        output_dir,
+        off_labels,
+        eff=None,
+        verbose=False,
 ):
     """
     Handle simple phaser run from the command line
@@ -282,9 +283,7 @@ phaser {
                 pass
         nickname += f"_{max(nums) + 1}"
 
-    mtz = rs.read_mtz(str(mtzfile))
-    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
-    sg = mtz.spacegroup.short_name()
+    cell_string, sg = _parse_mtz(mtzfile)
 
     eff = output_dir / f"params_{nickname}.eff"
 
@@ -312,9 +311,17 @@ phaser {
     return output_dir / nickname
 
 
+def _parse_mtz(mtzfile):
+    mtz = rs.read_mtz(str(mtzfile))
+    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
+    sg = mtz.spacegroup.short_name()
+    return cell_string, sg
+
+
 def _renumber_waters(pdb):
     """
-    Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
+    Call phenix.sort_hetatms to place waters onto the nearest protein chain.
+    This ensures that rbr selections handle waters properly
 
     Parameters
     ----------
@@ -338,8 +345,8 @@ def _renumber_waters(pdb):
 
 
 def _remove_waters(
-    pdb,
-    output_dir,
+        pdb,
+        output_dir,
 ):
     pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
 
