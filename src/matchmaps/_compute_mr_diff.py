@@ -128,15 +128,8 @@ def compute_mr_difference_map(
         f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data..."
     )
 
-    phaser_nickname = phaser_wrapper(
-        mtzfile=mtzon,
-        pdb=pdboff,
-        input_dir=input_dir,
-        output_dir=output_dir,
-        off_labels=f"{Fon},{SigFon}",
-        eff=None,
-        verbose=verbose,
-    )
+    phaser_nickname = phaser_wrapper(mtzfile=mtzon, pdb=pdboff, output_dir=output_dir, off_labels=f"{Fon},{SigFon}",
+                                     eff=None, verbose=verbose)
 
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(

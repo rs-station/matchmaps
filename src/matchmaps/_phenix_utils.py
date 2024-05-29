@@ -223,7 +223,6 @@ def rigid_body_refinement_wrapper(
 def phaser_wrapper(
         mtzfile,
         pdb,
-        input_dir,
         output_dir,
         off_labels,
         eff=None,
