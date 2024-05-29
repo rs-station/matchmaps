@@ -109,7 +109,9 @@ def compute_realspace_difference_map(
 
     auto_phenix_version = _validate_environment(ccp4=True)
 
-    if not phenix_version:
+    if phenix_version:
+        pass
+    else:
         phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
