@@ -3,20 +3,16 @@
 import argparse
 import os
 import sys
-import subprocess
 import time
-from functools import partial
 from pathlib import Path
 
 import gemmi
-import numpy as np
 import reciprocalspaceship as rs
 
-
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
-    _realspace_align_and_subtract,
     _rbr_selection_parser,
     _ncs_align_and_subtract,
     _validate_environment,
@@ -26,7 +22,6 @@ from matchmaps._utils import (
     _cif_or_mtz_to_mtz,
     _write_script,
 )
-from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 
 
 def compute_ncs_difference_map(

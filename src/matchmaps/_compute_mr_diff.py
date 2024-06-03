@@ -3,15 +3,13 @@
 import argparse
 import os
 import sys
-import subprocess
 import time
-from functools import partial
 from pathlib import Path
 
 import gemmi
-import numpy as np
 import reciprocalspaceship as rs
 
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, phaser_wrapper, _remove_waters
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
@@ -25,7 +23,6 @@ from matchmaps._utils import (
     _cif_or_mtz_to_mtz,
     _write_script,
 )
-from matchmaps._phenix_utils import rigid_body_refinement_wrapper, phaser_wrapper, _remove_waters
 
 
 def compute_mr_difference_map(

@@ -1,20 +1,15 @@
 """Compute unbiased real space difference map."""
 
 import argparse
-import os
-import sys
-import glob
 import subprocess
+import sys
 import time
-from functools import partial
 from pathlib import Path
 
 import gemmi
-import numpy as np
 import reciprocalspaceship as rs
 
-from IPython import embed
-
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
@@ -27,7 +22,6 @@ from matchmaps._utils import (
     _cif_or_pdb_to_pdb,
     _write_script,
 )
-from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 
 
 def compute_realspace_difference_map(
