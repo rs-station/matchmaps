@@ -47,6 +47,7 @@ def compute_ncs_difference_map(
     eff : str = None,
     keep_temp_files : str = None,
     no_bss = False,
+    phenix_version: str = None,
 ):
     """
     Compute an internal difference map across non-crystallographic symmetry
@@ -90,8 +91,13 @@ def compute_ncs_difference_map(
     no_bss : bool, optional
         If True, skip bulk solvent scaling feature of phenix.refine
     """
-    _validate_environment(ccp4=False)
-    
+    auto_phenix_version = _validate_environment(ccp4=False)
+
+    if phenix_version:
+        pass
+    else:
+        phenix_version = auto_phenix_version
+
     output_dir_contents = list(output_dir.glob("*"))
     
     pdb = _cif_or_pdb_to_pdb(pdb, output_dir)
@@ -120,7 +126,8 @@ def compute_ncs_difference_map(
             verbose=verbose,
             rbr_selections=rbr_phenix,
             off_labels=f"{F},{SigF}",
-            no_bss=no_bss
+            no_bss=no_bss,
+            phenix_style=phenix_version,
         )
 
         # use phenix names for columns when computing FloatGrid
@@ -326,6 +333,16 @@ def parse_arguments():
             "Note that this file is written out in the current working directory, NOT the input or output directories"
         )
     )
+
+    parser.add_argument(
+        "--phenix-version",
+        required=False,
+        help=(
+            "Specify phenix version as a string, e.g. '1.20'. "
+            "If omitted, matchmaps will attempt to automatically detect the version in use "
+            "by analyzing the output of phenix.version"
+        )
+    )
     
     return parser
 
@@ -365,6 +382,7 @@ def main():
         spacing=args.spacing,
         keep_temp_files=args.keep_temp_files,
         no_bss=args.no_bss,
+        phenix_version=args.phenix_version,
     )
     
     if args.script:
@@ -372,6 +390,7 @@ def main():
             utility = 'matchmaps.ncs', 
             arguments = sys.argv[1:],
             script_name = args.script,
+            phenix_version=args.phenix_version,
             )
 
     return
