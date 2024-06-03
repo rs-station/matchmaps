@@ -27,25 +27,16 @@ common_args = (
         "nargs": "*",
     }),
 
-    (("--output-dir", "-o"), {
-        "help": "Any .cif restraint files needed for refinement",
+    (("--input-dir", "-i"), {
+        "help": "Path to input files. Optional, defaults to './' (current directory)",
         "required": False,
-        "default": None,
-        "nargs": "*",
+        "default": "./",
     }),
 
-    (("reflection_files", ), {
-        "metavar":"reflections.{mtz,stream}",
-        "help":"Mtz or stream file(s) containing unmerged reflection observations. "
-               "If you are supplying stream files, you must also use the --spacegroups option to supply the symmetry for merging. "
-               "See the metadata_keys param for more info about stream file usage.",
-        "type":str,
-        "nargs":'+',
+    (("--output-dir", "-o"), {
+        "help": "Path to which output files should be written. Optional, defaults to './' (current directory)",
+        "required": False,
+        "default": "./",
     }),
 
-    (("output_base", ), {
-        "metavar":"out",
-        "help":"Output filename base.",
-        "type":str,
-    }),
 )
