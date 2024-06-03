@@ -6,14 +6,12 @@ are exported to python for use in prototyping and testing
 """
 
 import os
-import glob
 import shutil
 import subprocess
 import time
 import re
 from functools import partial
 from pathlib import Path
-from IPython import embed
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
@@ -22,6 +20,8 @@ import reciprocalspaceship as rs
 def _validate_environment(ccp4):
     """
     Check if the environment contains phenix (and if necessary, ccp4) and throw a helpful error if not
+    
+    If the function runs successfully, it returns a string of form "X.XX" denoting the major and minor version of the phenix detected, e.g. "1.20" or "1.21".
     """
 
     if shutil.which("phenix.refine") is None:
@@ -31,16 +31,7 @@ def _validate_environment(ccp4):
             "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
         )
     else:
-        version_printout = subprocess.run(
-            "phenix.version | grep Version", shell=True, capture_output=True
-        )
-        
-        version_string = str(version_printout.stdout)
-        
-        if version_string.find('21') > 0:
-            raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
-                                      "\n"
-                                      "Please use phenix 1.20 or earlier.")
+        phenix_version = _detect_phenix_version()
 
     if ccp4:
         if shutil.which("scaleit") is None:
@@ -49,6 +40,25 @@ def _validate_environment(ccp4):
                 "\n"
                 "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
             )
+
+    print(f'Detected phenix {phenix_version} in your environment.',
+            '\n',
+            'If this is not the version you are using, please specify the version directly via the --phenix-version flag')
+    
+    return phenix_version
+
+
+def _detect_phenix_version():
+    version_printout = subprocess.run(
+        "phenix.version | grep Version", shell=True, capture_output=True
+    )
+    version_string = str(version_printout.stdout)
+    # if version_string.find('21') > 0:
+    #     raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
+    #                               "\n"
+    #                               "Please use phenix 1.20 or earlier.")
+    phenix_version = '.'.join(version_string.split(': ')[1].split('.')[:-1])
+    return phenix_version
 
 
 def _rbr_selection_parser(rbr_selections):
@@ -209,162 +219,6 @@ def make_floatgrid_from_mtz(
     return float_grid
 
 
-def rigid_body_refinement_wrapper(
-    mtzon,
-    pdboff,
-    input_dir,
-    output_dir,
-    off_labels=None,
-    ligands=None,
-    eff=None,
-    verbose=False,
-    rbr_selections=None,
-    mr_on=False,
-    mr_off=False,
-    no_bss=False,
-):
-    if eff is None:
-        eff_contents = """
-refinement {
-  crystal_symmetry {
-    unit_cell = cell_parameters
-    space_group = sg
-  }
-  input {
-    pdb {
-      file_name = pdb_input
-    }
-    xray_data {
-      file_name = "mtz_input"
-      labels = columns
-      r_free_flags {
-        generate=True
-      }
-      force_anomalous_flag_to_be_equal_to = False
-    }
-    monomers {
-      ligands
-    }
-  }
-  output {
-    prefix = '''nickname'''
-    serial = 1
-    serial_format = "%d"
-    job_title = '''nickname'''
-    write_def_file = False
-    write_eff_file = False
-    write_geo_file = False
-  }
-  electron_density_maps {
-    map_coefficients {
-      map_type = "2mFo-DFc"
-      mtz_label_amplitudes = "2FOFCWT"
-      mtz_label_phases = "PH2FOFCWT"
-    }
-    map_coefficients {
-      map_type = "mFo-DFc"
-      mtz_label_amplitudes = "FOFCWT"
-      mtz_label_phases = "PHFOFCWT"
-    }
-  }
-  refine {
-    strategy = *rigid_body
-    sites {
-      rigid_body_sites
-    }
-  }
-  main {
-    number_of_macro_cycles = 1
-    nproc = 8
-    bulk_solvent_and_scale=bss
-    nqh_flips=False
-  }
-}
-    """
-    else:
-        with open(input_dir + eff) as file:
-            eff_contents = file.read()
-
-    if (off_labels is None) or (mr_on):
-        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_{pdboff.name.removesuffix('.pdb')}"
-    else:
-        nickname = f"{mtzon.name.removesuffix('.mtz')}_rbr_to_self"
-
-    ####
-    # update this logic in the future if matchmaps.mr changes
-    # mtz_location = input_dir if (mr_on or mr_off) else output_dir
-    ####
-
-    similar_files = list(output_dir.glob(f"{nickname}_[0-9]_1.*"))
-    if len(similar_files) == 0:
-        nickname += "_0"
-    else:
-        nums = []
-        for s in similar_files:
-            try:
-                nums.append(int(str(s).split("_")[-2]))
-            except ValueError:
-                pass
-        nickname += f"_{max(nums)+1}"
-
-    # read in mtz to access cell parameters and spacegroup
-    mtz = rs.read_mtz(str(mtzon))
-    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
-    sg = mtz.spacegroup.short_name()
-
-    # name for modified refinement file
-    eff = output_dir / f"params_{nickname}.eff"
-
-    params = {
-        "sg": sg,
-        "cell_parameters": cell_string,
-        "bss": str(not no_bss),
-        "pdb_input": str(pdboff),
-        "mtz_input": str(mtzon),
-        "nickname": str(output_dir / nickname),
-    }
-
-    if off_labels is None:
-        params["columns"] = "FPH1,SIGFPH1"  # names from scaleit output
-    else:
-        params["columns"] = off_labels  # user-provided column nanes
-
-    # if selection is not None:
-    #     params["all"] = selection  # overwrite atom selection
-
-    for key, value in params.items():
-        eff_contents = eff_contents.replace(key, value)
-
-    # either add ligands to .eff file or delete "ligands" placeholder
-    if ligands is not None:
-        ligand_string = "\n".join([f"file_name = '{l}'" for l in ligands])
-        eff_contents = eff_contents.replace("ligands", ligand_string)
-    else:
-        eff_contents = eff_contents.replace("ligands", "")
-
-    if rbr_selections is not None:
-        selection_string = "\n".join(
-            [f"rigid_body = '{sel}'" for sel in rbr_selections]
-        )
-        eff_contents = eff_contents.replace("rigid_body_sites", selection_string)
-    else:
-        eff_contents = eff_contents.replace("rigid_body_sites", "rigid_body = all")
-
-    # write out customized .eff file for use by phenix
-    with open(eff, "w") as file:
-        file.write(eff_contents)
-
-    # run refinement!
-    # print refinement output to terminal if user supplied the --verbose flag
-    subprocess.run(
-        f"phenix.refine {eff}",
-        shell=True,
-        capture_output=(not verbose),
-    )
-
-    return output_dir / nickname
-
-
 def _handle_special_positions(pdboff, output_dir):
     """
     Check if any waters happen to sit on special positions, and if so, remove them.
@@ -421,141 +275,6 @@ Alternatively, you can remove this atom from your structure altogether and try a
     pdb.write_pdb(str(pdboff_nospecialpositions))
 
     return pdboff_nospecialpositions
-
-
-def _renumber_waters(pdb):
-    """
-    Call phenix.sort_hetatms to place waters onto the nearest protein chain. This ensures that rbr selections handle waters properly
-
-    Parameters
-    ----------
-    pdb : str
-        name of pdb file
-    dir : str
-        directory in which pdb file lives
-    """
-
-    pdb_renumbered = Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
-
-    subprocess.run(
-        f"phenix.sort_hetatms file_name={pdb} output_file={pdb_renumbered}",
-        shell=True,
-        capture_output=True,
-    )
-
-    print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
-
-    return pdb_renumbered
-
-
-def _remove_waters(
-    pdb,
-    output_dir,
-):
-    pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
-
-    subprocess.run(
-        f"phenix.pdbtools {pdb} remove='water' \
-            output.prefix='{output_dir}/' \
-            output.suffix='{pdb_dry}'",
-        shell=True,
-        capture_output=True,
-    )
-
-    return output_dir / (pdb_dry + ".pdb")
-
-
-def phaser_wrapper(
-    mtzfile,
-    pdb,
-    input_dir,
-    output_dir,
-    off_labels,
-    eff=None,
-    verbose=False,
-):
-    """
-    Handle simple phaser run from the command line
-    """
-
-    if shutil.which("phenix.phaser") is None:
-        raise OSError(
-            "Cannot find executable, phenix.phaser. Please set up your phenix environment."
-        )
-
-    if eff is None:
-        eff_contents = """
-phaser {
-  mode = ANO CCA EP_AUTO *MR_AUTO MR_FRF MR_FTF MR_PAK MR_RNP NMAXYZ SCEDS
-  hklin = mtz_input
-  labin = labels
-  model = pdb_input
-  model_identity = 100
-  component_copies = 1
-  search_copies = 1
-  chain_type = *protein dna rna
-  crystal_symmetry {
-    unit_cell = cell_parameters
-    space_group = sg
-  }
-  keywords {
-    general {
-      root = '''nickname'''
-      title = '''matchmaps_MR'''
-      mute = None
-      xyzout = True
-      xyzout_ensemble = True
-      hklout = True
-      jobs = 6
-    }
-  }
-}
-        """
-    else:
-        raise NotImplementedError("Custom phaser specifications are not yet supported")
-
-    nickname = f"{mtzfile.name.removesuffix('.mtz')}_phased_with_{pdb.name.removesuffix('.pdb')}"
-
-    similar_files = list(output_dir.glob(f"{nickname}_*"))
-    if len(similar_files) == 0:
-        nickname += "_0"
-    else:
-        nums = []
-        for s in similar_files:
-            try:
-                nums.append(int(str(s).split("_")[-1].split(".")[0]))
-            except ValueError:
-                pass
-        nickname += f"_{max(nums)+1}"
-
-    mtz = rs.read_mtz(str(mtzfile))
-    cell_string = f"{mtz.cell.a} {mtz.cell.b} {mtz.cell.c} {mtz.cell.alpha} {mtz.cell.beta} {mtz.cell.gamma}"
-    sg = mtz.spacegroup.short_name()
-
-    eff = output_dir / f"params_{nickname}.eff"
-
-    params = {
-        "sg": sg,
-        "cell_parameters": cell_string,
-        "pdb_input": str(pdb),
-        "mtz_input": str(mtzfile),
-        "nickname": str(output_dir / nickname),
-        "labels": off_labels,  # should be prepackaged as a string
-    }
-
-    for key, value in params.items():
-        eff_contents = eff_contents.replace(key, value)
-
-    with open(eff, "w") as file:
-        file.write(eff_contents)
-
-    subprocess.run(
-        f"phenix.phaser {eff}",
-        shell=True,
-        capture_output=(not verbose),
-    )
-
-    return output_dir / nickname
 
 
 def _restore_ligand_occupancy(
@@ -1079,12 +798,17 @@ def _clean_up_files(output_dir, old_files, keep_temp_files):
     return
 
 
-def _write_script(utility, arguments, script_name):
+def _write_script(utility, arguments, script_name, phenix_version):
     from matchmaps import __version__ as version
+
+    if phenix_version is None:
+        phenix_version = _detect_phenix_version()
 
     contents = f"""#!/bin/bash
 
-# This file was produced by matchmaps version {version} on {time.strftime('%c')}
+# This file was produced on {time.strftime('%c')}
+# Using matchmaps version {version} and phenix version {phenix_version}
+#
 # The command below was originally run in the following directory:
 # {os.getcwd()}
 

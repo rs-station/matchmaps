@@ -1,27 +1,20 @@
 """Compute unbiased real space difference map."""
 
 import argparse
-import os
-import sys
-import glob
 import subprocess
+import sys
 import time
-from functools import partial
 from pathlib import Path
 
 import gemmi
-import numpy as np
 import reciprocalspaceship as rs
 
-from IPython import embed
-
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
-    rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
-    _renumber_waters,
     _clean_up_files,
     _validate_environment,
     _validate_inputs,
@@ -51,7 +44,8 @@ def compute_realspace_difference_map(
     keep_temp_files : str = None,
     radius : float = 5,
     alpha : float = 0,
-    no_bss = False
+    no_bss = False,
+    phenix_version: str = None,
 ):
     """
     Compute a real-space difference map from mtzs.
@@ -103,9 +97,16 @@ def compute_realspace_difference_map(
         Alpha to use in error weighting of F-obs prior to Fourier Transform. Defaults to 0, e.g. no weighting.
     no_bss : bool, optional
         If True, skip bulk solvent scaling feature of phenix.refine
+    phenix_version: str, optional
+        Phenix version string to override the automatically detected version. I don't know why this would be necessary.
     """
 
-    _validate_environment(ccp4=True)
+    auto_phenix_version = _validate_environment(ccp4=True)
+
+    if phenix_version:
+        pass
+    else:
+        phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
 
@@ -173,6 +174,7 @@ def compute_realspace_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         no_bss=no_bss,
+        phenix_style=phenix_version,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -188,6 +190,7 @@ def compute_realspace_difference_map(
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
         no_bss=no_bss,
+        phenix_style=phenix_version,
     )
 
     # read back in the files created by phenix
@@ -446,6 +449,16 @@ def parse_arguments():
             "Note that this file is written out in the current working directory, NOT the input or output directories"
         )
     )
+    
+    parser.add_argument(
+        "--phenix-version",
+        required=False,
+        help=(
+            "Specify phenix version as a string, e.g. '1.20'. "
+            "If omitted, matchmaps will attempt to automatically detect the version in use "
+            "by analyzing the output of phenix.version"
+        )
+    )
 
     return parser
 
@@ -484,6 +497,7 @@ def main():
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
         no_bss = args.no_bss,
+        phenix_version = args.phenix_version,
     )
     
     if args.script:
@@ -491,6 +505,7 @@ def main():
             utility = 'matchmaps', 
             arguments = sys.argv[1:],
             script_name = args.script,
+            phenix_version=args.phenix_version,
             )
 
     return

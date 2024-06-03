@@ -3,26 +3,21 @@
 import argparse
 import os
 import sys
-import subprocess
 import time
-from functools import partial
 from pathlib import Path
 
 import gemmi
-import numpy as np
 import reciprocalspaceship as rs
 
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, phaser_wrapper, _remove_waters
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
-    rigid_body_refinement_wrapper,
     _realspace_align_and_subtract,
     _rbr_selection_parser,
-    _remove_waters,
     _restore_ligand_occupancy,
     _validate_environment,
     _validate_inputs,
-    phaser_wrapper,
     _clean_up_files,
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
@@ -51,7 +46,8 @@ def compute_mr_difference_map(
     radius : float = 5,
     alpha : float = 0,
     no_bss = False,
-):
+    phenix_version: str = None,
+    ):
     """
     Compute a real-space difference map from mtzs in different spacegroups.
 
@@ -105,7 +101,12 @@ def compute_mr_difference_map(
         If True, skip bulk solvent scaling feature of phenix.refine
     """
     
-    _validate_environment(ccp4=False)
+    auto_phenix_version = _validate_environment(ccp4=False)
+
+    if phenix_version:
+        pass
+    else:
+        phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
     
@@ -130,15 +131,8 @@ def compute_mr_difference_map(
         f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data..."
     )
 
-    phaser_nickname = phaser_wrapper(
-        mtzfile=mtzon,
-        pdb=pdboff,
-        input_dir=input_dir,
-        output_dir=output_dir,
-        off_labels=f"{Fon},{SigFon}",
-        eff=None,
-        verbose=verbose,
-    )
+    phaser_nickname = phaser_wrapper(mtzfile=mtzon, pdb=pdboff, output_dir=output_dir, off_labels=f"{Fon},{SigFon}",
+                                     phenix_style=phenix_version, eff=None, verbose=verbose)
 
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
@@ -161,6 +155,7 @@ def compute_mr_difference_map(
         off_labels=f"{Fon},{SigFon}",  # workaround for compatibility
         mr_on=True,
         no_bss=no_bss,
+        phenix_style=phenix_version,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'off' data...")
@@ -175,8 +170,8 @@ def compute_mr_difference_map(
         verbose=verbose,
         rbr_selections=rbr_phenix,
         off_labels=f"{Foff},{SigFoff}",
-        mr_off=True,
         no_bss=no_bss,
+        phenix_style=phenix_version,
     )
 
     # from here down I just copied over the stuff from the normal version
@@ -443,6 +438,16 @@ def parse_arguments():
         )
     )
 
+    parser.add_argument(
+        "--phenix-version",
+        required=False,
+        help=(
+            "Specify phenix version as a string, e.g. '1.20'. "
+            "If omitted, matchmaps will attempt to automatically detect the version in use "
+            "by analyzing the output of phenix.version"
+        )
+    )
+
     return parser
 
 
@@ -485,7 +490,8 @@ def main():
         alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
-        no_bss = args.no_bss
+        no_bss = args.no_bss,
+        phenix_version = args.phenix_version,
     )
     
     if args.script:
@@ -493,6 +499,7 @@ def main():
             utility = 'matchmaps.mr', 
             arguments = sys.argv[1:],
             script_name = args.script,
+            phenix_version=args.phenix_version,
             )
 
     return
