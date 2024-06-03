@@ -31,19 +31,8 @@ def _validate_environment(ccp4):
             "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
         )
     else:
-        version_printout = subprocess.run(
-            "phenix.version | grep Version", shell=True, capture_output=True
-        )
-        
-        version_string = str(version_printout.stdout)
-        
-        # if version_string.find('21') > 0:
-        #     raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
-        #                               "\n"
-        #                               "Please use phenix 1.20 or earlier.")
+        phenix_version = _detect_phenix_version()
 
-        phenix_version = '.'.join(version_string.split(': ')[1].split('.')[:-1])
-        
     if ccp4:
         if shutil.which("scaleit") is None:
             raise OSError(
@@ -57,6 +46,20 @@ def _validate_environment(ccp4):
             'If this is not the version you are using, please specify the version directly via the --phenix-version flag')
     
     return phenix_version
+
+
+def _detect_phenix_version():
+    version_printout = subprocess.run(
+        "phenix.version | grep Version", shell=True, capture_output=True
+    )
+    version_string = str(version_printout.stdout)
+    # if version_string.find('21') > 0:
+    #     raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
+    #                               "\n"
+    #                               "Please use phenix 1.20 or earlier.")
+    phenix_version = '.'.join(version_string.split(': ')[1].split('.')[:-1])
+    return phenix_version
+
 
 def _rbr_selection_parser(rbr_selections):
     # end early and return nones if this feature isn't being used
@@ -795,12 +798,17 @@ def _clean_up_files(output_dir, old_files, keep_temp_files):
     return
 
 
-def _write_script(utility, arguments, script_name):
+def _write_script(utility, arguments, script_name, phenix_version):
     from matchmaps import __version__ as version
+
+    if phenix_version is None:
+        phenix_version = _detect_phenix_version()
 
     contents = f"""#!/bin/bash
 
-# This file was produced by matchmaps version {version} on {time.strftime('%c')}
+# This file was produced on {time.strftime('%c')}
+# Using matchmaps version {version} and phenix version {phenix_version}
+#
 # The command below was originally run in the following directory:
 # {os.getcwd()}
 

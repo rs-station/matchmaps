@@ -502,6 +502,7 @@ def main():
             utility = 'matchmaps.mr', 
             arguments = sys.argv[1:],
             script_name = args.script,
+            phenix_version=args.phenix_version,
             )
 
     return
