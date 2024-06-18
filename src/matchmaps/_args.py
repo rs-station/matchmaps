@@ -64,7 +64,7 @@ base_and_mr_args = (
             "Used for rigid-body refinement of both input MTZs to generate phases."
         ),
     }),
-    ("--on-as-stationary", {
+    (("--on-as-stationary",), {
         "required": False,
         "action": "store_true",
         "default": False,
@@ -73,7 +73,7 @@ base_and_mr_args = (
         ),
     }),
 
-    ("--alpha", {
+    (("--alpha",), {
         "required": False,
         "type": float,
         "default": 0,
@@ -84,7 +84,7 @@ base_and_mr_args = (
         )
     }),
 
-    ("--unmasked-radius", {
+    (("--unmasked-radius",), {
         "required": False,
         "type": float,
         "default": 5,
@@ -116,7 +116,7 @@ ncs_args = (
         ),
     }),
 
-    ("--phases", {
+    (("--phases",), {
         "required": False,
         "default": None,
         "help": (
@@ -145,7 +145,7 @@ ncs_args = (
         ),
     }),
 
-    ("--mapname", {
+    (("--mapname",), {
         "required": False,
         "default": "matchmaps_ncs",
         "help": "Base filename for the output map files. "
@@ -183,7 +183,7 @@ common_args = (
         "type": float,
     }),
 
-    ("--dmin", {
+    (("--dmin",), {
         "help": (
             "Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. "
             "By default, cutoff is the resolution limit of the lower-resolution input MTZ. "
@@ -193,7 +193,7 @@ common_args = (
         "default": None,
     }),
 
-    ("--no-bss", {
+    (("--no-bss",), {
         "help": (
             "Include this flag to skip bulk solvent scaling in phenix.refine. By default, BSS is included."
         ),
@@ -209,7 +209,7 @@ common_args = (
         "default": False,
     }),
 
-    ("--eff", {
+    (("--eff",), {
         "help": "Custom .eff template for running phenix.refine. ",
         "required": False,
         "default": None,
@@ -223,7 +223,7 @@ common_args = (
             "This directory is created as a subdirectory of the supplied output-dir."
         )}),
 
-    ("--script", {
+    (("--script",), {
         "required": False,
         "default": "run_matchmaps",
         "help": (
@@ -233,7 +233,7 @@ common_args = (
         )
     }),
 
-    ("--phenix-version", {
+    (("--phenix-version",), {
         "required": False,
         "help": (
             "Specify phenix version as a string, e.g. '1.20'. "
