@@ -7,7 +7,7 @@ import reciprocalspaceship as rs
 
 
 def _auto_eff_refinement_template(phenix_style: str):
-    if phenix_style == '1.20':
+    if phenix_style == "1.20":
         eff_contents = """
     refinement {
       crystal_symmetry {
@@ -65,13 +65,13 @@ def _auto_eff_refinement_template(phenix_style: str):
       }
     }
         """
-    elif phenix_style == '1.21':
+    elif phenix_style == "1.21":
         eff_contents = """
 data_manager {
   model {
     file = pdb_input
   }
-  miller_array {
+  millerarray {
     file = mtz_input
     labels {
       name = columns
@@ -132,24 +132,24 @@ output {
 }
     """
     else:
-        raise NotImplementedError('Unsupported phenix version')
+        raise NotImplementedError("Unsupported phenix version")
 
     return eff_contents
 
 
 def rigid_body_refinement_wrapper(
-        mtzon,
-        pdboff,
-        input_dir,
-        output_dir,
-        phenix_style,
-        off_labels=None,
-        ligands=None,
-        eff=None,
-        verbose=False,
-        rbr_selections=None,
-        mr_on=False,
-        no_bss=False,
+    mtzon,
+    pdboff,
+    input_dir,
+    output_dir,
+    phenix_style,
+    off_labels=None,
+    ligands=None,
+    eff=None,
+    verbose=False,
+    rbr_selections=None,
+    mr_on=False,
+    no_bss=False,
 ):
     if eff is None:
         eff_contents = _auto_eff_refinement_template(phenix_style=phenix_style)
@@ -215,17 +215,18 @@ def rigid_body_refinement_wrapper(
         file.write(eff_contents)
     # run refinement!
     # print refinement output to terminal if user supplied the --verbose flag
-    subprocess.run(
-        f"phenix.refine {eff}",
-        shell=True,
-        capture_output=(not verbose),
+
+    _custom_subprocess(
+        command="phenix.refine",
+        params=eff,
+        verbose=verbose,
     )
 
     return output_dir / nickname
 
 
 def _auto_eff_phaser_template(phenix_style):
-    if (phenix_style == '1.20') or (phenix_style == '1.21'):
+    if (phenix_style == "1.20") or (phenix_style == "1.21"):
         eff_contents = """
 phaser {
   mode = ANO CCA EP_AUTO *MR_AUTO MR_FRF MR_FTF MR_PAK MR_RNP NMAXYZ SCEDS
@@ -253,7 +254,7 @@ phaser {
   }
 }
         """
-    elif phenix_style == '1.21':
+    elif phenix_style == "1.21":
         eff_contents = """"""
 
     else:
@@ -261,14 +262,15 @@ phaser {
 
     return eff_contents
 
+
 def phaser_wrapper(
-        mtzfile,
-        pdb,
-        output_dir,
-        off_labels,
-        phenix_style,
-        eff=None,
-        verbose=False,
+    mtzfile,
+    pdb,
+    output_dir,
+    off_labels,
+    phenix_style,
+    eff=None,
+    verbose=False,
 ):
     """
     Handle simple phaser run from the command line
@@ -322,10 +324,10 @@ def phaser_wrapper(
     with open(eff, "w") as file:
         file.write(eff_contents)
 
-    subprocess.run(
-        f"phenix.phaser {eff}",
-        shell=True,
-        capture_output=(not verbose),
+    _custom_subprocess(
+        command="phenix.phaser",
+        params=eff,
+        verbose=verbose
     )
 
     return output_dir / nickname
@@ -338,7 +340,7 @@ def _parse_mtz(mtzfile):
     return cell_string, sg
 
 
-def _renumber_waters(pdb):
+def _renumber_waters(pdb, verbose):
     """
     Call phenix.sort_hetatms to place waters onto the nearest protein chain.
     This ensures that rbr selections handle waters properly
@@ -349,15 +351,17 @@ def _renumber_waters(pdb):
         name of pdb file
     dir : str
         directory in which pdb file lives
+    verbose:
     """
 
     pdb_renumbered = Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
 
-    subprocess.run(
-        f"phenix.sort_hetatms file_name={pdb} output_file={pdb_renumbered}",
-        shell=True,
-        capture_output=True,
+    _custom_subprocess(
+        command='phenix.sort_hetatms',
+        params=f"file_name={pdb} output_file={pdb_renumbered}",
+        verbose=verbose
     )
+
 
     print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
 
@@ -365,17 +369,37 @@ def _renumber_waters(pdb):
 
 
 def _remove_waters(
-        pdb,
-        output_dir,
+    pdb,
+    output_dir,
+    verbose
 ):
     pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
 
-    subprocess.run(
-        f"phenix.pdbtools {pdb} remove='water' \
+    _custom_subprocess(
+        command="phenix.pdbtools",
+        params=f"{pdb} remove='water' \
             output.prefix='{output_dir}/' \
             output.suffix='{pdb_dry}'",
-        shell=True,
-        capture_output=True,
+        verbose=verbose
     )
 
     return output_dir / (pdb_dry + ".pdb")
+
+
+def _custom_subprocess(command, params, verbose, shell=True):
+
+    subproc = subprocess.run(
+        command + " " + params, shell=shell, capture_output=(not verbose)
+    )
+
+    if subproc.returncode != 0:
+
+        error = f"matchmaps encountered an error while running {command}" + (
+            "\n              Try again in --verbose mode for more a more detailed error message"
+            if (not verbose)
+            else ""
+        )
+
+        raise RuntimeError(error)
+
+    return

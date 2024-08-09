@@ -126,7 +126,7 @@ def compute_mr_difference_map(
 
     # write this function as a wrapper around phenix.pdbtools
     # modified pdboff already moved to output_dir by _handle_special_positions
-    pdboff = _remove_waters(pdboff, output_dir)
+    pdboff = _remove_waters(pdboff, output_dir, verbose)
 
     print(
         f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data..."
