@@ -1,7 +1,5 @@
 """Compute unbiased real space difference map."""
 
-import argparse
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -157,7 +155,7 @@ def compute_realspace_difference_map(
     # reset short nicknames to the latest files
     mtzon = mtzon_scaled_truecell
     mtzoff = mtzoff_trunc
-    ## done with cell swapping and resolution matching
+    # done with cell swapping and resolution matching
 
     pdboff = _handle_special_positions(pdboff, output_dir)
 

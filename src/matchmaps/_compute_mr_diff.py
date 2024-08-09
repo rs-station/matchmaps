@@ -1,6 +1,5 @@
 """Compute unbiased real space difference map from inputs in different spacegroups"""
 
-import argparse
 import os
 import sys
 import time

@@ -71,7 +71,7 @@ data_manager {
   model {
     file = pdb_input
   }
-  millerarray {
+  miller_array {
     file = mtz_input
     labels {
       name = columns
@@ -218,7 +218,7 @@ def rigid_body_refinement_wrapper(
 
     _custom_subprocess(
         command="phenix.refine",
-        params=eff,
+        params=str(eff),
         verbose=verbose,
     )
 
@@ -326,7 +326,7 @@ def phaser_wrapper(
 
     _custom_subprocess(
         command="phenix.phaser",
-        params=eff,
+        params=str(eff),
         verbose=verbose
     )
 
@@ -361,7 +361,6 @@ def _renumber_waters(pdb, verbose):
         params=f"file_name={pdb} output_file={pdb_renumbered}",
         verbose=verbose
     )
-
 
     print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
 
