@@ -1,7 +1,5 @@
 """Compute unbiased real space difference map."""
 
-import argparse
-import subprocess
 import sys
 import time
 from pathlib import Path
@@ -10,7 +8,7 @@ import gemmi
 import reciprocalspaceship as rs
 
 from matchmaps._parsers import matchmaps_parser
-from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters
+from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters, _custom_subprocess
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
@@ -127,20 +125,20 @@ def compute_realspace_difference_map(
         f"{time.strftime('%H:%M:%S')}: Running scaleit to scale 'on' data to 'off' data..."
     )
 
-    subprocess.run(
-        f"rs.scaleit -r {mtzoff} {Foff} {SigFoff} -i {mtzon} {Fon} {SigFon} -o {mtzon_scaled} --ignore-isomorphism",
-        shell=True,
-        capture_output=(not verbose),
+    _custom_subprocess(
+        command="rs.scaleit",
+        params=f"-r {mtzoff} {Foff} {SigFoff} -i {mtzon} {Fon} {SigFon} -o {mtzon_scaled} --ignore-isomorphism",
+        verbose=verbose
     )
 
-    ## now that scaleit has run, let's swap out the spacegroup from the scaled file
+    # now that scaleit has run, let's swap out the spacegroup from the scaled file
     mtzon_scaled_py = rs.read_mtz(str(mtzon_scaled))
     mtzon_original_py = rs.read_mtz(str(mtzon))
     mtzoff_original_py = rs.read_mtz(str(mtzoff))
-    
+
     mtzoff_trunc = output_dir / (mtzoff.name.removesuffix(".mtz") + "_trunc.mtz")
     mtzon_scaled_truecell = output_dir / (mtzon_scaled.name.removesuffix(".mtz") + "_truecell.mtz")
-    
+
     mtzon_scaled_py.cell = mtzon_original_py.cell
 
     mtzoff_original_py.compute_dHKL(inplace=True)
@@ -157,11 +155,11 @@ def compute_realspace_difference_map(
     # reset short nicknames to the latest files
     mtzon = mtzon_scaled_truecell
     mtzoff = mtzoff_trunc
-    ## done with cell swapping and resolution matching
+    # done with cell swapping and resolution matching
 
     pdboff = _handle_special_positions(pdboff, output_dir)
 
-    pdboff = _renumber_waters(pdboff)
+    pdboff = _renumber_waters(pdboff, verbose)
 
     print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine for the 'on' data...")
 
@@ -213,12 +211,13 @@ def compute_realspace_difference_map(
     # TO-DO: Figure out why phenix outputs are sometimes still split into (+) and (-) columns, even when I specify that anomalous=False
     # As a workaround, even anomalous files have a single 'F-obs-filtered' column, so I can always just use that.
     fg_off = make_floatgrid_from_mtz(
-        mtzoff, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin, alpha=alpha,
+        mtzoff, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin,
+        alpha=alpha,
     )
     fg_on = make_floatgrid_from_mtz(
-        mtzon, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin, alpha=alpha,
+        mtzon, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin,
+        alpha=alpha,
     )
-    
 
     if rbr_gemmi is None:
         _realspace_align_and_subtract(
@@ -251,7 +250,7 @@ def compute_realspace_difference_map(
                 selection=selection,
                 radius=radius,
             )
-    
+
     print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
     _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
 
@@ -271,7 +270,7 @@ def main():
         args.mtzon[0],
         args.pdboff,
     )
-    
+
     compute_realspace_difference_map(
         pdboff=pdboff,
         ligands=ligands,
@@ -292,17 +291,17 @@ def main():
         alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
-        no_bss = args.no_bss,
-        phenix_version = args.phenix_version,
+        no_bss=args.no_bss,
+        phenix_version=args.phenix_version,
     )
-    
+
     if args.script:
         _write_script(
-            utility = 'matchmaps', 
-            arguments = sys.argv[1:],
-            script_name = args.script,
+            utility='matchmaps',
+            arguments=sys.argv[1:],
+            script_name=args.script,
             phenix_version=args.phenix_version,
-            )
+        )
 
     return
 

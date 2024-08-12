@@ -108,7 +108,7 @@ def compute_ncs_difference_map(
 
         pdb = _handle_special_positions(pdb, output_dir)
 
-        pdb = _renumber_waters(pdb)
+        pdb = _renumber_waters(pdb, verbose)
 
         print(f"{time.strftime('%H:%M:%S')}: Running phenix.refine...")
 
