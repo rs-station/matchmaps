@@ -82,6 +82,7 @@ data_manager {
         r_free_flags {
             generate = True
         }
+        force_anomalous_flag_to_be_equal_to = False
     }
   }
 }
