@@ -7,3 +7,5 @@
 [![codecov](https://codecov.io/gh/rs-station/matchmaps/branch/main/graph/badge.svg)](https://codecov.io/gh/rs-station/matchmaps)
 
 Make unbiased difference maps even for non-isomorphous inputs. Check out the [package documentation](https://rs-station.github.io/matchmaps/)
+
+New text on the readme
