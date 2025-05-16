@@ -33,7 +33,7 @@ def compute_ncs_difference_map(
     Phi : str = None,
     ligands : list = None,
     name : str = None,
-    dmin : int = None,
+    dmin : float = None,
     spacing = 0.5,
     input_dir=Path("."),
     output_dir=Path("."),

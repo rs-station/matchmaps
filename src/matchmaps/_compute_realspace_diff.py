@@ -32,7 +32,7 @@ def compute_realspace_difference_map(
         Fon: str,
         SigFon: str,
         ligands: list = None,
-        dmin: int = None,
+        dmin: float = None,
         spacing=0.5,
         on_as_stationary: bool = False,
         input_dir=Path("."),

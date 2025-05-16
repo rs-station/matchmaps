@@ -34,7 +34,7 @@ def compute_mr_difference_map(
     Fon : str,
     SigFon : str,
     ligands: list = None,
-    dmin : int = None,
+    dmin : float = None,
     spacing = 0.5,
     on_as_stationary = False,
     input_dir = Path("."),
