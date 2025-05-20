@@ -27,6 +27,7 @@ def compute_diagnostic_plots(
     input_dir=Path("."),
     output_dir=Path("."),
     filename=None,
+    title = 'Produced by matchmaps.diagnose',
 ):
     rcParams.update({"figure.autolayout": True})
     rcParams.update({"font.size": 16})
@@ -53,6 +54,7 @@ def compute_diagnostic_plots(
 
     plt.figure(figsize=(8, 7))
     plt.grid(linestyle="--")
+    plt.title(title)
     plt.hlines(0, 0, bins-1, color='gray', linestyle='-')
     plt.xlabel(r"Resolution bins ($\AA$)")
     plt.ylabel(r"$CC_{1/2}$")
@@ -80,6 +82,8 @@ def compute_diagnostic_plots(
     )
 
     plt.legend(loc="upper right")
+    if filename:
+        plt.savefig(output_dir / filename, dpi=600)
     plt.show()
     return mtz
 
