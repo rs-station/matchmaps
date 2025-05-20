@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
+from matchmaps._parsers import matchmaps_diagnose_parser
 # to do list:
 # [  ] write function for making plot
 # [  ] write main function which directs command-line arguments into the plot
@@ -120,6 +121,8 @@ def cc_datasets(
 
 
 def main():
+
+    args =
 
     print("entered diagnostic plots")
 
