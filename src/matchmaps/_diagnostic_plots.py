@@ -8,10 +8,13 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 from matchmaps._parsers import matchmaps_diagnose_parser
+from matchmaps._utils import _validate_inputs
+
+
 # to do list:
-# [  ] write function for making plot
+# [ x ] write function for making plot
 # [  ] write main function which directs command-line arguments into the plot
-# [  ] write argument parser (in the _parsers and _args files), reusing code where possible
+# [ x ] write argument parser (in the _parsers and _args files), reusing code where possible
 # [  ] write a useful docstring
 # [  ] make sure matchmaps functions aren't broken!
 
@@ -122,11 +125,30 @@ def cc_datasets(
 
 def main():
 
-    args =
+    args = matchmaps_diagnose_parser.parse_args()
 
-    print("entered diagnostic plots")
+    (input_dir, output_dir, _, mtzoff, mtzon) = _validate_inputs(
+        args.input_dir,
+        args.output_dir,
+        None,
+        args.mtzoff[0],
+        args.mtzon[0],
+    )
 
-    compute_diagnostic_plots()
+    compute_diagnostic_plots(
+        mtzoff=mtzoff,
+        mtzon=mtzon,
+        Foff=args.mtzoff[1],
+        Phioff=args.mtzoff[2],
+        Fon=args.mtzon[1],
+        Phion=args.mtzon[2],
+        input_dir=input_dir,
+        output_dir=output_dir,
+        filename=args.filename,
+        bins=args.bins,
+        dmin=args.dmin,
+        title=args.title,
+    )
 
     return
 

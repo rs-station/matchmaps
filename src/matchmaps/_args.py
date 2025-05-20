@@ -335,7 +335,10 @@ diagnose_args = (
         ("--filename",),
         {
             "required": False,
-            "help": "Base filename for the plot; should have a file extension compatible with plt.savefig",
+            "help": ("Filename for the plot to save; if it has an extension, it should be compatible with plt.savefig"
+                     "If omitted, plot will be opened interactively but no file will be saved."
+                     "File will be saved in the --output-dir directory (current directory by default)"
+                     ),
         },
     ),
     (
@@ -344,6 +347,15 @@ diagnose_args = (
             "required": False,
             "default": "Produced by matchmaps.diagnose",
             "help": "Title for the plot",
+        },
+    ),
+    (
+        ("--bins", "-b"),
+        {
+            "required": False,
+            "default": 15,
+            "help": "Numbers of resolution bins to compute correlation",
+            "type": int,
         },
     ),
 )
