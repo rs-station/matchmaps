@@ -40,7 +40,7 @@ matchmaps_diagnose_description = (
     "Plot the isomorphism of two datasets by resolution bin."
     "The plot is analogous to Figure 1a from the matchmaps paper (doi.org/10.1107/S1600576724003510)"
     ""
-    "By default, the plot will open in a separate window, but you can save it with the --filename flag"
+    "By default, the plot will open in a separate window, but you can save it with the `--filename` flag"
 )
 
 base_and_mr_args = (
@@ -171,8 +171,8 @@ ncs_args = (
             "default": None,
             "nargs": 2,
             "help": (
-                "NCS chains to overlay and subtract, specified as [fixed_chain, moving_chain]."
-                "E.g. to overlay chain C onto chain B, specify: --ncs-chains B C"
+                "NCS chains to overlay and subtract, specified as [fixed_chain, moving_chain]. "
+                "E.g. to overlay chain C onto chain B, specify: `--ncs-chains B C`"
             ),
         },
     ),
@@ -244,7 +244,7 @@ common_matchmaps_args = (
             "default": None,
             "help": (
                 "Do not delete intermediate matchmaps files, but rather place them in the supplied directory. "
-                "This directory is created as a subdirectory of the supplied output-dir."
+                "This directory is created as a subdirectory of the supplied `output-dir`."
             ),
         },
     ),
@@ -335,9 +335,9 @@ diagnose_args = (
         ("--filename",),
         {
             "required": False,
-            "help": ("Filename for the plot to save; if it has an extension, it should be compatible with plt.savefig"
-                     "If omitted, plot will be opened interactively but no file will be saved."
-                     "File will be saved in the --output-dir directory (current directory by default)"
+            "help": ("Filename for the plot to save; if it has an extension, it should be compatible with plt.savefig. "
+                     "If omitted, plot will be opened interactively but no file will be saved. "
+                     "File will be saved in the `--output-dir` directory (current directory by default)"
                      ),
         },
     ),
