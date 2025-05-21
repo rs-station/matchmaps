@@ -24,7 +24,7 @@ except ImportError:
 # -- Project information -----------------------------------------------------
 
 project = "matchmaps"
-copyright = "2023, Dennis Brookner"
+copyright = "2025, Dennis Brookner"
 author = "Dennis Brookner"
 
 
@@ -62,7 +62,7 @@ extensions = [
     # "sphinx.ext.autodoc",
     # "sphinx.ext.intersphinx",
     # "sphinx.ext.linkcode",
-    # "sphinx.ext.mathjax",
+    "sphinx.ext.mathjax",
     # "sphinx.ext.napoleon",
     # "sphinx_copybutton",
     # "sphinx_panels",
