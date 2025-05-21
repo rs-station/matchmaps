@@ -29,7 +29,7 @@ matchmaps_mr_description = (
 
 matchmaps_ncs_description = (
     "Compute an 'internal' real-space difference map between NCS-related molecules. "
-    "You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file."
+    "You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file. "
     ""
     "Please note that phenix must be installed and active in your environment for this function to run. "
     ""
@@ -37,8 +37,8 @@ matchmaps_ncs_description = (
 )
 
 matchmaps_diagnose_description = (
-    "Plot the isomorphism of two datasets by resolution bin."
-    "The plot is analogous to Figure 1a from the matchmaps paper (doi.org/10.1107/S1600576724003510)"
+    "Plot the isomorphism of two datasets by resolution bin; "
+    "this plot is analogous to Figure 1a from the matchmaps paper. "
     ""
     "By default, the plot will open in a separate window, but you can save it with the `--filename` flag"
 )

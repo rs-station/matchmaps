@@ -25,7 +25,7 @@ These plots compare the correlation for both structure factor amplitudes and str
 
 ```{eval-rst}
 .. note::
-Note that, unlike the main `matchmaps` utilities, `matchmaps.diagnose` does *not* require the PHENIX or CCP4 external dependencies. Just a quick `pip install matchmaps`, and you're ready to go!
+    Note that, unlike the main `matchmaps` utilities, `matchmaps.diagnose` does *not* require the PHENIX or CCP4 external dependencies. Just a quick `pip install matchmaps`, and you're ready to go!
 ```
 The simplest usage of `matchmaps.diagnose` is to just supply your two input files, along with the names for the structure factor amplitudes and phases in each dataset. Make sure you're including *observed* structure factor amplitudes!
 
@@ -37,4 +37,4 @@ matchmaps.diagnose \
 
 Make sure that you're supplying phases here! This syntax is similar to that of the main `matchmaps` utilites, except that in those cases, you supply structure factor amplitudes and *uncertainties*. 
 
-Full documentation of 
+Full documentation of the command-line interface for `matchmaps.diagnose` can be found on the [CLI page](cli.md#matchmaps-diagnose)
