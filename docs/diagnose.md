@@ -6,6 +6,6 @@ You have two crystallographic datasets that you'd like to compare with an Fo-Fo 
 
 ## Interpreting this plot
 
-The plot above shows three curves for each dataset. Two of them report on a 
+The plot above shows three curves for each dataset. Two of them report on a :math:`CC_{1/2}` 
 
 ## Using `matchmaps.diagnose`
