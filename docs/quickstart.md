@@ -11,7 +11,7 @@ pip install matchmaps
 I recommend that you use a package manager such as [`conda`](https://docs.conda.io/en/latest/) and always install into a fresh environment, e.g.:
 
 ```bash
-conda create -n my-matchmaps-env python=3.9
+conda create -n my-matchmaps-env python=3.10
 conda activate my-matchmaps-env
 pip install matchmaps
 ```
