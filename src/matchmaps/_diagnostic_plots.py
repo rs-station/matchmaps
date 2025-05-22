@@ -40,6 +40,7 @@ def compute_diagnostic_plots(
     onmtz = rs.read_mtz(str(input_dir / mtzon))
 
     _validate_column_dtypes(offmtz, (Foff, Phioff), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype))
+    _validate_column_dtypes(onmtz, (Fon, Phion), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype))
 
     offmtz.canonicalize_phases(inplace=True)
     onmtz.canonicalize_phases(inplace=True)
