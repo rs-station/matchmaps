@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 from matchmaps._parsers import matchmaps_diagnose_parser
-from matchmaps._utils import _validate_inputs
+from matchmaps._utils import _validate_inputs, _validate_column_dtypes
 
 
 # to do list:
@@ -38,6 +38,8 @@ def compute_diagnostic_plots(
 
     offmtz = rs.read_mtz(str(input_dir / mtzoff))
     onmtz = rs.read_mtz(str(input_dir / mtzon))
+
+    _validate_column_dtypes(offmtz, (Foff, Phioff), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype))
 
     offmtz.canonicalize_phases(inplace=True)
     onmtz.canonicalize_phases(inplace=True)
