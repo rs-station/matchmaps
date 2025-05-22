@@ -19,7 +19,7 @@ from matchmaps._utils import (
     _validate_inputs,
     _cif_or_mtz_to_mtz,
     _cif_or_pdb_to_pdb,
-    _write_script,
+    _write_script, _validate_column_dtypes,
 )
 
 
@@ -268,6 +268,11 @@ def main():
         args.mtzon[0],
         args.pdboff,
     )
+
+    _validate_column_dtypes(rs.read_mtz(str(mtzoff)), (args.mtzoff[1], args.mtzoff[2]),
+                            (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype))
+    _validate_column_dtypes(rs.read_mtz(str(mtzon)), (args.mtzon[1], args.mtzon[2]),
+                            (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype))
 
     compute_realspace_difference_map(
         pdboff=pdboff,

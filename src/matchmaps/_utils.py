@@ -699,8 +699,12 @@ def _validate_column_dtypes(mtz : rs.DataSet,
 
     for column, dtype in zip(columns, dtypes):
 
-        if not dtype.is_dtype(mtz[column].dtype):
-            raise ValueError(f"MTZ column '{column}' has dtype '{mtz[column].dtype}'; expected dtype '{dtype.name}'")
+        try:
+            if not dtype.is_dtype(mtz[column].dtype):
+                raise ValueError(f"MTZ column '{column}' has dtype '{mtz[column].dtype}'; expected dtype '{dtype.name}'")
+        except KeyError:
+            raise KeyError(f"Column '{column}' does not exist in the input MTZ")
+
 
 def _cif_or_mtz_to_mtz(input_file, output_dir):
     """

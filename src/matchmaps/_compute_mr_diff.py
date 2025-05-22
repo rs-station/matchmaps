@@ -21,7 +21,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
-    _write_script,
+    _write_script, _validate_column_dtypes,
 )
 
 
@@ -256,7 +256,12 @@ def main():
         args.mtzon[0],
         args.pdboff,
     )
-    
+
+    _validate_column_dtypes(rs.read_mtz(str(mtzoff)), (args.mtzoff[1], args.mtzoff[2]),
+                            (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype))
+    _validate_column_dtypes(rs.read_mtz(str(mtzon)), (args.mtzon[1], args.mtzon[2]),
+                            (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype))
+
     compute_mr_difference_map(
         pdboff=pdboff,
         ligands=ligands,

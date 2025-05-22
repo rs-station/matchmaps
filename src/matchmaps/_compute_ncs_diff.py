@@ -21,7 +21,7 @@ from matchmaps._utils import (
     _clean_up_files,
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
-    _write_script,
+    _write_script, _validate_column_dtypes,
 )
 
 
@@ -86,6 +86,8 @@ def compute_ncs_difference_map(
         If not None, the name of a subdirectory of the output_dir into which intermediate matchmaps files are moved upon program completion.
     no_bss : bool, optional
         If True, skip bulk solvent scaling feature of phenix.refine
+    phenix_version: str, optional
+        Phenix version string to override the automatically detected version. I don't know why this would be necessary.
     """
     auto_phenix_version = _validate_environment(ccp4=False)
 
@@ -178,11 +180,14 @@ def main():
         args.pdb,
     )
 
-    if not os.path.exists(args.output_dir):
-        os.makedirs(args.output_dir)
+    if args.phases:
+        columns = (args.mtz[1], args.phases)
+        dtypes = (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype)
+    else:
+        columns = (args.mtz[1], args.mtz[2])
+        dtypes = (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype)
 
-    if not os.path.exists(args.input_dir):
-        raise ValueError(f"Input directory '{args.input_dir}' does not exist")
+    _validate_column_dtypes(rs.read_mtz(str(mtz)), columns, dtypes)
 
     compute_ncs_difference_map(
         pdb=pdb,
