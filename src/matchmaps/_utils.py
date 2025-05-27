@@ -551,7 +551,7 @@ def align_grids_from_model_transform(
         tr=transform,
         dest_model=structure1[0],  # dest_model,
         radius=radius,
-        order=2,
+        order=1,
     )
 
     return grid2_out
@@ -596,7 +596,7 @@ def _ncs_align_and_subtract(
         tr=sup.transform.inverse(),
         dest_model=pdb[0],
         radius=8,
-        order=2,
+        order=1,
     )
 
     model = gemmi.Model("dummy model")
