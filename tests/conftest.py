@@ -6,6 +6,10 @@ import reciprocalspaceship as rs
 
 @pytest.fixture
 def phenix_outputs():
+    """
+    Return a 4-tuple of the mtz and pdb for off and on datasets output by phenix.refine
+    Data was produced by running matchmaps on PDB IDs 1RX2 (off) and 1RX4 (on)
+    """
 
     d = "data/mm_intermediates"
 
