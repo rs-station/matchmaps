@@ -38,7 +38,11 @@ jobs:
           python -m pip install -e .[test]
 
       - name: Test
-        run: pytest --color=yes --cov --cov-report=xml --cov-report=term-missing
+        run: |
+          cd tests
+          pwd
+          ls
+          pytest --color=yes --cov --cov-report=xml --cov-report=term-missing
 
       - name: Coverage
         uses: codecov/codecov-action@v5
