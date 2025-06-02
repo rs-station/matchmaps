@@ -1,0 +1,158 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Should I use matchmaps? Diagnosing non-isomorphism &mdash; matchmaps</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=e9b4edf4" />
+
+  
+    <link rel="shortcut icon" href="_static/rs-favicon_32x32.png"/>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=393827a2"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+      <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Troubleshooting and advanced usage" href="troubleshooting.html" />
+    <link rel="prev" title="Getting started with matchmaps" href="quickstart.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            matchmaps
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Should I use matchmaps?</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#interpreting-this-plot">Interpreting this plot</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#how-does-your-data-compare">How does your data compare?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#phases-vs-amplitudes">Phases vs. amplitudes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-matchmaps-diagnose">Using <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting and advanced usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
+<li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli.html">Full command-line API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">matchmaps</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Should I use <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>? Diagnosing non-isomorphism</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/diagnose.md" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section class="tex2jax_ignore mathjax_ignore" id="should-i-use-matchmaps-diagnosing-non-isomorphism">
+<h1>Should I use <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>? Diagnosing non-isomorphism<a class="headerlink" href="#should-i-use-matchmaps-diagnosing-non-isomorphism" title="Link to this heading"></a></h1>
+<p>You have two crystallographic datasets that you’d like to compare with an Fo-Fo difference map. Should you use <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, or will an isomorphous difference map do the trick? To help answer this question, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> provides the utility <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code>, which creates a plot similar to the following (Figure 1a from the <a class="reference external" href="https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html">MatchMaps paper</a>)</p>
+<p><img alt="Figure 1a: resolution dependence of inter-dataset correlation" src="_images/figure.jpg" /></p>
+<section id="interpreting-this-plot">
+<h2>Interpreting this plot<a class="headerlink" href="#interpreting-this-plot" title="Link to this heading"></a></h2>
+<p>The plot above shows three curves for each pair of datasets; each curve represents a form of resolution-dependent correlation between the datasets.
+Two of the curves report <span class="math notranslate nohighlight">\(CC_{1/2}\)</span> between structure factor amplitudes and <span class="math notranslate nohighlight">\(cos(\textrm{structure factor phases}\)</span>), and the third shows the figure of merit for structure factor phases. <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code> omits the figure-of-merit caculation and just shows the two <span class="math notranslate nohighlight">\(CC_{1/2}\)</span> curves.</p>
+<p>The worse the isomorphism between your datasets, the more quickly these correlations will drop off with resolution. The above plot shows two very extreme examples. The isomorphous datasets (PDB IDs 1RX2 and 1RX1) correlate quite well even out to the highest-resolution bin; these datasets can be compared effectively with an isomorphous difference map.</p>
+<p>In contrast, the poorly isomorphous datasets (PDB IDs 1RX2 and 1RX4) are much less correlated at low resolution, and their correlation drops off even more quickly with resolution. At even modest resolution, these datasets are essentially uncorrelated. As expected, an isomorphous difference map is entirely useless for comparing these datasets.</p>
+<section id="how-does-your-data-compare">
+<h3>How does your data compare?<a class="headerlink" href="#how-does-your-data-compare" title="Link to this heading"></a></h3>
+<p>If your data looks similar to the “poorly isomorphous” case above, with the correlation dropping to essentially 0, then I definitely recommend trying out <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>. If your data has some sort of in-between behavior, then it’s possible that both an isomorphous difference map and a <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> difference map could contain useful information. If your data are highly correlated like in the isomorphous case above, I would recommend starting with an isomorphous difference map.</p>
+</section>
+<section id="phases-vs-amplitudes">
+<h3>Phases vs. amplitudes<a class="headerlink" href="#phases-vs-amplitudes" title="Link to this heading"></a></h3>
+<p>These plots compare the correlation for both structure factor amplitudes and structure factor phases. In principle, only the phase correlation is consequential for the success of an isomorphous difference map. However, in practice, I suspect that these curves will always overlay closely. If you encounter a situation where the resolution-dependent correlations of amplitudes and phases are significantly different, let me know! I would be very interested to learn more about that.</p>
+</section>
+</section>
+<section id="using-matchmaps-diagnose">
+<h2>Using <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code><a class="headerlink" href="#using-matchmaps-diagnose" title="Link to this heading"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Note that, unlike the main <code class="xref py py-obj docutils literal notranslate"><span class="pre">matchmaps</span></code> utilities, <code class="xref py py-obj docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code> does <em>not</em> require the PHENIX or CCP4 external dependencies. Just a quick <code class="xref py py-obj docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">matchmaps</span></code>, and you’re ready to go!</p>
+</div>
+<p>The simplest usage of <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code> is to just supply your two input files, along with the names for the structure factor amplitudes and phases in each dataset. Make sure you’re including <em>observed</em> structure factor amplitudes!</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>matchmaps.diagnose<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mtzoff<span class="w"> </span>off.mtz<span class="w"> </span>FP<span class="w"> </span>PHIC<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mtzon<span class="w">  </span>on.mtz<span class="w">  </span>FP<span class="w"> </span>PHIC
+</pre></div>
+</div>
+<p>Make sure that you’re supplying phases here! This syntax is similar to that of the main <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> utilites, except that in those cases, you supply structure factor amplitudes and <em>uncertainties</em>.</p>
+<p>Full documentation of the command-line interface for <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code> can be found on the <a class="reference internal" href="cli.html#matchmaps-diagnose"><span class="std std-ref">CLI page</span></a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="quickstart.html" class="btn btn-neutral float-left" title="Getting started with matchmaps" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting and advanced usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Dennis Brookner.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

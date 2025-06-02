@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="_static/rs-favicon_32x32.png"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=194bdfd8"></script>
+      <script src="_static/documentation_options.js?v=393827a2"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -44,6 +44,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagnose.html">Should I use matchmaps?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting and advanced usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
@@ -94,10 +95,19 @@
 </li>
       </ul></li>
       <li>
+    --bins
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-bins">matchmaps.diagnose command line option</a>
+</li>
+      </ul></li>
+      <li>
     --dmin
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-dmin">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-dmin">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-dmin">matchmaps.mr command line option</a>
 </li>
@@ -116,10 +126,19 @@
 </li>
       </ul></li>
       <li>
+    --filename
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-filename">matchmaps.diagnose command line option</a>
+</li>
+      </ul></li>
+      <li>
     --help
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-h">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-h">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-h">matchmaps.mr command line option</a>
 </li>
@@ -131,6 +150,8 @@
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-input-dir">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-input-dir">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-input-dir">matchmaps.mr command line option</a>
 </li>
@@ -179,6 +200,8 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-mtzoff">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzoff">matchmaps.diagnose command line option</a>
+</li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-mtzoff">matchmaps.mr command line option</a>
 </li>
       </ul></li>
@@ -187,6 +210,8 @@
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-mtzon">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzon">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-mtzon">matchmaps.mr command line option</a>
 </li>
@@ -223,6 +248,8 @@
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-output-dir">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-output-dir">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-output-dir">matchmaps.mr command line option</a>
 </li>
@@ -263,8 +290,6 @@
         <li><a href="cli.html#cmdoption-matchmaps.ncs-phenix-version">matchmaps.ncs command line option</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     --rbr-selections
 
@@ -274,6 +299,8 @@
         <li><a href="cli.html#cmdoption-matchmaps.mr-rbr-selections">matchmaps.mr command line option</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     --script
 
@@ -297,6 +324,13 @@
 </li>
       </ul></li>
       <li>
+    --title
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-title">matchmaps.diagnose command line option</a>
+</li>
+      </ul></li>
+      <li>
     --unmasked-radius
 
       <ul>
@@ -317,10 +351,19 @@
 </li>
       </ul></li>
       <li>
+    -b
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-bins">matchmaps.diagnose command line option</a>
+</li>
+      </ul></li>
+      <li>
     -f
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-mtzoff">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzoff">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-mtzoff">matchmaps.mr command line option</a>
 </li>
@@ -330,6 +373,8 @@
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-h">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-h">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-h">matchmaps.mr command line option</a>
 </li>
@@ -341,6 +386,8 @@
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-input-dir">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-input-dir">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-input-dir">matchmaps.mr command line option</a>
 </li>
@@ -382,6 +429,8 @@
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-mtzon">matchmaps command line option</a>
 </li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzon">matchmaps.diagnose command line option</a>
+</li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-mtzon">matchmaps.mr command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.ncs-ncs-chains">matchmaps.ncs command line option</a>
@@ -392,6 +441,8 @@
 
       <ul>
         <li><a href="cli.html#cmdoption-matchmaps-output-dir">matchmaps command line option</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-output-dir">matchmaps.diagnose command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.mr-output-dir">matchmaps.mr command line option</a>
 </li>
@@ -427,6 +478,13 @@
         <li><a href="cli.html#cmdoption-matchmaps.mr-spacing">matchmaps.mr command line option</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps.ncs-spacing">matchmaps.ncs command line option</a>
+</li>
+      </ul></li>
+      <li>
+    -t
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-title">matchmaps.diagnose command line option</a>
 </li>
       </ul></li>
       <li>
@@ -509,6 +567,43 @@
         <li><a href="cli.html#cmdoption-matchmaps-spacing">-s</a>
 </li>
         <li><a href="cli.html#cmdoption-matchmaps-verbose">-v</a>
+</li>
+      </ul></li>
+      <li>
+    matchmaps.diagnose command line option
+
+      <ul>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-bins">--bins</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-dmin">--dmin</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-filename">--filename</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-h">--help</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-input-dir">--input-dir</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzoff">--mtzoff</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzon">--mtzon</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-output-dir">--output-dir</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-title">--title</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-bins">-b</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzoff">-f</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-h">-h</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-input-dir">-i</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-mtzon">-n</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-output-dir">-o</a>
+</li>
+        <li><a href="cli.html#cmdoption-matchmaps.diagnose-title">-t</a>
 </li>
       </ul></li>
       <li>
@@ -649,7 +744,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Dennis Brookner.</p>
+    <p>&#169; Copyright 2025, Dennis Brookner.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="_static/rs-favicon_32x32.png"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=194bdfd8"></script>
+      <script src="_static/documentation_options.js?v=393827a2"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -46,6 +46,7 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="diagnose.html">Should I use matchmaps?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting and advanced usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualizing results</a></li>
 <li class="toctree-l1"><a class="reference internal" href="about.html">About the algorithm</a></li>
@@ -53,6 +54,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#matchmaps">matchmaps</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#matchmaps-mr">matchmaps.mr</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#matchmaps-ncs">matchmaps.ncs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matchmaps-diagnose">matchmaps.diagnose</a></li>
 </ul>
 </li>
 </ul>
@@ -91,11 +93,11 @@
 <span class="go">                 SigFon --pdboff PDBOFF [--on-as-stationary] [--alpha ALPHA]</span>
 <span class="go">                 [--unmasked-radius UNMASKED_RADIUS]</span>
 <span class="go">                 [--rbr-selections [RBR_SELECTIONS ...]]</span>
-<span class="go">                 [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
-<span class="go">                 [--output-dir OUTPUT_DIR] [--spacing SPACING] [--dmin DMIN]</span>
-<span class="go">                 [--no-bss] [--verbose] [--eff EFF]</span>
-<span class="go">                 [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
-<span class="go">                 [--phenix-version PHENIX_VERSION]</span>
+<span class="go">                 [--ligands [LIGANDS ...]] [--spacing SPACING] [--no-bss]</span>
+<span class="go">                 [--verbose] [--eff EFF] [--keep-temp-files KEEP_TEMP_FILES]</span>
+<span class="go">                 [--script SCRIPT] [--phenix-version PHENIX_VERSION]</span>
+<span class="go">                 [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
+<span class="go">                 [--dmin DMIN]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -153,27 +155,9 @@
 </dd></dl>
 
 <dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps-input-dir">
-<span id="cmdoption-matchmaps-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-input-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps-output-dir">
-<span id="cmdoption-matchmaps-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-output-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
-</dd></dl>
-
-<dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-spacing">
 <span id="cmdoption-matchmaps-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps-dmin">
-<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Link to this definition"></a></dt>
-<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -197,7 +181,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps-keep-temp-files">
 <span id="cmdoption-matchmaps-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-keep-temp-files" title="Link to this definition"></a></dt>
-<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
+<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied <code class="xref py py-obj docutils literal notranslate"><span class="pre">output-dir</span></code>.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -212,6 +196,24 @@
 <dd><p>Specify phenix version as a string, e.g. ‘1.20’. If omitted, matchmaps will attempt to automatically detect the version in use by analyzing the output of phenix.version</p>
 </dd></dl>
 
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-input-dir">
+<span id="cmdoption-matchmaps-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-input-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-output-dir">
+<span id="cmdoption-matchmaps-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-output-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps-dmin">
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps-dmin" title="Link to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
+</dd></dl>
+
 </section>
 <section id="matchmaps-mr">
 <h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Link to this heading"></a></h2>
@@ -220,11 +222,11 @@
 <span class="go">                    Fon SigFon --pdboff PDBOFF [--on-as-stationary]</span>
 <span class="go">                    [--alpha ALPHA] [--unmasked-radius UNMASKED_RADIUS]</span>
 <span class="go">                    [--rbr-selections [RBR_SELECTIONS ...]]</span>
-<span class="go">                    [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
-<span class="go">                    [--output-dir OUTPUT_DIR] [--spacing SPACING]</span>
-<span class="go">                    [--dmin DMIN] [--no-bss] [--verbose] [--eff EFF]</span>
+<span class="go">                    [--ligands [LIGANDS ...]] [--spacing SPACING] [--no-bss]</span>
+<span class="go">                    [--verbose] [--eff EFF]</span>
 <span class="go">                    [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
-<span class="go">                    [--phenix-version PHENIX_VERSION]</span>
+<span class="go">                    [--phenix-version PHENIX_VERSION] [--input-dir INPUT_DIR]</span>
+<span class="go">                    [--output-dir OUTPUT_DIR] [--dmin DMIN]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -282,27 +284,9 @@
 </dd></dl>
 
 <dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-input-dir">
-<span id="cmdoption-matchmaps.mr-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-input-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-output-dir">
-<span id="cmdoption-matchmaps.mr-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-output-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
-</dd></dl>
-
-<dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-spacing">
 <span id="cmdoption-matchmaps.mr-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-dmin">
-<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-dmin" title="Link to this definition"></a></dt>
-<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -326,7 +310,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.mr-keep-temp-files">
 <span id="cmdoption-matchmaps.mr-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-keep-temp-files" title="Link to this definition"></a></dt>
-<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
+<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied <code class="xref py py-obj docutils literal notranslate"><span class="pre">output-dir</span></code>.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -341,17 +325,35 @@
 <dd><p>Specify phenix version as a string, e.g. ‘1.20’. If omitted, matchmaps will attempt to automatically detect the version in use by analyzing the output of phenix.version</p>
 </dd></dl>
 
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-input-dir">
+<span id="cmdoption-matchmaps.mr-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-input-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-output-dir">
+<span id="cmdoption-matchmaps.mr-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-output-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.mr-dmin">
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.mr-dmin" title="Link to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
+</dd></dl>
+
 </section>
 <section id="matchmaps-ncs">
 <h2>matchmaps.ncs<a class="headerlink" href="#matchmaps-ncs" title="Link to this heading"></a></h2>
-<p>Compute an ‘internal’ real-space difference map between NCS-related molecules. You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file.Please note that phenix must be installed and active in your environment for this function to run. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
+<p>Compute an ‘internal’ real-space difference map between NCS-related molecules. You will need an MTZ file with structure factor amplitudes and optionally containing phases, and a PDB/CIF file. Please note that phenix must be installed and active in your environment for this function to run. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.ncs [-h] --mtz [MTZ ...] [--phases PHASES] --pdb PDB</span>
 <span class="go">                     --ncs-chains fixed_chain moving_chain [--mapname MAPNAME]</span>
-<span class="go">                     [--ligands [LIGANDS ...]] [--input-dir INPUT_DIR]</span>
-<span class="go">                     [--output-dir OUTPUT_DIR] [--spacing SPACING]</span>
-<span class="go">                     [--dmin DMIN] [--no-bss] [--verbose] [--eff EFF]</span>
+<span class="go">                     [--ligands [LIGANDS ...]] [--spacing SPACING] [--no-bss]</span>
+<span class="go">                     [--verbose] [--eff EFF]</span>
 <span class="go">                     [--keep-temp-files KEEP_TEMP_FILES] [--script SCRIPT]</span>
-<span class="go">                     [--phenix-version PHENIX_VERSION]</span>
+<span class="go">                     [--phenix-version PHENIX_VERSION] [--input-dir INPUT_DIR]</span>
+<span class="go">                     [--output-dir OUTPUT_DIR] [--dmin DMIN]</span>
 </pre></div>
 </div>
 <dl class="std option">
@@ -381,7 +383,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-ncs-chains">
 <span id="cmdoption-matchmaps.ncs-n"></span><span class="sig-name descname"><span class="pre">--ncs-chains</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;fixed_chain&gt;</span> <span class="pre">&lt;moving_chain&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-ncs-chains" title="Link to this definition"></a></dt>
-<dd><p>NCS chains to overlay and subtract, specified as [fixed_chain, moving_chain].E.g. to overlay chain C onto chain B, specify: –ncs-chains B C</p>
+<dd><p>NCS chains to overlay and subtract, specified as [fixed_chain, moving_chain]. E.g. to overlay chain C onto chain B, specify: <code class="xref py py-obj docutils literal notranslate"><span class="pre">--ncs-chains</span> <span class="pre">B</span> <span class="pre">C</span></code></p>
 </dd></dl>
 
 <dl class="std option">
@@ -397,27 +399,9 @@
 </dd></dl>
 
 <dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-input-dir">
-<span id="cmdoption-matchmaps.ncs-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-input-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-output-dir">
-<span id="cmdoption-matchmaps.ncs-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-output-dir" title="Link to this definition"></a></dt>
-<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
-</dd></dl>
-
-<dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-spacing">
 <span id="cmdoption-matchmaps.ncs-s"></span><span class="sig-name descname"><span class="pre">--spacing</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;spacing&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-spacing" title="Link to this definition"></a></dt>
 <dd><p>Approximate voxel size in Angstroms for real-space maps. Defaults to 0.5 A. Value is approximate because there must be an integer number of voxels along each unit cell dimension</p>
-</dd></dl>
-
-<dl class="std option">
-<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-dmin">
-<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-dmin" title="Link to this definition"></a></dt>
-<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -441,7 +425,7 @@
 <dl class="std option">
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-keep-temp-files">
 <span id="cmdoption-matchmaps.ncs-k"></span><span class="sig-name descname"><span class="pre">--keep-temp-files</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-k</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;keep_temp_files&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-keep-temp-files" title="Link to this definition"></a></dt>
-<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied output-dir.</p>
+<dd><p>Do not delete intermediate matchmaps files, but rather place them in the supplied directory. This directory is created as a subdirectory of the supplied <code class="xref py py-obj docutils literal notranslate"><span class="pre">output-dir</span></code>.</p>
 </dd></dl>
 
 <dl class="std option">
@@ -454,6 +438,89 @@
 <dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-phenix-version">
 <span class="sig-name descname"><span class="pre">--phenix-version</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;phenix_version&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-phenix-version" title="Link to this definition"></a></dt>
 <dd><p>Specify phenix version as a string, e.g. ‘1.20’. If omitted, matchmaps will attempt to automatically detect the version in use by analyzing the output of phenix.version</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-input-dir">
+<span id="cmdoption-matchmaps.ncs-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-input-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-output-dir">
+<span id="cmdoption-matchmaps.ncs-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-output-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.ncs-dmin">
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.ncs-dmin" title="Link to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
+</dd></dl>
+
+</section>
+<section id="matchmaps-diagnose">
+<h2>matchmaps.diagnose<a class="headerlink" href="#matchmaps-diagnose" title="Link to this heading"></a></h2>
+<p>Plot the isomorphism of two datasets by resolution bin; this plot is analogous to Figure 1a from the matchmaps paper. By default, the plot will open in a separate window, but you can save it with the <code class="xref py py-obj docutils literal notranslate"><span class="pre">--filename</span></code> flag</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.diagnose [-h] --mtzoff mtzfileoff Foff Phioff --mtzon</span>
+<span class="go">                          mtzfileon Fon Phioff [--filename FILENAME]</span>
+<span class="go">                          [--title TITLE] [--bins BINS]</span>
+<span class="go">                          [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
+<span class="go">                          [--dmin DMIN]</span>
+</pre></div>
+</div>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-h">
+<span id="cmdoption-matchmaps.diagnose-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-h" title="Link to this definition"></a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-mtzoff">
+<span id="cmdoption-matchmaps.diagnose-f"></span><span class="sig-name descname"><span class="pre">--mtzoff</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;phioff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileoff&gt;</span> <span class="pre">&lt;foff&gt;</span> <span class="pre">&lt;phioff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-mtzoff" title="Link to this definition"></a></dt>
+<dd><p>MTZ or sfCIF containing off/apo/ground/dark state data. Specified as [filename F Phi] (no need for SigF here!)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-mtzon">
+<span id="cmdoption-matchmaps.diagnose-n"></span><span class="sig-name descname"><span class="pre">--mtzon</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;phioff&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;mtzfileon&gt;</span> <span class="pre">&lt;fon&gt;</span> <span class="pre">&lt;phioff&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-mtzon" title="Link to this definition"></a></dt>
+<dd><p>MTZ or sfCIF containing on/bound/excited/bright state data. Specified as [filename F Phi] (no need for SigF here!)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-filename">
+<span class="sig-name descname"><span class="pre">--filename</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;filename&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-filename" title="Link to this definition"></a></dt>
+<dd><p>Filename for the plot to save; if it has an extension, it should be compatible with plt.savefig. If omitted, plot will be opened interactively but no file will be saved. File will be saved in the <code class="xref py py-obj docutils literal notranslate"><span class="pre">--output-dir</span></code> directory (current directory by default)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-title">
+<span id="cmdoption-matchmaps.diagnose-t"></span><span class="sig-name descname"><span class="pre">--title</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;title&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;title&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-title" title="Link to this definition"></a></dt>
+<dd><p>Title for the plot</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-bins">
+<span id="cmdoption-matchmaps.diagnose-b"></span><span class="sig-name descname"><span class="pre">--bins</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;bins&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-b</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;bins&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-bins" title="Link to this definition"></a></dt>
+<dd><p>Numbers of resolution bins to compute correlation</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-input-dir">
+<span id="cmdoption-matchmaps.diagnose-i"></span><span class="sig-name descname"><span class="pre">--input-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;input_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-input-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to input files. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-output-dir">
+<span id="cmdoption-matchmaps.diagnose-o"></span><span class="sig-name descname"><span class="pre">--output-dir</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">-o</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;output_dir&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-output-dir" title="Link to this definition"></a></dt>
+<dd><p>Path to which output files should be written. Optional, defaults to ‘./’ (current directory)</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-matchmaps.diagnose-dmin">
+<span class="sig-name descname"><span class="pre">--dmin</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;dmin&gt;</span></span><a class="headerlink" href="#cmdoption-matchmaps.diagnose-dmin" title="Link to this definition"></a></dt>
+<dd><p>Highest-resolution (in Angstroms) reflections to include in Fourier transform for FloatGrid creation. By default, cutoff is the resolution limit of the lower-resolution input MTZ.</p>
 </dd></dl>
 
 </section>
@@ -469,7 +536,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Dennis Brookner.</p>
+    <p>&#169; Copyright 2025, Dennis Brookner.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -11,4 +11,7 @@
 
 .. autoprogram:: matchmaps._parsers:matchmaps_ncs_parser
    :prog: matchmaps.ncs
+
+.. autoprogram:: matchmaps._parsers:matchmaps_diagnose_parser
+   :prog: matchmaps.diagnose
 ```
