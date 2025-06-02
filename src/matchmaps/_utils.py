@@ -15,7 +15,7 @@ from pathlib import Path
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
-
+from pandas.api.extensions import ExtensionDtype
 
 def _validate_environment(ccp4):
     """
@@ -687,6 +687,23 @@ def _validate_inputs(
             raise ValueError(f"Input file '{f}' does not exist")
 
     return input_dir, output_dir, ligands, *files
+
+
+def _validate_column_dtypes(mtz : rs.DataSet,
+                            columns : tuple[str, ...],
+                            dtypes : tuple[ExtensionDtype, ...], # ????
+                            ):
+    """
+    Validate dtypes of input columns
+    """
+
+    for column, dtype in zip(columns, dtypes):
+
+        try:
+            if not dtype.is_dtype(mtz[column].dtype):
+                raise ValueError(f"MTZ column '{column}' has dtype '{mtz[column].dtype}'; expected dtype '{dtype.name}'")
+        except KeyError:
+            raise KeyError(f"Column '{column}' does not exist in the input MTZ")
 
 
 def _cif_or_mtz_to_mtz(input_file, output_dir):

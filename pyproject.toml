@@ -66,6 +66,7 @@ matchmaps = "matchmaps._compute_realspace_diff:main"
 "matchmaps.ncs" = "matchmaps._compute_ncs_diff:main"
 "matchmaps.mr" = "matchmaps._compute_mr_diff:main"
 "matchmaps.version" = "matchmaps._version_util:main"
+"matchmaps.diagnose" = "matchmaps._diagnostic_plots:main"
 
 # https://hatch.pypa.io/latest/config/metadata/
 [tool.hatch.version]
