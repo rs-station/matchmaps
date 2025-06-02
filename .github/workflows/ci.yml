@@ -34,7 +34,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
-          python -m pip install -U pip
+          python -m pip install -U pip setuptools
           python -m pip install -e .[test]
 
       - name: Test
