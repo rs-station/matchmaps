@@ -7,7 +7,6 @@ from matchmaps._utils import make_floatgrid_from_mtz, _realspace_align_and_subtr
 
 
 def test_gemmi_pipeline(phenix_outputs):
-
     mtzoff, pdboff, mtzon, pdbon = phenix_outputs
 
     spacing = 0.5
@@ -22,11 +21,23 @@ def test_gemmi_pipeline(phenix_outputs):
     alpha = 0
 
     fg_off = make_floatgrid_from_mtz(
-        mtzoff, spacing=spacing, F=F, SigF=SigF, Phi=Phi, spacegroup=spacegroup, dmin=dmin,
+        mtzoff,
+        spacing=spacing,
+        F=F,
+        SigF=SigF,
+        Phi=Phi,
+        spacegroup=spacegroup,
+        dmin=dmin,
         alpha=alpha,
     )
     fg_on = make_floatgrid_from_mtz(
-        mtzon, spacing=spacing, F=F, SigF=SigF, Phi=Phi, spacegroup=spacegroup, dmin=dmin,
+        mtzon,
+        spacing=spacing,
+        F=F,
+        SigF=SigF,
+        Phi=Phi,
+        spacegroup=spacegroup,
+        dmin=dmin,
         alpha=alpha,
     )
 

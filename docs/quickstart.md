@@ -82,7 +82,7 @@ If you'd like read or write files from somewhere other than your current directo
 
 To direct output files to a specific directory, use the `--output-dir` flag. By default, all of the temporary files created by `matchmaps` will be deleted when the program finishes. Only the `.map` files described below are kept. If you would like to keep all files, you may additionally supply a `--keep-temp-files` directory, which will be created inside of `--output-dir`.
 
-### Examples 
+### Examples
 
 Supply an input directory:
 ```bash
@@ -125,7 +125,7 @@ Below is a quick tour of the output files that `matchmaps` will produce and what
 Let's assume that your input files are called `off.mtz` and `on.mtz`. The following files created by `matchmaps` may be of interest:
 
  - `on_minus_off.map`: This is your difference map! It should contain positive and negative signal in the vicinity (>= 2 Angstroms) of your protein model.
- - `on_minus_off_unmasked.map`: The same as the previous difference map, but before the 2 A solvent mask was applied. This file can be useful if you're expecting signal (perhaps a bound ligand) far away from your protein model. By default, this map contains signal up to 5 A away from the protein model; this radius can be changed with the `--unmasked-radius` flag for `matchmaps` and `matchmaps.mr` utilites. 
+ - `on_minus_off_unmasked.map`: The same as the previous difference map, but before the 2 A solvent mask was applied. This file can be useful if you're expecting signal (perhaps a bound ligand) far away from your protein model. By default, this map contains signal up to 5 A away from the protein model; this radius can be changed with the `--unmasked-radius` flag for `matchmaps` and `matchmaps.mr` utilites.
  - `on.map` / `off.map`: The real-space maps which are subtracted to produce the above difference maps. It is a good idea to open these files and inspect them. They should be generally aligned in space. Any interesting signal you expect to see in a difference map may also be apparent by inspecting these maps. Remember that both of these maps were computed using the "off" model, so structural features of the "off" data are likely to be more prominent.
  - `on_before.map` / `off_before.map`: The real-space maps, prior to alignment. These maps may be useful a) if you're curious how much alignment was necessary, or b) to troubleshoot where in the pipeline something went wrong.
 
