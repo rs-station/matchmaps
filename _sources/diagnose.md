@@ -35,6 +35,6 @@ matchmaps.diagnose \
     --mtzon  on.mtz  FP PHIC
 ```
 
-Make sure that you're supplying phases here! This syntax is similar to that of the main `matchmaps` utilites, except that in those cases, you supply structure factor amplitudes and *uncertainties*. 
+Make sure that you're supplying phases here! This syntax is similar to that of the main `matchmaps` utilites, except that in those cases, you supply structure factor amplitudes and *uncertainties*.
 
 Full documentation of the command-line interface for `matchmaps.diagnose` can be found on the [CLI page](cli.md#matchmaps-diagnose)
