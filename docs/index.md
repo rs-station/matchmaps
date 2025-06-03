@@ -29,6 +29,6 @@ This software is part of the [Reciprocal Space Station](https://rs-station.githu
    Visualizing results <visualization>
    About the algorithm <about>
    Full command-line API <cli>
-   
+
 
 ```
