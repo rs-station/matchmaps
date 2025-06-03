@@ -335,10 +335,11 @@ diagnose_args = (
         ("--filename",),
         {
             "required": False,
-            "help": ("Filename for the plot to save; if it has an extension, it should be compatible with plt.savefig. "
-                     "If omitted, plot will be opened interactively but no file will be saved. "
-                     "File will be saved in the `--output-dir` directory (current directory by default)"
-                     ),
+            "help": (
+                "Filename for the plot to save; if it has an extension, it should be compatible with plt.savefig. "
+                "If omitted, plot will be opened interactively but no file will be saved. "
+                "File will be saved in the `--output-dir` directory (current directory by default)"
+            ),
         },
     ),
     (

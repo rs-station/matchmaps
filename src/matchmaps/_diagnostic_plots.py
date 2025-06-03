@@ -31,7 +31,7 @@ def compute_diagnostic_plots(
     input_dir=Path("."),
     output_dir=Path("."),
     filename=None,
-    title = 'Produced by matchmaps.diagnose',
+    title="Produced by matchmaps.diagnose",
 ):
     rcParams.update({"figure.autolayout": True})
     rcParams.update({"font.size": 16})
@@ -39,8 +39,12 @@ def compute_diagnostic_plots(
     offmtz = rs.read_mtz(str(input_dir / mtzoff))
     onmtz = rs.read_mtz(str(input_dir / mtzon))
 
-    _validate_column_dtypes(offmtz, (Foff, Phioff), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype))
-    _validate_column_dtypes(onmtz, (Fon, Phion), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype))
+    _validate_column_dtypes(
+        offmtz, (Foff, Phioff), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype)
+    )
+    _validate_column_dtypes(
+        onmtz, (Fon, Phion), (rs.StructureFactorAmplitudeDtype, rs.PhaseDtype)
+    )
 
     offmtz.canonicalize_phases(inplace=True)
     onmtz.canonicalize_phases(inplace=True)
@@ -56,13 +60,12 @@ def compute_diagnostic_plots(
     for newname, oldname in zip(
         ("cosphi_off", "cosphi_on"), (f"{Phioff}_off", f"{Phion}_on")
     ):
-
         mtz[newname] = np.cos(mtz[oldname] * np.pi / 180)
 
     plt.figure(figsize=(8, 7))
     plt.grid(linestyle="--")
     plt.title(title)
-    plt.hlines(0, 0, bins-1, color='gray', linestyle='-')
+    plt.hlines(0, 0, bins - 1, color="gray", linestyle="-")
     plt.xlabel(r"Resolution bins ($\AA$)")
     plt.ylabel(r"$CC_{1/2}$")
 
@@ -85,7 +88,7 @@ def compute_diagnostic_plots(
         marker="o",
         linestyle="--",
         label="Amplitude correlation",
-        return_edges=False
+        return_edges=False,
     )
 
     plt.legend(loc="upper right")
@@ -127,7 +130,6 @@ def cc_datasets(
 
 
 def main():
-
     args = matchmaps_diagnose_parser.parse_args()
 
     (input_dir, output_dir, _, mtzoff, mtzon) = _validate_inputs(

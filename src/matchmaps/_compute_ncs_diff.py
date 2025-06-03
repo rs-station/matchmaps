@@ -21,28 +21,29 @@ from matchmaps._utils import (
     _clean_up_files,
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
-    _write_script, _validate_column_dtypes,
+    _write_script,
+    _validate_column_dtypes,
 )
 
 
 def compute_ncs_difference_map(
-    pdb : Path,
-    mtz : Path,
-    F : str,
-    SigF : str = None,
-    Phi : str = None,
-    ligands : list = None,
-    name : str = None,
-    dmin : float = None,
-    spacing = 0.5,
+    pdb: Path,
+    mtz: Path,
+    F: str,
+    SigF: str = None,
+    Phi: str = None,
+    ligands: list = None,
+    name: str = None,
+    dmin: float = None,
+    spacing=0.5,
     input_dir=Path("."),
     output_dir=Path("."),
     verbose=False,
-    ncs_chains : list[str] = None,
-    refine_ncs_separately = False,
-    eff : str = None,
-    keep_temp_files : str = None,
-    no_bss = False,
+    ncs_chains: list[str] = None,
+    refine_ncs_separately=False,
+    eff: str = None,
+    keep_temp_files: str = None,
+    no_bss=False,
     phenix_version: str = None,
 ):
     """
@@ -69,9 +70,9 @@ def compute_ncs_difference_map(
     spacing : float, optional
         Approximate size of real-space voxels in Angstroms, by default 0.5 A
     input_dir : pathlib.Path, optional
-        Path to directory containing input files, by default Path(".") (current directory), 
+        Path to directory containing input files, by default Path(".") (current directory),
     output_dir : pathlib.Path, optional
-        Path to directory containing input files, by default Path(".") (current directory), 
+        Path to directory containing input files, by default Path(".") (current directory),
     verbose : bool, optional
         If True, print outputs of scaleit and phenix.refine, by default False
     ncs_chains : list[str], optional
@@ -97,11 +98,11 @@ def compute_ncs_difference_map(
         phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
-    
+
     pdb = _cif_or_pdb_to_pdb(pdb, output_dir)
-    
+
     mtz, _ = _cif_or_mtz_to_mtz(mtz, output_dir)
-    
+
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(ncs_chains)
 
     if Phi is None:  # do rigid-body refinement to get phases
@@ -160,7 +161,7 @@ def compute_ncs_difference_map(
         output_dir=output_dir,
         name=name,
     )
-    
+
     print(f"{time.strftime('%H:%M:%S')}: Cleaning up files...")
 
     _clean_up_files(output_dir, output_dir_contents, keep_temp_files)
@@ -168,6 +169,7 @@ def compute_ncs_difference_map(
     print(f"{time.strftime('%H:%M:%S')}: Done!")
 
     return
+
 
 def main():
     args = matchmaps_ncs_parser.parse_args()
@@ -208,14 +210,14 @@ def main():
         no_bss=args.no_bss,
         phenix_version=args.phenix_version,
     )
-    
+
     if args.script:
         _write_script(
-            utility = 'matchmaps.ncs', 
-            arguments = sys.argv[1:],
-            script_name = args.script,
+            utility="matchmaps.ncs",
+            arguments=sys.argv[1:],
+            script_name=args.script,
             phenix_version=args.phenix_version,
-            )
+        )
 
     return
 

@@ -1,8 +1,8 @@
 # About the `matchmaps` algorithm
 
-If you want to learn more about the idea behind `matchmaps`, along with some examples, please check out paper in the Journal of Applied Crystallography!  
+If you want to learn more about the idea behind `matchmaps`, along with some examples, please check out paper in the Journal of Applied Crystallography!
 
-> [MatchMaps: non-isomorphous difference maps for X-ray crystallography](https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html) 
+> [MatchMaps: non-isomorphous difference maps for X-ray crystallography](https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html)
 
 If you're looking for a user guide, you can find that [here](quickstart.md). But if you're looking for more details about how `matchmaps` works, read on!
 
@@ -22,13 +22,13 @@ Conformational change mediates the biological functions of macromolecules. Cryst
 
 ### Scaling
 
-Scaling includes fitting both an overall scale factor and an anisotropic B-factor. `matchmaps` performs scaling via the [CCP4 `SCALEIT` utility](https://www.ccp4.ac.uk/html/scaleit.html), assisted by the [`rs-booster` `rs.scaleit` utility](https://rs-station.github.io/rs-booster/misc.html#rs-scaleit).  
+Scaling includes fitting both an overall scale factor and an anisotropic B-factor. `matchmaps` performs scaling via the [CCP4 `SCALEIT` utility](https://www.ccp4.ac.uk/html/scaleit.html), assisted by the [`rs-booster` `rs.scaleit` utility](https://rs-station.github.io/rs-booster/misc.html#rs-scaleit).
 
 ### Refinement
 
 Refinement is performed via `phenix.refine`. `matchmaps` makes use of a custom `.eff` parameter template which can be found in full in the [source code](https://github.com/rs-station/matchmaps/blob/d59fa78c2f549904d0042e637262ef6c5171d355/src/matchmaps/_utils.py#L216).
 
-By default, refinement includes bulk-solvent scaling, as this produces the best refinement results. However, in some cases, you may expect your ON data to include interesting signal far away from the OFF model, in regions outside the solvent mask. A common example of this would be if your ON data includes a bound ligand. In such situations, we recommend that bulk-solvent scaling be deactivated. You can find instructions for turning off bulk-solvent scaling (and for changing the solvent mask; see [below](#solvent-masking)) [here](quickstart.md#other-useful-options) 
+By default, refinement includes bulk-solvent scaling, as this produces the best refinement results. However, in some cases, you may expect your ON data to include interesting signal far away from the OFF model, in regions outside the solvent mask. A common example of this would be if your ON data includes a bound ligand. In such situations, we recommend that bulk-solvent scaling be deactivated. You can find instructions for turning off bulk-solvent scaling (and for changing the solvent mask; see [below](#solvent-masking)) [here](quickstart.md#other-useful-options)
 
 The user also has the option to perform rigid-body refinement on multiple different selections. For example, if your protein model contains multiple chains, those chains may move slightly relative to each other; you may not be interested in visualizing this shift in your difference map. In this case, you can specify the model selections that should be refined separately. Instuctions for doing so can be found [here](quickstart.md#other-useful-options). Note that any non-macromolecule atoms in your model will be renumbered to belong to the nearest macromolecule chain using the `phenix.sort_hetatms` utility.
 
