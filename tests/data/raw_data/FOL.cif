@@ -1,0 +1,362 @@
+# electronic Ligand Builder and Optimisation Workbench (eLBOW)
+#   - a module of PHENIX version 1.14-3260-
+#   - file written: Mon Mar 16 11:47:08 2020
+#
+#   Input file: /Users/jgreisman/Documents/Hekstra_Lab/projects/DHFR/ligands/FOL/FOL.pdb
+#   Final geometry file: /Users/jgreisman/Documents/Hekstra_Lab/projects/DHFR/ligands/FOL/FOL.pdb
+#   Random seed: 3628800
+#
+data_comp_list
+loop_
+_chem_comp.id
+_chem_comp.three_letter_code
+_chem_comp.name
+_chem_comp.group
+_chem_comp.number_atoms_all
+_chem_comp.number_atoms_nh
+_chem_comp.desc_level
+FOL        FOL 'Unknown                  ' ligand 49 32 .
+#
+data_comp_FOL
+#
+loop_
+_chem_comp_atom.comp_id
+_chem_comp_atom.atom_id
+_chem_comp_atom.type_symbol
+_chem_comp_atom.type_energy
+_chem_comp_atom.charge
+_chem_comp_atom.partial_charge
+_chem_comp_atom.x
+_chem_comp_atom.y
+_chem_comp_atom.z
+FOL         N      N   NH1    0    .      33.8300   19.8960   54.0740
+FOL         CA     C   CH1    0    .      33.9760   19.2790   52.7560
+FOL         C      C   C      0    .      34.7230   20.7770   54.5480
+FOL         O      O   O      0    .      35.7180   21.0710   53.9080
+FOL         NA2    N   NH2    0    .      30.8250   16.0340   62.1500
+FOL         CB     C   CH2    0    .      34.7560   17.9710   52.9300
+FOL         CG     C   CH2    0    .      34.3420   16.8430   51.9950
+FOL         CD     C   C      0    .      35.2730   15.6790   52.2500
+FOL         OE1    O   O      0    .      36.4220   15.8870   52.5680
+FOL         OE2    O   OC     0    .      34.8270   14.4170   52.1440
+FOL         N1     N   N      0    .      30.4250   18.2670   61.8230
+FOL         O1     O   O      0    .      32.3290   19.1760   51.0550
+FOL         C2     C   CR6    0    .      31.2780   17.2570   61.8350
+FOL         O2     O   OC     0    .      31.5930   18.9400   53.1190
+FOL         N3     N   NR16   0    .      32.5630   17.3590   61.5380
+FOL         C4     C   CR6    0    .      33.1370   18.5120   61.2170
+FOL         C4A    C   CR66   0    .      32.2600   19.6740   61.1230
+FOL         O4     O   O      0    .      34.3440   18.5980   60.9670
+FOL         N5     N   N      0    .      32.7500   20.8600   60.7670
+FOL         C6     C   CR6    0    .      31.9150   21.8600   60.6960
+FOL         C7     C   CR16   0    .      30.5750   21.6910   61.0190
+FOL         C8A    C   CR66   0    .      30.8990   19.5020   61.4500
+FOL         N8     N   N      0    .      30.0860   20.5410   61.4160
+FOL         C9     C   CH2    0    .      32.3890   23.2270   60.2750
+FOL         N10    N   NH1    0    .      33.6610   23.2130   59.5360
+FOL         C11    C   CR6    0    .      34.4380   21.3920   55.8620
+FOL         C12    C   CR16   0    .      33.1550   21.3590   56.4200
+FOL         C13    C   CR16   0    .      32.8800   21.9420   57.6290
+FOL         C14    C   CR6    0    .      33.8810   22.6060   58.3120
+FOL         C15    C   CR16   0    .      35.1620   22.6450   57.7580
+FOL         C16    C   CR16   0    .      35.4340   22.0680   56.5450
+FOL         CT     C   C      0    .      32.5710   19.1260   52.2410
+FOL         HN     H   HNH1   0    .      33.1510   19.6880   54.5600
+FOL         HN0    H   HNH1   0    .      34.3270   23.6190   59.8980
+FOL        HN21    H   HNH2   0    .      29.8290   15.9530   62.4000
+FOL        HN22    H   HNH2   0    .      31.4390   15.2150   62.2220
+FOL         HA     H   HCH1   0    .      34.4820   19.7930   52.1070
+FOL         HB1    H   HCH2   0    .      34.6320   17.6650   53.8420
+FOL         HB2    H   HCH2   0    .      35.6950   18.1580   52.7770
+FOL         HG1    H   HCH2   0    .      34.4190   17.1320   51.0720
+FOL         HG2    H   HCH2   0    .      33.4260   16.5810   52.1780
+FOL         H7     H   HCR6   0    .      30.0020   22.4210   60.9510
+FOL         H12    H   HCR6   0    .      32.4710   20.9300   55.9580
+FOL         H13    H   HCR6   0    .      32.0240   21.8910   57.9890
+FOL         H15    H   HCR6   0    .      35.8450   23.0720   58.2230
+FOL         H16    H   HCR6   0    .      36.2870   22.1310   56.1810
+FOL         H31    H   HNR6   0    .      33.0470   16.6480   61.5540
+FOL         H91    H   HCH2   0    .      31.7100   23.6250   59.7070
+FOL         H92    H   HCH2   0    .      32.5040   23.7700   61.0710
+#
+loop_
+_chem_comp_bond.comp_id
+_chem_comp_bond.atom_id_1
+_chem_comp_bond.atom_id_2
+_chem_comp_bond.type
+_chem_comp_bond.value_dist
+_chem_comp_bond.value_dist_esd
+_chem_comp_bond.value_dist_neutron
+FOL   N       CA    single        1.463 0.020     1.463
+FOL   N       C     single        1.341 0.020     1.341
+FOL   N       HN    single        0.860 0.020     1.020
+FOL   CA      CB    single        1.533 0.020     1.533
+FOL   CA      CT    single        1.504 0.020     1.504
+FOL   CA      HA    single        0.970 0.020     1.090
+FOL   C       O     double        1.219 0.020     1.219
+FOL   C       C11   single        1.479 0.020     1.479
+FOL   NA2     C2    single        1.342 0.020     1.342
+FOL   NA2    HN21   single        0.860 0.020     1.020
+FOL   NA2    HN22   single        0.860 0.020     1.020
+FOL   CB      CG    single        1.522 0.020     1.522
+FOL   CB      HB1   single        0.970 0.020     1.090
+FOL   CB      HB2   single        0.970 0.020     1.090
+FOL   CG      CD    single        1.512 0.020     1.512
+FOL   CG      HG1   single        0.970 0.020     1.090
+FOL   CG      HG2   single        0.970 0.020     1.090
+FOL   CD      OE1   deloc         1.210 0.020     1.210
+FOL   CD      OE2   deloc         1.343 0.020     1.343
+FOL   N1      C2    aromatic      1.322 0.020     1.322
+FOL   N1      C8A   aromatic      1.374 0.020     1.374
+FOL   O1      CT    deloc         1.211 0.020     1.211
+FOL   C2      N3    aromatic      1.323 0.020     1.323
+FOL   O2      CT    deloc         1.327 0.020     1.327
+FOL   N3      C4    aromatic      1.327 0.020     1.327
+FOL   N3      H31   single        0.860 0.020     1.020
+FOL   C4      C4A   aromatic      1.459 0.020     1.459
+FOL   C4      O4    double        1.236 0.020     1.236
+FOL   C4A     N5    aromatic      1.332 0.020     1.332
+FOL   C4A     C8A   aromatic      1.410 0.020     1.410
+FOL   N5      C6    aromatic      1.305 0.020     1.305
+FOL   C6      C7    aromatic      1.389 0.020     1.389
+FOL   C6      C9    single        1.507 0.020     1.507
+FOL   C7      N8    aromatic      1.311 0.020     1.311
+FOL   C7      H7    single        0.930 0.020     1.080
+FOL   C8A     N8    aromatic      1.320 0.020     1.320
+FOL   C9      N10   single        1.471 0.020     1.471
+FOL   C9      H91   single        0.970 0.020     1.090
+FOL   C9      H92   single        0.970 0.020     1.090
+FOL   N10     C14   single        1.384 0.020     1.384
+FOL   N10     HN0   single        0.860 0.020     1.020
+FOL   C11     C12   aromatic      1.399 0.020     1.399
+FOL   C11     C16   aromatic      1.384 0.020     1.384
+FOL   C12     C13   aromatic      1.370 0.020     1.370
+FOL   C12     H12   single        0.930 0.020     1.080
+FOL   C13     C14   aromatic      1.382 0.020     1.382
+FOL   C13     H13   single        0.930 0.020     1.080
+FOL   C14     C15   aromatic      1.396 0.020     1.396
+FOL   C15     C16   aromatic      1.371 0.020     1.371
+FOL   C15     H15   single        0.930 0.020     1.080
+FOL   C16     H16   single        0.930 0.020     1.080
+#
+loop_
+_chem_comp_angle.comp_id
+_chem_comp_angle.atom_id_1
+_chem_comp_angle.atom_id_2
+_chem_comp_angle.atom_id_3
+_chem_comp_angle.value_angle
+_chem_comp_angle.value_angle_esd
+FOL   HN      N       C           118.99 3.000
+FOL   HN      N       CA          119.06 3.000
+FOL   C       N       CA          121.95 3.000
+FOL   HA      CA      CT          108.18 3.000
+FOL   HA      CA      CB          105.22 3.000
+FOL   CT      CA      CB          115.30 3.000
+FOL   HA      CA      N           115.55 3.000
+FOL   CT      CA      N           104.96 3.000
+FOL   CB      CA      N           107.97 3.000
+FOL   C11     C       O           121.57 3.000
+FOL   C11     C       N           117.33 3.000
+FOL   O       C       N           121.09 3.000
+FOL  HN22     NA2    HN21         119.92 3.000
+FOL  HN22     NA2     C2          122.82 3.000
+FOL  HN21     NA2     C2          117.07 3.000
+FOL   HB2     CB      HB1         109.45 3.000
+FOL   HB2     CB      CG          108.02 3.000
+FOL   HB1     CB      CG          108.00 3.000
+FOL   HB2     CB      CA          108.08 3.000
+FOL   HB1     CB      CA          108.11 3.000
+FOL   CG      CB      CA          115.10 3.000
+FOL   HG2     CG      HG1         109.56 3.000
+FOL   HG2     CG      CD          109.98 3.000
+FOL   HG1     CG      CD          109.93 3.000
+FOL   HG2     CG      CB          109.94 3.000
+FOL   HG1     CG      CB          110.00 3.000
+FOL   CD      CG      CB          107.42 3.000
+FOL   OE2     CD      OE1         119.85 3.000
+FOL   OE2     CD      CG          120.38 3.000
+FOL   OE1     CD      CG          119.77 3.000
+FOL   C8A     N1      C2          117.80 3.000
+FOL   N3      C2      N1          124.46 3.000
+FOL   N3      C2      NA2         116.81 3.000
+FOL   N1      C2      NA2         118.73 3.000
+FOL   H31     N3      C4          118.63 3.000
+FOL   H31     N3      C2          118.60 3.000
+FOL   C4      N3      C2          122.78 3.000
+FOL   O4      C4      C4A         121.25 3.000
+FOL   O4      C4      N3          122.13 3.000
+FOL   C4A     C4      N3          116.58 3.000
+FOL   C8A     C4A     N5          121.72 3.000
+FOL   C8A     C4A     C4          117.91 3.000
+FOL   N5      C4A     C4          120.36 3.000
+FOL   C6      N5      C4A         117.49 3.000
+FOL   C9      C6      C7          118.61 3.000
+FOL   C9      C6      N5          120.61 3.000
+FOL   C7      C6      N5          120.77 3.000
+FOL   H7      C7      N8          118.72 3.000
+FOL   H7      C7      C6          118.80 3.000
+FOL   N8      C7      C6          122.48 3.000
+FOL   N8      C8A     C4A         119.51 3.000
+FOL   N8      C8A     N1          120.13 3.000
+FOL   C4A     C8A     N1          120.35 3.000
+FOL   C8A     N8      C7          117.94 3.000
+FOL   H92     C9      H91         109.48 3.000
+FOL   H92     C9      N10         108.36 3.000
+FOL   H91     C9      N10         108.35 3.000
+FOL   H92     C9      C6          108.40 3.000
+FOL   H91     C9      C6          108.39 3.000
+FOL   N10     C9      C6          113.81 3.000
+FOL   HN0     N10     C14         117.15 3.000
+FOL   HN0     N10     C9          116.98 3.000
+FOL   C14     N10     C9          125.87 3.000
+FOL   C16     C11     C12         118.33 3.000
+FOL   C16     C11     C           120.20 3.000
+FOL   C12     C11     C           121.42 3.000
+FOL   H12     C12     C13         119.14 3.000
+FOL   H12     C12     C11         119.14 3.000
+FOL   C13     C12     C11         121.72 3.000
+FOL   H13     C13     C14         120.12 3.000
+FOL   H13     C13     C12         120.20 3.000
+FOL   C14     C13     C12         119.69 3.000
+FOL   C15     C14     C13         118.81 3.000
+FOL   C15     C14     N10         118.98 3.000
+FOL   C13     C14     N10         122.19 3.000
+FOL   H15     C15     C16         119.34 3.000
+FOL   H15     C15     C14         119.22 3.000
+FOL   C16     C15     C14         121.43 3.000
+FOL   H16     C16     C15         120.01 3.000
+FOL   H16     C16     C11         120.02 3.000
+FOL   C15     C16     C11         119.97 3.000
+FOL   O2      CT      O1          120.41 3.000
+FOL   O2      CT      CA          118.42 3.000
+FOL   O1      CT      CA          121.17 3.000
+#
+loop_
+_chem_comp_tor.comp_id
+_chem_comp_tor.id
+_chem_comp_tor.atom_id_1
+_chem_comp_tor.atom_id_2
+_chem_comp_tor.atom_id_3
+_chem_comp_tor.atom_id_4
+_chem_comp_tor.value_angle
+_chem_comp_tor.value_angle_esd
+_chem_comp_tor.period
+FOL CONST_01       C4      N3      C2      N1            1.31   0.0 0
+FOL CONST_02       C4      C4A     C8A     N1           -1.02   0.0 0
+FOL CONST_03       N5      C4A     C8A     N1         -179.54   0.0 0
+FOL CONST_04       C7      N8      C8A     N1         -178.17   0.0 0
+FOL CONST_05       C4A     C8A     N1      C2           -1.38   0.0 0
+FOL CONST_06       N8      C8A     N1      C2          179.69   0.0 0
+FOL CONST_07       C4A     C4      N3      C2           -3.70   0.0 0
+FOL CONST_08       C8A     N1      C2      N3            1.41   0.0 0
+FOL CONST_09       N5      C4A     C4      N3         -177.99   0.0 0
+FOL CONST_10       C8A     C4A     C4      N3            3.48   0.0 0
+FOL CONST_11       C6      N5      C4A     C4          179.75   0.0 0
+FOL CONST_12       N8      C8A     C4A     C4          177.91   0.0 0
+FOL CONST_13       C7      C6      N5      C4A           1.80   0.0 0
+FOL CONST_14       C7      N8      C8A     C4A           2.89   0.0 0
+FOL CONST_15       N8      C8A     C4A     N5           -0.61   0.0 0
+FOL CONST_16       N8      C7      C6      N5            0.54   0.0 0
+FOL CONST_17       C8A     C4A     N5      C6           -1.77   0.0 0
+FOL CONST_18       C8A     N8      C7      C6           -2.93   0.0 0
+FOL CONST_19       C14     C13     C12     C11           1.33   0.0 0
+FOL CONST_20       C14     C15     C16     C11          -2.08   0.0 0
+FOL CONST_21       C15     C16     C11     C12           2.18   0.0 0
+FOL CONST_22       C15     C14     C13     C12          -1.12   0.0 0
+FOL CONST_23       C16     C11     C12     C13          -1.85   0.0 0
+FOL CONST_24       C16     C15     C14     C13           1.52   0.0 0
+FOL CONST_25       C13     C12     C11     C          -179.13   0.0 0
+FOL CONST_26       C15     C16     C11     C           179.51   0.0 0
+FOL CONST_27       C8A     N1      C2      NA2        -177.65   0.0 0
+FOL CONST_28       C4      N3      C2      NA2        -179.61   0.0 0
+FOL CONST_29       O4      C4      N3      C2          178.56   0.0 0
+FOL CONST_30       C9      C6      N5      C4A        -178.84   0.0 0
+FOL CONST_31       N5      C4A     C4      O4           -0.22   0.0 0
+FOL CONST_32       C8A     C4A     C4      O4         -178.76   0.0 0
+FOL CONST_33       C9      C6      C7      N8         -178.83   0.0 0
+FOL CONST_34       C12     C13     C14     N10        -179.99   0.0 0
+FOL CONST_35       C16     C15     C14     N10        -179.57   0.0 0
+FOL CONST_36       H31     N3      C2      N1         -178.72   0.0 0
+FOL CONST_37       H7      C7      C6      N5         -179.43   0.0 0
+FOL CONST_38       H13     C13     C12     C11        -178.64   0.0 0
+FOL CONST_39       H15     C15     C16     C11         177.92   0.0 0
+FOL CONST_40       H16     C16     C11     C12        -177.79   0.0 0
+FOL CONST_41       H12     C12     C13     C14        -178.67   0.0 0
+FOL CONST_42       C13     C14     N10     C9            0.93   0.0 0
+FOL CONST_43       C15     C14     N10     C9         -177.95   0.0 0
+FOL CONST_44      HN21     NA2     C2      N1           -2.04   0.0 0
+FOL CONST_45      HN22     NA2     C2      N1         -177.01   0.0 0
+FOL CONST_46       HN0     N10     C14     C13        -179.05   0.0 0
+FOL CONST_47       C11     C       N       CA          176.83   0.0 0
+FOL CONST_48       HN      N       C       C11          -3.16   0.0 0
+FOL CONST_49       O       C       N       CA           -2.08   0.0 0
+FOL Var_01         C12     C11     C       N           -17.18  30.0 2
+FOL Var_02         N10     C9      C6      N5           20.22  30.0 2
+FOL Var_03         C14     N10     C9      C6           62.94  30.0 3
+FOL Var_04         CD      CG      CB      CA          176.36  30.0 3
+FOL Var_05         OE1     CD      CG      CB          -32.88  30.0 3
+#
+loop_
+_chem_comp_chir.comp_id
+_chem_comp_chir.id
+_chem_comp_chir.atom_id_centre
+_chem_comp_chir.atom_id_1
+_chem_comp_chir.atom_id_2
+_chem_comp_chir.atom_id_3
+_chem_comp_chir.volume_sign
+FOL chir_01   CA      N       CB      CT    negativ
+#
+loop_
+_chem_comp_plane_atom.comp_id
+_chem_comp_plane_atom.plane_id
+_chem_comp_plane_atom.atom_id
+_chem_comp_plane_atom.dist_esd
+FOL plan-1    NA2 0.020
+FOL plan-1     N1 0.020
+FOL plan-1     C2 0.020
+FOL plan-1     N3 0.020
+FOL plan-1     C4 0.020
+FOL plan-1    C4A 0.020
+FOL plan-1     O4 0.020
+FOL plan-1     N5 0.020
+FOL plan-1     C6 0.020
+FOL plan-1     C7 0.020
+FOL plan-1    C8A 0.020
+FOL plan-1     N8 0.020
+FOL plan-1     C9 0.020
+FOL plan-1     H7 0.020
+FOL plan-1    H31 0.020
+FOL plan-2     CG 0.020
+FOL plan-2     CD 0.020
+FOL plan-2    OE1 0.020
+FOL plan-2    OE2 0.020
+FOL plan-3     CA 0.020
+FOL plan-3     O1 0.020
+FOL plan-3     O2 0.020
+FOL plan-3     CT 0.020
+FOL plan-4      C 0.020
+FOL plan-4    N10 0.020
+FOL plan-4    C11 0.020
+FOL plan-4    C12 0.020
+FOL plan-4    C13 0.020
+FOL plan-4    C14 0.020
+FOL plan-4    C15 0.020
+FOL plan-4    C16 0.020
+FOL plan-4    H12 0.020
+FOL plan-4    H13 0.020
+FOL plan-4    H15 0.020
+FOL plan-4    H16 0.020
+FOL plan-5      N 0.020
+FOL plan-5     CA 0.020
+FOL plan-5      C 0.020
+FOL plan-5      O 0.020
+FOL plan-5    C11 0.020
+FOL plan-5     HN 0.020
+FOL plan-6    NA2 0.020
+FOL plan-6     C2 0.020
+FOL plan-6   HN21 0.020
+FOL plan-6   HN22 0.020
+FOL plan-7     C9 0.020
+FOL plan-7    N10 0.020
+FOL plan-7    C14 0.020
+FOL plan-7    HN0 0.020

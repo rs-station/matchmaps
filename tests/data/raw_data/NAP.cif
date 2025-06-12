@@ -1,0 +1,451 @@
+# electronic Ligand Builder and Optimisation Workbench (eLBOW)
+#   - a module of PHENIX version 1.14-3260-
+#   - file written: Mon Mar 16 11:35:45 2020
+#
+#   Input file: /Users/jgreisman/Documents/Hekstra_Lab/projects/DHFR/ligands/NAP/NAP.pdb
+#   Final geometry file: /Users/jgreisman/Documents/Hekstra_Lab/projects/DHFR/ligands/NAP/NAP.pdb
+#   Random seed: 3628800
+#
+data_comp_list
+loop_
+_chem_comp.id
+_chem_comp.three_letter_code
+_chem_comp.name
+_chem_comp.group
+_chem_comp.number_atoms_all
+_chem_comp.number_atoms_nh
+_chem_comp.desc_level
+NAP        NAP 'Unknown                  ' ligand 73 48 .
+#
+data_comp_NAP
+#
+loop_
+_chem_comp_atom.comp_id
+_chem_comp_atom.atom_id
+_chem_comp_atom.type_symbol
+_chem_comp_atom.type_energy
+_chem_comp_atom.charge
+_chem_comp_atom.partial_charge
+_chem_comp_atom.x
+_chem_comp_atom.y
+_chem_comp_atom.z
+NAP         P2B    P   P      0    .      28.3850   39.0270   63.4740
+NAP         PA     P   P      0    .      29.7430   31.1830   65.2150
+NAP         PN     P   P      0    .      31.6800   30.7420   67.3760
+NAP         C1B    C   CH1    0    .      26.5760   35.6880   63.8190
+NAP         C1D    C   CR15   0    .      34.2120   25.9460   65.4150
+NAP         N1A    N   N      0    .      21.6920   37.0190   64.3200
+NAP         N1N    N   NR6    0    .      33.2630   25.0010   64.8020
+NAP         O1A    O   O      0    .      28.6170   30.6400   65.9740
+NAP         O1N    O   O      0    .      32.8830   31.5960   67.6850
+NAP         O1X    O   O      0    .      27.1080   39.7210   63.7650
+NAP         C2A    C   CR16   0    .      22.6720   37.5460   63.6160
+NAP         C2B    C   CH1    0    .      27.3440   36.8510   64.4600
+NAP         C2D    C   CR15   0    .      35.0370   26.7900   64.4570
+NAP         C2N    C   CR16   0    .      33.4050   23.7180   65.1030
+NAP         O2A    O   OP     0    .      30.2540   30.4100   63.9840
+NAP         O2B    O   O2     0    .      28.0990   37.4430   63.4040
+NAP         O2D    O   OH1    0    .      36.1890   26.0890   64.0370
+NAP         O2N    O   OP     0    .      30.7150   30.4220   68.4840
+NAP         O2X    O   OP     0    .      29.4920   39.2790   64.5700
+NAP         C3B    C   CH1    0    .      28.2310   36.1000   65.4710
+NAP         C3D    C   CR15   0    .      35.4180   27.9380   65.4010
+NAP         C3N    C   CR6    0    .      32.5010   22.7770   64.6220
+NAP         N3A    N   N      0    .      23.9050   37.1180   63.5660
+NAP         O3     O   O2     0    .      30.9920   31.5350   66.1750
+NAP         O3B    O   OH1    0    .      29.3910   36.8360   65.8410
+NAP         O3D    O   OH1    0    .      36.4880   27.4980   66.2410
+NAP         O3X    O   OP     0    .      28.8790   39.3420   61.9970
+NAP         C4B    C   CH1    0    .      28.6280   34.8700   64.6460
+NAP         C4D    C   CR15   0    .      34.1530   28.1250   66.2610
+NAP         C4N    C   CR16   0    .      31.4510   23.2100   63.8200
+NAP         O4B    O   O2     0    .      27.4450   34.5490   63.9110
+NAP         O4D    O   O      0    .      33.4140   26.8850   66.1360
+NAP         C5A    C   CR56   0    .      23.2130   35.4200   65.1050
+NAP         C5B    C   CH2    0    .      29.0030   33.6630   65.5080
+NAP         C5D    C   CH2    0    .      33.2570   29.2920   65.8430
+NAP         C5N    C   CR16   0    .      31.3520   24.5450   63.5110
+NAP         O5B    O   O2     0    .      29.4730   32.6350   64.6190
+NAP         O5D    O   O2     0    .      32.1310   29.3360   66.7450
+NAP         C6A    C   CR6    0    .      21.9140   35.9610   65.0870
+NAP         C6N    C   CR16   0    .      32.2730   25.4340   64.0350
+NAP         N6A    N   NH2    0    .      20.8860   35.4170   65.8240
+NAP         C7N    C   C      0    .      32.6080   21.3510   64.9830
+NAP         N7A    N   N      0    .      23.8220   34.3720   65.7340
+NAP         N7N    N   NH2    0    .      33.6400   20.9080   65.6970
+NAP         O7N    O   O      0    .      31.7370   20.5890   64.6400
+NAP         N9A    N   NR5    0    .      25.3350   35.3720   64.5030
+NAP        HO2N    H   HOH1   0    .      36.3410   26.3240   63.2340
+NAP        HO3A    H   HOH1   0    .      29.1200   37.5740   66.1640
+NAP        HO3N    H   HOH1   0    .      36.7640   28.1810   66.6660
+NAP         H1B    H   HCH1   0    .      26.3810   35.9680   62.7780
+NAP         H1D    H   HCR5   0    .      34.9050   25.4590   66.0920
+NAP         H2A    H   HCR6   0    .      22.4330   38.4100   63.0110
+NAP         H2B    H   HCH1   0    .      26.6760   37.5750   64.9320
+NAP         H2D    H   HCR5   0    .      34.4610   27.1810   63.6160
+NAP         H3B    H   HCH1   0    .      27.6490   35.8040   66.3440
+NAP         H2N    H   HCR6   0    .      34.2320   23.5040   65.7310
+NAP         H3D    H   HCR5   0    .      35.6830   28.8440   64.8530
+NAP         H4B    H   HCH1   0    .      29.4420   35.1350   63.9690
+NAP         H4D    H   HCR5   0    .      34.4330   28.3200   67.2970
+NAP         H4N    H   HCR6   0    .      30.7330   22.5180   63.4460
+NAP         H5N    H   HCR6   0    .      30.5570   24.9010   62.9000
+NAP         H6N    H   HCR6   0    .      32.2370   26.4920   63.8980
+NAP         H8A    H   HCR5   0    .      25.8070   33.6210   65.6750
+NAP        H51A    H   HCH2   0    .      28.1300   33.3160   66.0610
+NAP        H52A    H   HCH2   0    .      29.7950   33.9400   66.2040
+NAP        H51N    H   HCH2   0    .      33.8290   30.2200   65.8910
+NAP        H52N    H   HCH2   0    .      32.8900   29.1560   64.8250
+NAP        H61A    H   HNH2   0    .      21.0920   34.6080   66.3830
+NAP        H62A    H   HNH2   0    .      19.9900   35.8590   65.7550
+NAP        H71N    H   HNH2   0    .      34.2580   21.4530   65.9440
+NAP        H72N    H   HNH2   0    .      33.6890   20.0770   65.9110
+NAP         C4A    C   CR56   0    .      24.1820   36.0620   64.3200
+NAP         C8A    C   CR15   0    .      25.0740   34.3550   65.3610
+#
+loop_
+_chem_comp_bond.comp_id
+_chem_comp_bond.atom_id_1
+_chem_comp_bond.atom_id_2
+_chem_comp_bond.type
+_chem_comp_bond.value_dist
+_chem_comp_bond.value_dist_esd
+_chem_comp_bond.value_dist_neutron
+NAP   P2B     O1X   deloc         1.482 0.020     1.482
+NAP   P2B     O2B   single        1.611 0.020     1.611
+NAP   P2B     O2X   deloc         1.578 0.020     1.578
+NAP   P2B     O3X   deloc         1.589 0.020     1.589
+NAP   PA      O1A   deloc         1.462 0.020     1.462
+NAP   PA      O2A   deloc         1.541 0.020     1.541
+NAP   PA      O3    single        1.614 0.020     1.614
+NAP   PA      O5B   single        1.593 0.020     1.593
+NAP   PN      O1N   deloc         1.507 0.020     1.507
+NAP   PN      O2N   deloc         1.504 0.020     1.504
+NAP   PN      O3    single        1.595 0.020     1.595
+NAP   PN      O5D   single        1.606 0.020     1.606
+NAP   C1B     C2B   single        1.534 0.020     1.534
+NAP   C1B     O4B   single        1.436 0.020     1.436
+NAP   C1B     N9A   single        1.452 0.020     1.452
+NAP   C1B     H1B   single        0.970 0.020     1.090
+NAP   C1D     N1N   single        1.473 0.020     1.473
+NAP   C1D     C2D   single        1.520 0.020     1.520
+NAP   C1D     O4D   single        1.428 0.020     1.428
+NAP   C1D     H1D   single        0.970 0.020     1.090
+NAP   N1A     C2A   aromatic      1.317 0.020     1.317
+NAP   N1A     C6A   aromatic      1.325 0.020     1.325
+NAP   N1N     C2N   aromatic      1.325 0.020     1.325
+NAP   N1N     C6N   aromatic      1.325 0.020     1.325
+NAP   C2A     N3A   aromatic      1.306 0.020     1.306
+NAP   C2A     H2A   single        0.930 0.020     1.080
+NAP   C2B     O2B   single        1.427 0.020     1.427
+NAP   C2B     C3B   single        1.540 0.020     1.540
+NAP   C2B     H2B   single        0.970 0.020     1.090
+NAP   C2D     O2D   single        1.412 0.020     1.412
+NAP   C2D     C3D   single        1.534 0.020     1.534
+NAP   C2D     H2D   single        0.970 0.020     1.090
+NAP   C2N     C3N   aromatic      1.391 0.020     1.391
+NAP   C2N     H2N   single        0.930 0.020     1.080
+NAP   O2D    HO2N   single        0.850 0.020     0.980
+NAP   C3B     O3B   single        1.423 0.020     1.423
+NAP   C3B     C4B   single        1.533 0.020     1.533
+NAP   C3B     H3B   single        0.970 0.020     1.090
+NAP   C3D     O3D   single        1.430 0.020     1.430
+NAP   C3D     C4D   single        1.541 0.020     1.541
+NAP   C3D     H3D   single        0.970 0.020     1.090
+NAP   C3N     C4N   aromatic      1.390 0.020     1.390
+NAP   C3N     C7N   single        1.475 0.020     1.475
+NAP   N3A     C4A   aromatic      1.327 0.020     1.327
+NAP   O3B    HO3A   single        0.850 0.020     0.980
+NAP   O3D    HO3N   single        0.850 0.020     0.980
+NAP   C4A     C5A   aromatic      1.403 0.020     1.403
+NAP   C4A     N9A   aromatic      1.356 0.020     1.356
+NAP   C4B     O4B   single        1.429 0.020     1.429
+NAP   C4B     C5B   single        1.530 0.020     1.530
+NAP   C4B     H4B   single        0.970 0.020     1.090
+NAP   C4D     O4D   single        1.449 0.020     1.449
+NAP   C4D     C5D   single        1.530 0.020     1.530
+NAP   C4D     H4D   single        0.970 0.020     1.090
+NAP   C4N     C5N   aromatic      1.374 0.020     1.374
+NAP   C4N     H4N   single        0.930 0.020     1.080
+NAP   C5A     C6A   aromatic      1.407 0.020     1.407
+NAP   C5A     N7A   aromatic      1.366 0.020     1.366
+NAP   C5B     O5B   single        1.438 0.020     1.438
+NAP   C5B    H51A   single        0.970 0.020     1.090
+NAP   C5B    H52A   single        0.970 0.020     1.090
+NAP   C5D     O5D   single        1.443 0.020     1.443
+NAP   C5D    H51N   single        0.970 0.020     1.090
+NAP   C5D    H52N   single        0.970 0.020     1.090
+NAP   C5N     C6N   aromatic      1.383 0.020     1.383
+NAP   C5N     H5N   single        0.930 0.020     1.080
+NAP   C6A     N6A   single        1.377 0.020     1.377
+NAP   C6N     H6N   single        0.930 0.020     1.080
+NAP   N6A    H61A   single        0.860 0.020     1.020
+NAP   N6A    H62A   single        0.860 0.020     1.020
+NAP   C7N     N7N   single        1.331 0.020     1.331
+NAP   C7N     O7N   double        1.207 0.020     1.207
+NAP   N7A     C8A   aromatic      1.306 0.020     1.306
+NAP   N7N    H71N   single        0.860 0.020     1.020
+NAP   N7N    H72N   single        0.860 0.020     1.020
+NAP   C8A     N9A   aromatic      1.356 0.020     1.356
+NAP   C8A     H8A   single        0.930 0.020     1.080
+#
+loop_
+_chem_comp_angle.comp_id
+_chem_comp_angle.atom_id_1
+_chem_comp_angle.atom_id_2
+_chem_comp_angle.atom_id_3
+_chem_comp_angle.value_angle
+_chem_comp_angle.value_angle_esd
+NAP   O3X     P2B     O2X         113.32 3.000
+NAP   O3X     P2B     O2B         102.11 3.000
+NAP   O2X     P2B     O2B         108.16 3.000
+NAP   O3X     P2B     O1X         110.95 3.000
+NAP   O2X     P2B     O1X         113.16 3.000
+NAP   O2B     P2B     O1X         108.42 3.000
+NAP   O5B     PA      O3           98.91 3.000
+NAP   O5B     PA      O2A         102.39 3.000
+NAP   O3      PA      O2A         109.14 3.000
+NAP   O5B     PA      O1A         113.72 3.000
+NAP   O3      PA      O1A         111.60 3.000
+NAP   O2A     PA      O1A         118.93 3.000
+NAP   O5D     PN      O3          105.10 3.000
+NAP   O5D     PN      O2N         106.47 3.000
+NAP   O3      PN      O2N         112.57 3.000
+NAP   O5D     PN      O1N         110.64 3.000
+NAP   O3      PN      O1N         102.53 3.000
+NAP   O2N     PN      O1N         118.80 3.000
+NAP   H1B     C1B     N9A         110.56 3.000
+NAP   H1B     C1B     O4B         111.80 3.000
+NAP   N9A     C1B     O4B         108.33 3.000
+NAP   H1B     C1B     C2B         107.00 3.000
+NAP   N9A     C1B     C2B         113.33 3.000
+NAP   O4B     C1B     C2B         105.76 3.000
+NAP   H1D     C1D     O4D         109.71 3.000
+NAP   H1D     C1D     C2D         107.22 3.000
+NAP   O4D     C1D     C2D         104.86 3.000
+NAP   H1D     C1D     N1N         112.55 3.000
+NAP   O4D     C1D     N1N         105.78 3.000
+NAP   C2D     C1D     N1N         116.34 3.000
+NAP   C6A     N1A     C2A         120.28 3.000
+NAP   C6N     N1N     C2N         121.86 3.000
+NAP   C6N     N1N     C1D         120.84 3.000
+NAP   C2N     N1N     C1D         117.23 3.000
+NAP   H2A     C2A     N3A         116.68 3.000
+NAP   H2A     C2A     N1A         117.02 3.000
+NAP   N3A     C2A     N1A         126.29 3.000
+NAP   H2B     C2B     C3B         113.06 3.000
+NAP   H2B     C2B     O2B         111.62 3.000
+NAP   C3B     C2B     O2B         112.54 3.000
+NAP   H2B     C2B     C1B         112.14 3.000
+NAP   C3B     C2B     C1B         101.12 3.000
+NAP   O2B     C2B     C1B         105.68 3.000
+NAP   H2D     C2D     C3D         109.69 3.000
+NAP   H2D     C2D     O2D         112.27 3.000
+NAP   C3D     C2D     O2D         110.60 3.000
+NAP   H2D     C2D     C1D         113.45 3.000
+NAP   C3D     C2D     C1D          99.35 3.000
+NAP   O2D     C2D     C1D         110.76 3.000
+NAP   H2N     C2N     C3N         125.12 3.000
+NAP   H2N     C2N     N1N         114.42 3.000
+NAP   C3N     C2N     N1N         120.45 3.000
+NAP   C2B     O2B     P2B         118.02 3.000
+NAP  HO2N     O2D     C2D         106.82 3.000
+NAP   H3B     C3B     C4B         110.57 3.000
+NAP   H3B     C3B     O3B         111.56 3.000
+NAP   C4B     C3B     O3B         110.11 3.000
+NAP   H3B     C3B     C2B         110.52 3.000
+NAP   C4B     C3B     C2B         100.78 3.000
+NAP   O3B     C3B     C2B         112.83 3.000
+NAP   H3D     C3D     C4D         112.26 3.000
+NAP   H3D     C3D     O3D         111.64 3.000
+NAP   C4D     C3D     O3D         108.89 3.000
+NAP   H3D     C3D     C2D         111.87 3.000
+NAP   C4D     C3D     C2D         103.32 3.000
+NAP   O3D     C3D     C2D         108.48 3.000
+NAP   C7N     C3N     C4N         119.81 3.000
+NAP   C7N     C3N     C2N         121.49 3.000
+NAP   C4N     C3N     C2N         118.66 3.000
+NAP   C4A     N3A     C2A         115.86 3.000
+NAP   PN      O3      PA          132.31 3.000
+NAP  HO3A     O3B     C3B         106.74 3.000
+NAP  HO3N     O3D     C3D         106.82 3.000
+NAP   H4B     C4B     C5B         110.99 3.000
+NAP   H4B     C4B     O4B         110.66 3.000
+NAP   C5B     C4B     O4B         108.39 3.000
+NAP   H4B     C4B     C3B         109.40 3.000
+NAP   C5B     C4B     C3B         113.15 3.000
+NAP   O4B     C4B     C3B         104.04 3.000
+NAP   H4D     C4D     C5D         105.88 3.000
+NAP   H4D     C4D     O4D         111.46 3.000
+NAP   C5D     C4D     O4D         109.31 3.000
+NAP   H4D     C4D     C3D         109.94 3.000
+NAP   C5D     C4D     C3D         114.89 3.000
+NAP   O4D     C4D     C3D         105.47 3.000
+NAP   H4N     C4N     C5N         120.25 3.000
+NAP   H4N     C4N     C3N         120.62 3.000
+NAP   C5N     C4N     C3N         119.13 3.000
+NAP   C4B     O4B     C1B         110.84 3.000
+NAP   C4D     O4D     C1D         108.74 3.000
+NAP   N7A     C5A     C6A         135.44 3.000
+NAP   N7A     C5A     C4A         107.52 3.000
+NAP   C6A     C5A     C4A         117.04 3.000
+NAP  H52A     C5B    H51A         109.81 3.000
+NAP  H52A     C5B     O5B         109.81 3.000
+NAP  H51A     C5B     O5B         110.35 3.000
+NAP  H52A     C5B     C4B         109.72 3.000
+NAP  H51A     C5B     C4B         109.92 3.000
+NAP   O5B     C5B     C4B         107.20 3.000
+NAP  H52N     C5D    H51N         108.87 3.000
+NAP  H52N     C5D     O5D         108.94 3.000
+NAP  H51N     C5D     O5D         110.83 3.000
+NAP  H52N     C5D     C4D         110.92 3.000
+NAP  H51N     C5D     C4D         109.26 3.000
+NAP   O5D     C5D     C4D         108.03 3.000
+NAP   H5N     C5N     C6N         120.00 3.000
+NAP   H5N     C5N     C4N         120.54 3.000
+NAP   C6N     C5N     C4N         119.43 3.000
+NAP   C5B     O5B     PA          118.41 3.000
+NAP   C5D     O5D     PN          119.43 3.000
+NAP   N6A     C6A     C5A         122.03 3.000
+NAP   N6A     C6A     N1A         120.00 3.000
+NAP   C5A     C6A     N1A         117.96 3.000
+NAP   H6N     C6N     C5N         124.47 3.000
+NAP   H6N     C6N     N1N         115.05 3.000
+NAP   C5N     C6N     N1N         120.45 3.000
+NAP  H62A     N6A    H61A         125.25 3.000
+NAP  H62A     N6A     C6A         117.18 3.000
+NAP  H61A     N6A     C6A         117.57 3.000
+NAP   O7N     C7N     N7N         120.13 3.000
+NAP   O7N     C7N     C3N         119.24 3.000
+NAP   N7N     C7N     C3N         120.63 3.000
+NAP   C8A     N7A     C5A         107.81 3.000
+NAP  H72N     N7N    H71N         120.01 3.000
+NAP  H72N     N7N     C7N         119.98 3.000
+NAP  H71N     N7N     C7N         120.02 3.000
+NAP   C8A     N9A     C4A         107.66 3.000
+NAP   C8A     N9A     C1B         128.75 3.000
+NAP   C4A     N9A     C1B         123.53 3.000
+NAP   N9A     C4A     C5A         106.20 3.000
+NAP   N9A     C4A     N3A         131.24 3.000
+NAP   C5A     C4A     N3A         122.56 3.000
+NAP   H8A     C8A     N9A         124.13 3.000
+NAP   H8A     C8A     N7A         125.04 3.000
+NAP   N9A     C8A     N7A         110.82 3.000
+#
+loop_
+_chem_comp_tor.comp_id
+_chem_comp_tor.id
+_chem_comp_tor.atom_id_1
+_chem_comp_tor.atom_id_2
+_chem_comp_tor.atom_id_3
+_chem_comp_tor.atom_id_4
+_chem_comp_tor.value_angle
+_chem_comp_tor.value_angle_esd
+_chem_comp_tor.period
+NAP CONST_01       C4A     N3A     C2A     N1A          -1.11   0.0 0
+NAP CONST_02       C4A     C5A     C6A     N1A           1.01   0.0 0
+NAP CONST_03       N7A     C5A     C6A     N1A        -179.64   0.0 0
+NAP CONST_04       C4N     C3N     C2N     N1N           0.11   0.0 0
+NAP CONST_05       C4N     C5N     C6N     N1N           1.66   0.0 0
+NAP CONST_06       C5A     C6A     N1A     C2A          -0.86   0.0 0
+NAP CONST_07       C5A     C4A     N3A     C2A           1.26   0.0 0
+NAP CONST_08       N9A     C4A     N3A     C2A         179.95   0.0 0
+NAP CONST_09       C5N     C6N     N1N     C2N          -0.49   0.0 0
+NAP CONST_10       C5N     C4N     C3N     C2N           1.05   0.0 0
+NAP CONST_11       C6N     N1N     C2N     C3N          -0.40   0.0 0
+NAP CONST_12       C6N     C5N     C4N     C3N          -1.91   0.0 0
+NAP CONST_13       C6A     N1A     C2A     N3A           0.95   0.0 0
+NAP CONST_14       C6A     C5A     C4A     N3A          -1.26   0.0 0
+NAP CONST_15       N7A     C5A     C4A     N3A         179.21   0.0 0
+NAP CONST_16       C8A     N9A     C4A     N3A        -178.78   0.0 0
+NAP CONST_17       C8A     N7A     C5A     C4A          -0.47   0.0 0
+NAP CONST_18       N7A     C8A     N9A     C4A          -0.37   0.0 0
+NAP CONST_19       C8A     N9A     C4A     C5A           0.07   0.0 0
+NAP CONST_20       N9A     C8A     N7A     C5A           0.53   0.0 0
+NAP CONST_21       N9A     C4A     C5A     C6A         179.77   0.0 0
+NAP CONST_22       C8A     N7A     C5A     C6A        -179.87   0.0 0
+NAP CONST_23       N9A     C4A     C5A     N7A           0.24   0.0 0
+NAP CONST_24       N3A     C4A     N9A     C1B          -1.31   0.0 0
+NAP CONST_25       C5A     C4A     N9A     C1B         177.53   0.0 0
+NAP CONST_26       N7A     C8A     N9A     C1B        -177.66   0.0 0
+NAP CONST_27       C3N     C2N     N1N     C1D         176.39   0.0 0
+NAP CONST_28       C5N     C6N     N1N     C1D        -177.16   0.0 0
+NAP CONST_29       C7N     C3N     C2N     N1N        -177.71   0.0 0
+NAP CONST_30       N6A     C6A     N1A     C2A         179.80   0.0 0
+NAP CONST_31       N6A     C6A     C5A     C4A        -179.66   0.0 0
+NAP CONST_32       C7N     C3N     C4N     C5N         178.90   0.0 0
+NAP CONST_33       N7A     C5A     C6A     N6A          -0.31   0.0 0
+NAP CONST_34       H8A     C8A     N9A     C1B           1.29   0.0 0
+NAP CONST_35       H2N     C2N     N1N     C1D          -2.71   0.0 0
+NAP CONST_36       H6N     C6N     N1N     C1D           0.73   0.0 0
+NAP CONST_37       H5N     C5N     C6N     N1N         179.69   0.0 0
+NAP CONST_38       H4N     C4N     C3N     C2N        -179.14   0.0 0
+NAP CONST_39       H2A     C2A     N3A     C4A         179.64   0.0 0
+NAP CONST_40      H61A     N6A     C6A     N1A         179.18   0.0 0
+NAP CONST_41      H62A     N6A     C6A     N1A          -0.51   0.0 0
+NAP CONST_42      H71N     N7N     C7N     C3N          -0.78   0.0 0
+NAP CONST_43      H72N     N7N     C7N     C3N         179.24   0.0 0
+NAP Var_01         N7N     C7N     C3N     C2N          -5.38  30.0 2
+NAP Var_02         C4B     C5B     O5B     PA         -171.50  30.0 2
+NAP Var_03         C4D     C5D     O5D     PN          133.79  30.0 2
+NAP Var_04         O2X     P2B     O2B     C2B          74.58  30.0 3
+NAP Var_05         O1N     PN      O3      PA          173.31  30.0 2
+NAP Var_06         O1A     PA      O3      PN           44.44  30.0 1
+#
+loop_
+_chem_comp_chir.comp_id
+_chem_comp_chir.id
+_chem_comp_chir.atom_id_centre
+_chem_comp_chir.atom_id_1
+_chem_comp_chir.atom_id_2
+_chem_comp_chir.atom_id_3
+_chem_comp_chir.volume_sign
+NAP chir_01   C1B     C2B     O4B     N9A   negativ
+NAP chir_02   C1D     N1N     C2D     O4D   negativ
+NAP chir_03   C2B     C1B     O2B     C3B   positiv
+NAP chir_04   C2D     C1D     O2D     C3D   positiv
+NAP chir_05   C3B     O3B     C4B     C2B   positiv
+NAP chir_06   C3D     C2D     O3D     C4D   positiv
+NAP chir_07   C4B     O4B     C5B     C3B   positiv
+NAP chir_08   C4D     C3D     O4D     C5D   positiv
+#
+loop_
+_chem_comp_plane_atom.comp_id
+_chem_comp_plane_atom.plane_id
+_chem_comp_plane_atom.atom_id
+_chem_comp_plane_atom.dist_esd
+NAP plan-1    C6A 0.020
+NAP plan-1    N6A 0.020
+NAP plan-1   H61A 0.020
+NAP plan-1   H62A 0.020
+NAP plan-2    C1B 0.020
+NAP plan-2    N1A 0.020
+NAP plan-2    C2A 0.020
+NAP plan-2    N3A 0.020
+NAP plan-2    C5A 0.020
+NAP plan-2    C6A 0.020
+NAP plan-2    N6A 0.020
+NAP plan-2    N7A 0.020
+NAP plan-2    N9A 0.020
+NAP plan-2    H2A 0.020
+NAP plan-2    H8A 0.020
+NAP plan-2    C4A 0.020
+NAP plan-2    C8A 0.020
+NAP plan-3    C1D 0.020
+NAP plan-3    N1N 0.020
+NAP plan-3    C2N 0.020
+NAP plan-3    C3N 0.020
+NAP plan-3    C4N 0.020
+NAP plan-3    C5N 0.020
+NAP plan-3    C6N 0.020
+NAP plan-3    C7N 0.020
+NAP plan-3    H2N 0.020
+NAP plan-3    H4N 0.020
+NAP plan-3    H5N 0.020
+NAP plan-3    H6N 0.020
+NAP plan-4    C3N 0.020
+NAP plan-4    C7N 0.020
+NAP plan-4    N7N 0.020
+NAP plan-4    O7N 0.020
+NAP plan-4   H71N 0.020
+NAP plan-4   H72N 0.020
