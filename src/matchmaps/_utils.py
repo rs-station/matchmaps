@@ -651,8 +651,8 @@ def _quicknorm(array):
 
 
 def _validate_inputs(
-    input_dir: Path,
-    output_dir: Path,
+    input_dir: str,
+    output_dir: str,
     ligands,
     *files,
 ):
