@@ -325,11 +325,7 @@ def phaser_wrapper(
     with open(eff, "w") as file:
         file.write(eff_contents)
 
-    _custom_subprocess(
-        command="phenix.phaser",
-        params=str(eff),
-        verbose=verbose
-    )
+    _custom_subprocess(command="phenix.phaser", params=str(eff), verbose=verbose)
 
     return output_dir / nickname
 
@@ -358,9 +354,9 @@ def _renumber_waters(pdb, verbose):
     pdb_renumbered = Path(str(pdb).removesuffix(".pdb") + "_renumbered.pdb")
 
     _custom_subprocess(
-        command='phenix.sort_hetatms',
+        command="phenix.sort_hetatms",
         params=f"file_name={pdb} output_file={pdb_renumbered}",
-        verbose=verbose
+        verbose=verbose,
     )
 
     print(f"{time.strftime('%H:%M:%S')}: Moved waters to nearest protein chains...")
@@ -368,11 +364,7 @@ def _renumber_waters(pdb, verbose):
     return pdb_renumbered
 
 
-def _remove_waters(
-    pdb,
-    output_dir,
-    verbose
-):
+def _remove_waters(pdb, output_dir, verbose):
     pdb_dry = pdb.name.removesuffix(".pdb") + "_dry"
 
     _custom_subprocess(
@@ -380,20 +372,18 @@ def _remove_waters(
         params=f"{pdb} remove='water' \
             output.prefix='{output_dir}/' \
             output.suffix='{pdb_dry}'",
-        verbose=verbose
+        verbose=verbose,
     )
 
     return output_dir / (pdb_dry + ".pdb")
 
 
 def _custom_subprocess(command, params, verbose, shell=True):
-
     subproc = subprocess.run(
         command + " " + params, shell=shell, capture_output=(not verbose)
     )
 
     if subproc.returncode != 0:
-
         error = f"matchmaps encountered an error while running {command}" + (
             "\n              Try again in --verbose mode for more a more detailed error message"
             if (not verbose)

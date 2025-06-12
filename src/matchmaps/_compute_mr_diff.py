@@ -9,7 +9,11 @@ import gemmi
 import reciprocalspaceship as rs
 
 from matchmaps._parsers import matchmaps_mr_parser
-from matchmaps._phenix_utils import rigid_body_refinement_wrapper, phaser_wrapper, _remove_waters
+from matchmaps._phenix_utils import (
+    rigid_body_refinement_wrapper,
+    phaser_wrapper,
+    _remove_waters,
+)
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
@@ -22,32 +26,33 @@ from matchmaps._utils import (
     _cif_or_pdb_to_pdb,
     _cif_or_mtz_to_mtz,
     _write_script,
+    _validate_column_dtypes,
 )
 
 
 def compute_mr_difference_map(
-    pdboff : Path,
-    mtzoff : Path,
-    mtzon : Path,
-    Foff : str,
-    SigFoff : str,
-    Fon : str,
-    SigFon : str,
+    pdboff: Path,
+    mtzoff: Path,
+    mtzon: Path,
+    Foff: str,
+    SigFoff: str,
+    Fon: str,
+    SigFon: str,
     ligands: list = None,
-    dmin : int = None,
-    spacing = 0.5,
-    on_as_stationary = False,
-    input_dir = Path("."),
-    output_dir = Path("."),
-    verbose = False,
-    rbr_selections : list[str] = None,
-    eff : str = None,
+    dmin: float = None,
+    spacing=0.5,
+    on_as_stationary=False,
+    input_dir=Path("."),
+    output_dir=Path("."),
+    verbose=False,
+    rbr_selections: list[str] = None,
+    eff: str = None,
     keep_temp_files: str = None,
-    radius : float = 5,
-    alpha : float = 0,
-    no_bss = False,
+    radius: float = 5,
+    alpha: float = 0,
+    no_bss=False,
     phenix_version: str = None,
-    ):
+):
     """
     Compute a real-space difference map from mtzs in different spacegroups.
 
@@ -100,21 +105,19 @@ def compute_mr_difference_map(
      no_bss : bool, optional
         If True, skip bulk solvent scaling feature of phenix.refine
     """
-    
+
     auto_phenix_version = _validate_environment(ccp4=False)
 
-    if phenix_version:
-        pass
-    else:
+    if not phenix_version:
         phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
-    
+
     pdboff = _cif_or_pdb_to_pdb(pdboff, output_dir)
-    
+
     mtzoff, off_name = _cif_or_mtz_to_mtz(mtzoff, output_dir)
     mtzon, on_name = _cif_or_mtz_to_mtz(mtzon, output_dir)
-    
+
     # take in the list of rbr selections and parse them into phenix and gemmi selection formats
     # if rbr_groups = None, just returns (None, None)
     rbr_phenix, rbr_gemmi = _rbr_selection_parser(rbr_selections)
@@ -131,12 +134,19 @@ def compute_mr_difference_map(
         f"{time.strftime('%H:%M:%S')}: Running phenix.phaser to place 'off' model into 'on' data..."
     )
 
-    phaser_nickname = phaser_wrapper(mtzfile=mtzon, pdb=pdboff, output_dir=output_dir, off_labels=f"{Fon},{SigFon}",
-                                     phenix_style=phenix_version, eff=None, verbose=verbose)
+    phaser_nickname = phaser_wrapper(
+        mtzfile=mtzon,
+        pdb=pdboff,
+        output_dir=output_dir,
+        off_labels=f"{Fon},{SigFon}",
+        phenix_style=phenix_version,
+        eff=None,
+        verbose=verbose,
+    )
 
     # TO-DO: fix ligand occupancies in pdb_mr_to_on
     edited_mr_pdb = _restore_ligand_occupancy(
-        pdb_to_be_restored= str(phaser_nickname) + ".1.pdb",
+        pdb_to_be_restored=str(phaser_nickname) + ".1.pdb",
         original_pdb=pdboff,
         output_dir=output_dir,
     )
@@ -195,10 +205,24 @@ def compute_mr_difference_map(
     # TO-DO: Figure out why phenix outputs are sometimes still split into (+) and (-) columns, even when I specify that anomalous=False
     # As a workaround, even anomalous files have a single 'F-obs-filtered' column, so I can always just use that.
     fg_off = make_floatgrid_from_mtz(
-        mtzoff, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin, alpha=alpha,
+        mtzoff,
+        spacing,
+        F="F-obs-filtered",
+        SigF="SIGF-obs-filtered",
+        Phi="PH2FOFCWT",
+        spacegroup="P1",
+        dmin=dmin,
+        alpha=alpha,
     )
     fg_on = make_floatgrid_from_mtz(
-        mtzon, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin, alpha=alpha,
+        mtzon,
+        spacing,
+        F="F-obs-filtered",
+        SigF="SIGF-obs-filtered",
+        Phi="PH2FOFCWT",
+        spacegroup="P1",
+        dmin=dmin,
+        alpha=alpha,
     )
 
     if rbr_gemmi is None:
@@ -258,7 +282,18 @@ def main():
         args.mtzon[0],
         args.pdboff,
     )
-    
+
+    _validate_column_dtypes(
+        rs.read_mtz(str(mtzoff)),
+        (args.mtzoff[1], args.mtzoff[2]),
+        (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype),
+    )
+    _validate_column_dtypes(
+        rs.read_mtz(str(mtzon)),
+        (args.mtzon[1], args.mtzon[2]),
+        (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype),
+    )
+
     compute_mr_difference_map(
         pdboff=pdboff,
         ligands=ligands,
@@ -279,17 +314,17 @@ def main():
         alpha=args.alpha,
         on_as_stationary=args.on_as_stationary,
         keep_temp_files=args.keep_temp_files,
-        no_bss = args.no_bss,
-        phenix_version = args.phenix_version,
+        no_bss=args.no_bss,
+        phenix_version=args.phenix_version,
     )
-    
+
     if args.script:
         _write_script(
-            utility = 'matchmaps.mr', 
-            arguments = sys.argv[1:],
-            script_name = args.script,
+            utility="matchmaps.mr",
+            arguments=sys.argv[1:],
+            script_name=args.script,
             phenix_version=args.phenix_version,
-            )
+        )
 
     return
 

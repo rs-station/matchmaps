@@ -15,12 +15,13 @@ from pathlib import Path
 import gemmi
 import numpy as np
 import reciprocalspaceship as rs
+from pandas.api.extensions import ExtensionDtype
 
 
 def _validate_environment(ccp4):
     """
     Check if the environment contains phenix (and if necessary, ccp4) and throw a helpful error if not
-    
+
     If the function runs successfully, it returns a string of form "X.XX" denoting the major and minor version of the phenix detected, e.g. "1.20" or "1.21".
     """
 
@@ -41,10 +42,12 @@ def _validate_environment(ccp4):
                 "For more information, see https://rs-station.github.io/matchmaps/quickstart.html#additional-dependencies"
             )
 
-    print(f'Detected phenix {phenix_version} in your environment.',
-            '\n',
-            'If this is not the version you are using, please specify the version directly via the --phenix-version flag')
-    
+    print(
+        f"Detected phenix {phenix_version} in your environment.",
+        "\n",
+        "If this is not the version you are using, please specify the version directly via the --phenix-version flag",
+    )
+
     return phenix_version
 
 
@@ -57,7 +60,7 @@ def _detect_phenix_version():
     #     raise NotImplementedError("It seems that you are using phenix 1.21, which is not yet supported by matchmaps"
     #                               "\n"
     #                               "Please use phenix 1.20 or earlier.")
-    phenix_version = '.'.join(version_string.split(': ')[1].split('.')[:-1])
+    phenix_version = ".".join(version_string.split(": ")[1].split(".")[:-1])
     return phenix_version
 
 
@@ -180,20 +183,15 @@ def make_floatgrid_from_mtz(
     # apply weighting
     # note: if alpha==0, then these numbers all just become 1, e.g. no weighting
     if SigF is not None:
-        weights = 1 / (
-            1
-            + (
-                alpha
-                * new_mtz[SigF] ** 2
-                / np.mean(new_mtz[SigF] ** 2)
-            )
-        )
+        weights = 1 / (1 + (alpha * new_mtz[SigF] ** 2 / np.mean(new_mtz[SigF] ** 2)))
     else:
         weights = 1
-        
-    if 'weighted_Fobs' in new_mtz.columns:
-        raise NotImplementedError('Error: mtz already contains a column named weighted_Fobs; email Dennis bugging him to support this')
-    new_mtz['weighted_Fobs'] = new_mtz[F] * weights
+
+    if "weighted_Fobs" in new_mtz.columns:
+        raise NotImplementedError(
+            "Error: mtz already contains a column named weighted_Fobs; email Dennis bugging him to support this"
+        )
+    new_mtz["weighted_Fobs"] = new_mtz[F] * weights
 
     # perform FFT using the desired amplitudes and phases
     new_mtz["Fcomplex"] = new_mtz.to_structurefactor("weighted_Fobs", Phi)
@@ -551,7 +549,7 @@ def align_grids_from_model_transform(
         tr=transform,
         dest_model=structure1[0],  # dest_model,
         radius=radius,
-        order=2,
+        order=1,
     )
 
     return grid2_out
@@ -596,7 +594,7 @@ def _ncs_align_and_subtract(
         tr=sup.transform.inverse(),
         dest_model=pdb[0],
         radius=8,
-        order=2,
+        order=1,
     )
 
     model = gemmi.Model("dummy model")
@@ -689,6 +687,25 @@ def _validate_inputs(
     return input_dir, output_dir, ligands, *files
 
 
+def _validate_column_dtypes(
+    mtz: rs.DataSet,
+    columns: tuple[str, ...],
+    dtypes: tuple[ExtensionDtype, ...],  # ????
+):
+    """
+    Validate dtypes of input columns
+    """
+
+    for column, dtype in zip(columns, dtypes):
+        try:
+            if not dtype.is_dtype(mtz[column].dtype):
+                raise ValueError(
+                    f"MTZ column '{column}' has dtype '{mtz[column].dtype}'; expected dtype '{dtype.name}'"
+                )
+        except KeyError:
+            raise KeyError(f"Column '{column}' does not exist in the input MTZ")
+
+
 def _cif_or_mtz_to_mtz(input_file, output_dir):
     """
     Return a File() object and also the original file name as a string
@@ -712,10 +729,12 @@ def _cif_or_mtz_to_mtz(input_file, output_dir):
         try:
             shutil.copy(input_file, output_file)
         except shutil.SameFileError:
-            print(f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
-                   "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option")
+            print(
+                f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
+                "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option"
+            )
             pass
-        
+
     elif input_file.suffix.lower() == ".cif":
         output_file = output_dir / (
             input_file.name.lower().removesuffix(".cif") + ".mtz"
@@ -755,12 +774,14 @@ def _cif_or_pdb_to_pdb(input_file, output_dir):
 
     if input_file.suffix.lower() == ".pdb":
         output_file = output_dir / (input_file.name)
-        
+
         try:
             shutil.copy(input_file, output_file)
         except shutil.SameFileError:
-            print(f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
-                   "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option")
+            print(
+                f"Note: Input file '{input_file.name}' is located in the output directory '{output_dir}'\n"
+                "      This is ok, but I recommend directing outputs elsewhere using the --output-dir option"
+            )
             pass
 
     elif input_file.suffix.lower() == ".cif":

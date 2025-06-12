@@ -8,7 +8,11 @@ import gemmi
 import reciprocalspaceship as rs
 
 from matchmaps._parsers import matchmaps_parser
-from matchmaps._phenix_utils import rigid_body_refinement_wrapper, _renumber_waters, _custom_subprocess
+from matchmaps._phenix_utils import (
+    rigid_body_refinement_wrapper,
+    _renumber_waters,
+    _custom_subprocess,
+)
 from matchmaps._utils import (
     _handle_special_positions,
     make_floatgrid_from_mtz,
@@ -20,31 +24,32 @@ from matchmaps._utils import (
     _cif_or_mtz_to_mtz,
     _cif_or_pdb_to_pdb,
     _write_script,
+    _validate_column_dtypes,
 )
 
 
 def compute_realspace_difference_map(
-        pdboff: Path,
-        mtzoff: Path,
-        mtzon: Path,
-        Foff: str,
-        SigFoff: str,
-        Fon: str,
-        SigFon: str,
-        ligands: list = None,
-        dmin: int = None,
-        spacing=0.5,
-        on_as_stationary: bool = False,
-        input_dir=Path("."),
-        output_dir=Path("."),
-        verbose=False,
-        rbr_selections: list[str] = None,
-        eff: str = None,
-        keep_temp_files: str = None,
-        radius: float = 5,
-        alpha: float = 0,
-        no_bss=False,
-        phenix_version: str = None,
+    pdboff: Path,
+    mtzoff: Path,
+    mtzon: Path,
+    Foff: str,
+    SigFoff: str,
+    Fon: str,
+    SigFon: str,
+    ligands: list = None,
+    dmin: float = None,
+    spacing=0.5,
+    on_as_stationary: bool = False,
+    input_dir=Path("."),
+    output_dir=Path("."),
+    verbose=False,
+    rbr_selections: list[str] = None,
+    eff: str = None,
+    keep_temp_files: str = None,
+    radius: float = 5,
+    alpha: float = 0,
+    no_bss=False,
+    phenix_version: str = None,
 ):
     """
     Compute a real-space difference map from mtzs.
@@ -102,9 +107,7 @@ def compute_realspace_difference_map(
 
     auto_phenix_version = _validate_environment(ccp4=True)
 
-    if phenix_version:
-        pass
-    else:
+    if not phenix_version:
         phenix_version = auto_phenix_version
 
     output_dir_contents = list(output_dir.glob("*"))
@@ -128,7 +131,7 @@ def compute_realspace_difference_map(
     _custom_subprocess(
         command="rs.scaleit",
         params=f"-r {mtzoff} {Foff} {SigFoff} -i {mtzon} {Fon} {SigFon} -o {mtzon_scaled} --ignore-isomorphism",
-        verbose=verbose
+        verbose=verbose,
     )
 
     # now that scaleit has run, let's swap out the spacegroup from the scaled file
@@ -137,7 +140,9 @@ def compute_realspace_difference_map(
     mtzoff_original_py = rs.read_mtz(str(mtzoff))
 
     mtzoff_trunc = output_dir / (mtzoff.name.removesuffix(".mtz") + "_trunc.mtz")
-    mtzon_scaled_truecell = output_dir / (mtzon_scaled.name.removesuffix(".mtz") + "_truecell.mtz")
+    mtzon_scaled_truecell = output_dir / (
+        mtzon_scaled.name.removesuffix(".mtz") + "_truecell.mtz"
+    )
 
     mtzon_scaled_py.cell = mtzon_original_py.cell
 
@@ -211,11 +216,23 @@ def compute_realspace_difference_map(
     # TO-DO: Figure out why phenix outputs are sometimes still split into (+) and (-) columns, even when I specify that anomalous=False
     # As a workaround, even anomalous files have a single 'F-obs-filtered' column, so I can always just use that.
     fg_off = make_floatgrid_from_mtz(
-        mtzoff, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin,
+        mtzoff,
+        spacing,
+        F="F-obs-filtered",
+        SigF="SIGF-obs-filtered",
+        Phi="PH2FOFCWT",
+        spacegroup="P1",
+        dmin=dmin,
         alpha=alpha,
     )
     fg_on = make_floatgrid_from_mtz(
-        mtzon, spacing, F="F-obs-filtered", SigF="SIGF-obs-filtered", Phi="PH2FOFCWT", spacegroup="P1", dmin=dmin,
+        mtzon,
+        spacing,
+        F="F-obs-filtered",
+        SigF="SIGF-obs-filtered",
+        Phi="PH2FOFCWT",
+        spacegroup="P1",
+        dmin=dmin,
         alpha=alpha,
     )
 
@@ -271,6 +288,17 @@ def main():
         args.pdboff,
     )
 
+    _validate_column_dtypes(
+        rs.read_mtz(str(mtzoff)),
+        (args.mtzoff[1], args.mtzoff[2]),
+        (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype),
+    )
+    _validate_column_dtypes(
+        rs.read_mtz(str(mtzon)),
+        (args.mtzon[1], args.mtzon[2]),
+        (rs.StructureFactorAmplitudeDtype, rs.StandardDeviationDtype),
+    )
+
     compute_realspace_difference_map(
         pdboff=pdboff,
         ligands=ligands,
@@ -297,7 +325,7 @@ def main():
 
     if args.script:
         _write_script(
-            utility='matchmaps',
+            utility="matchmaps",
             arguments=sys.argv[1:],
             script_name=args.script,
             phenix_version=args.phenix_version,
