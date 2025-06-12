@@ -171,8 +171,8 @@ def compute_ncs_difference_map(
     return
 
 
-def main(argv=None):
-    args = matchmaps_ncs_parser.parse_args(argv)
+def main():
+    args = matchmaps_ncs_parser.parse_args()
 
     (input_dir, output_dir, ligands, mtz, pdb) = _validate_inputs(
         args.input_dir,

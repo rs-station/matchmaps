@@ -276,8 +276,8 @@ def compute_realspace_difference_map(
     return
 
 
-def main(argv=None):
-    args = matchmaps_parser.parse_args(argv)
+def main():
+    args = matchmaps_parser.parse_args()
 
     (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
         args.input_dir,

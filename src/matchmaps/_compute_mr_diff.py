@@ -265,8 +265,8 @@ def compute_mr_difference_map(
     return
 
 
-def main(argv=None):
-    args = matchmaps_mr_parser.parse_args(argv)
+def main():
+    args = matchmaps_mr_parser.parse_args()
 
     if not os.path.exists(args.output_dir):
         os.makedirs(args.output_dir)
