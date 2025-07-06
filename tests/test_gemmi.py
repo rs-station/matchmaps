@@ -1,7 +1,6 @@
-import pytest
-import gemmi
-import reciprocalspaceship as rs
 from pathlib import Path
+
+import gemmi
 
 from matchmaps._utils import make_floatgrid_from_mtz, _realspace_align_and_subtract
 

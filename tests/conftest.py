@@ -24,3 +24,8 @@ def phenix_outputs():
     )
 
     return mtzoff, pdboff, mtzon, pdbon
+
+
+@pytest.fixture
+def mtz_1rx2():
+    return rs.read_mtz("data/raw_data/1rx2_phases.mtz")
