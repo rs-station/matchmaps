@@ -9,7 +9,7 @@ name = "matchmaps"
 # versioning through releases
 description = "Make unbiased difference maps even for non-isomorphous inputs"
 readme = "README.md"
-requires-python = ">=3.9, <=3.12"
+requires-python = ">=3.9, <3.13"
 license = { text = "BSD 3-Clause License" }
 authors = [
     { email = "debrookner@gmail.com", name = "Dennis Brookner" },
