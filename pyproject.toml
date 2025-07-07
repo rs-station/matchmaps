@@ -9,7 +9,7 @@ name = "matchmaps"
 # versioning through releases
 description = "Make unbiased difference maps even for non-isomorphous inputs"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9, <=3.12"
 license = { text = "BSD 3-Clause License" }
 authors = [
     { email = "debrookner@gmail.com", name = "Dennis Brookner" },
@@ -27,11 +27,11 @@ classifiers = [
 dynamic = ["version"]
 
 dependencies = [
-    "numpy",
+    "numpy>=2, <=2.1",
     "tqdm",
-    "reciprocalspaceship>=1.0.4",
-    "rs-booster>=0.1.2",
-    "gemmi>=0.7.0"
+    "reciprocalspaceship>=1.0.4, <=1.0.4",
+    "rs-booster>=0.1.2, <= 0.1.2",
+    "gemmi>=0.7.0, <=0.7.2"
 ]
 
 # extras
