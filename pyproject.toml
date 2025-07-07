@@ -27,7 +27,7 @@ classifiers = [
 dynamic = ["version"]
 
 dependencies = [
-    "numpy>=2, <=2.1",
+    "numpy>=2, <=2.3.1",
     "tqdm",
     "reciprocalspaceship>=1.0.4, <=1.0.5",
     "rs-booster>=0.1.2, <= 0.1.2",
