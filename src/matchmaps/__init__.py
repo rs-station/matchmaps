@@ -1,4 +1,5 @@
 """Make unbiased difference maps even for non-isomorphous inputs."""
+
 from importlib.metadata import PackageNotFoundError, version
 
 try:
