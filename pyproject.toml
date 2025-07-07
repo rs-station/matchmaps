@@ -31,7 +31,7 @@ dependencies = [
     "tqdm",
     "reciprocalspaceship>=1.0.4, <=1.0.5",
     "rs-booster>=0.1.2, <= 0.1.2",
-    "gemmi>=0.7.0, <=0.7.2"
+    "gemmi>=0.7.0, <=0.7.3"
 ]
 
 # extras
