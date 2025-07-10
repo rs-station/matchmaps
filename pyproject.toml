@@ -29,9 +29,10 @@ dynamic = ["version"]
 dependencies = [
     "numpy>=2, <=2.1",
     "tqdm",
-    "reciprocalspaceship>=1.0.4, <=1.0.5",
+    # "reciprocalspaceship>=1.0.5, <=1.0.5",
+    "reciprocalspaceship @ git+https://github.com/rs-station/reciprocalspaceship.git@main",
     "rs-booster>=0.1.2, <= 0.1.2",
-    "gemmi>=0.7.0, <=0.7.2"
+    "gemmi>=0.7.3, <=0.7.3"
 ]
 
 # extras
@@ -73,5 +74,5 @@ matchmaps = "matchmaps._compute_realspace_diff:main"
 source = "vcs"
 
 # # this can be deleted once a new rs-booster version has been released
-# [tool.hatch.metadata]
-# allow-direct-references = true
+[tool.hatch.metadata]
+allow-direct-references = true

@@ -378,7 +378,7 @@ def _realspace_align_and_subtract(
         pdb_fixed = pdboff.clone()
 
     # Use models to align grids
-    # align_grids_from_model_transform is a light wrapper around gemmi.interpolate_grid_of_aligned_model2
+    # align_grids_from_model_transform is a light wrapper around gemmi.interpolate_grid_of_aligned_model2 (previously called gemmi.interpolate_grid_of_aligned_model2)
     fg_off = align_grids_from_model_transform(
         fg_fixed, fg_off, pdb_fixed, pdboff, selection, radius=radius
     )
@@ -493,7 +493,8 @@ def align_grids_from_model_transform(
     grid1, grid2, structure1, structure2, selection, radius
 ):
     """
-    This function is basically just a wrapper around `gemmi.interpolate_grid_of_aligned_model2`, which is an amazing thing that exists!!.
+    This function is basically just a wrapper around `interpolate_grid_around_model` (previously called `gemmi.interpolate_grid_of_aligned_model2`),
+    which is an amazing thing that exists!!.
 
     Parameters
     ----------
@@ -543,7 +544,7 @@ def align_grids_from_model_transform(
 
     grid2_out.fill(0)
 
-    gemmi.interpolate_grid_of_aligned_model2(
+    gemmi.interpolate_grid_around_model(
         dest=grid2_out,
         src=grid2,
         tr=transform,
@@ -588,7 +589,7 @@ def _ncs_align_and_subtract(
     fg2 = fg.clone()
     fg2.fill(0)
 
-    gemmi.interpolate_grid_of_aligned_model2(
+    gemmi.interpolate_grid_around_model(
         dest=fg2,
         src=fg,
         tr=sup.transform.inverse(),
