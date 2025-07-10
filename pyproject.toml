@@ -74,5 +74,5 @@ matchmaps = "matchmaps._compute_realspace_diff:main"
 source = "vcs"
 
 # # this can be deleted once a new rs-booster version has been released
-# [tool.hatch.metadata]
-# allow-direct-references = true
+[tool.hatch.metadata]
+allow-direct-references = true
