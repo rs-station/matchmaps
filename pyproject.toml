@@ -27,7 +27,7 @@ classifiers = [
 dynamic = ["version"]
 
 dependencies = [
-    "numpy>=2, <=2.1",
+    "numpy>=2, <=2.3.1",
     "tqdm",
     # "reciprocalspaceship>=1.0.5, <=1.0.5",
     "reciprocalspaceship @ git+https://github.com/rs-station/reciprocalspaceship.git@main",
