@@ -15,7 +15,7 @@
     <link rel="shortcut icon" href="_static/rs-favicon_32x32.png"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=bc86ad04"></script>
+      <script src="_static/documentation_options.js?v=5c4b0fdf"></script>
       <script src="_static/doctools.js?v=9a2dae69"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
       <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
@@ -83,19 +83,21 @@
 <h1><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> Documentation<a class="headerlink" href="#matchmaps-documentation" title="Link to this heading"></a></h1>
 <p>Welcome to the docs for <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, a python package for aligning and subtracting non-isomorphous crystallographic datasets. Do you have a pair of datasets for which an isomorphous difference maps doesn’t quite work due to changes in your unit cell dimensions? If so, this is the package for you.</p>
 <p>The <a class="reference internal" href="quickstart.html"><span class="std std-doc">quickstart guide</span></a> contains installation instructions and sample usage of the basic <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> utility, along with other useful tips.</p>
-<p>If you’d like to learn more about <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, you can find our exploration of the package <a class="reference internal" href="about.html"><span class="std std-doc">here</span></a>. For even more information, and see the package in action, please check out our pre-print!</p>
+<p>If you’d like to learn more about <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code>, you can find our exploration of the package <a class="reference internal" href="about.html"><span class="std std-doc">here</span></a>. For even more information, and see the package in action, please check out our paper in the Journal of Applied Crystallography!</p>
 <blockquote>
-<div><p><a class="reference external" href="https://www.biorxiv.org/content/10.1101/2023.09.01.555333v2.full.pdf+html">MatchMaps: Non-isomorphous difference maps for X-ray crystallography</a></p>
+<div><p><a class="reference external" href="https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html">MatchMaps: non-isomorphous difference maps for X-ray crystallography</a></p>
 </div></blockquote>
 <p>This software is part of the <a class="reference external" href="https://rs-station.github.io/">Reciprocal Space Station</a> family of open-source crystallography software and was conceived in <a class="reference external" href="https://hekstralab.fas.harvard.edu/">Doeke Hekstra’s Lab</a> at Harvard by <a class="reference external" href="https://dennisbrookner.github.io/">Dennis Brookner</a></p>
 <section id="the-matchmaps-functions-in-brief">
 <h2>The <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> functions in brief<a class="headerlink" href="#the-matchmaps-functions-in-brief" title="Link to this heading"></a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three command-line utilities. A walkthrough of the core utility can be found <a class="reference internal" href="quickstart.html"><span class="std std-doc">here</span></a>, and all options for all three utilites are documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three utilities produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
+<p><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> consists of three main command-line utilities. A walkthrough of the core utility can be found <a class="reference internal" href="quickstart.html"><span class="std std-doc">here</span></a>, and all options for all three utilites are documented <a class="reference internal" href="cli.html"><span class="std std-doc">here</span></a>. All three utilities produce a real-space difference map and require a single starting model for phasing, but differ in the types of reflection data they require. Briefly:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps</span></code></strong> takes in two mtzs containing similar data and which are nearly isomorphous and computes an unbiased real-space difference map between them</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.mr</span></code></strong> takes in two mtzs containing similar data but which are in different spacegroups (or the same spacegroup but different crystal packing) and computes an unbiased real-space difference map between them.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">matchmaps.ncs</span></code></strong> takes in a single mtz and computes an internal difference map across a defined non-crystallographic symmetry present in the data.</p></li>
 </ul>
+<p>Additionally, <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> provides a utility called <code class="docutils literal notranslate"><span class="pre">matchmaps.diagnose</span></code>, which will produce a plot to help evaluate the isomorphism (or lack thereof!) between a pair of datasets. This is described in more detail <a class="reference internal" href="diagnose.html"><span class="std std-doc">here</span></a>.</p>
+<p>Last and also least, you can run <code class="docutils literal notranslate"><span class="pre">matchmaps.version</span></code> to check which version of <code class="docutils literal notranslate"><span class="pre">matchmaps</span></code> is installed.</p>
 <div class="toctree-wrapper compound">
 </div>
 </section>
