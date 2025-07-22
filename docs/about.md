@@ -1,6 +1,6 @@
 # About the `matchmaps` algorithm
 
-If you want to learn more about the idea behind `matchmaps`, along with some examples, please check out paper in the Journal of Applied Crystallography!
+If you want to learn more about the idea behind `matchmaps`, along with some examples, please check out our paper in the Journal of Applied Crystallography!
 
 > [MatchMaps: non-isomorphous difference maps for X-ray crystallography](https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html)
 
