@@ -7,7 +7,7 @@ You have two crystallographic datasets that you'd like to compare with an $F_oF_
 ## Interpreting this plot
 
 The plot above shows three curves for each pair of datasets; each curve represents a form of resolution-dependent correlation between the datasets.
-Two of the curves report $CC_{1/2}$ between structure factor amplitudes and $cos(\textrm{structure factor phases}$), and the third shows the figure of merit for structure factor phases. 
+Two of the curves report $CC_{1/2}$ between structure factor amplitudes and $cos(\textrm{structure factor phases}$), and the third shows the figure of merit for structure factor phases.
 
 ```{eval-rst}
 .. note::
