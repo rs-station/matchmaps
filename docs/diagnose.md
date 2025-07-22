@@ -1,13 +1,18 @@
 # Should I use `matchmaps`? Diagnosing non-isomorphism
 
-You have two crystallographic datasets that you'd like to compare with an Fo-Fo difference map. Should you use `matchmaps`, or will an isomorphous difference map do the trick? To help answer this question, `matchmaps` provides the utility `matchmaps.diagnose`, which creates a plot similar to the following (Figure 1a from the [MatchMaps paper](https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html))
+You have two crystallographic datasets that you'd like to compare with an $F_oF_o$ difference map. Should you use `matchmaps`, or will an isomorphous difference map do the trick? To help answer this question, `matchmaps` provides the utility `matchmaps.diagnose`, which creates a plot similar to the following (Figure 1a from the [MatchMaps paper](https://journals.iucr.org/j/issues/2024/03/00/ei5112/index.html))
 
 ![Figure 1a: resolution dependence of inter-dataset correlation](images/figure.jpg)
 
 ## Interpreting this plot
 
 The plot above shows three curves for each pair of datasets; each curve represents a form of resolution-dependent correlation between the datasets.
-Two of the curves report $CC_{1/2}$ between structure factor amplitudes and $cos(\textrm{structure factor phases}$), and the third shows the figure of merit for structure factor phases. `matchmaps.diagnose` omits the figure-of-merit caculation and just shows the two $CC_{1/2}$ curves.
+Two of the curves report $CC_{1/2}$ between structure factor amplitudes and $cos(\textrm{structure factor phases}$), and the third shows the figure of merit for structure factor phases. 
+
+```{eval-rst}
+.. note::
+    `matchmaps.diagnose` omits the figure-of-merit caculation and just shows the two $CC_{1/2}$ curves.
+```
 
 The worse the isomorphism between your datasets, the more quickly these correlations will drop off with resolution. The above plot shows two very extreme examples. The isomorphous datasets (PDB IDs 1RX2 and 1RX1) correlate quite well even out to the highest-resolution bin; these datasets can be compared effectively with an isomorphous difference map.
 
@@ -23,10 +28,8 @@ These plots compare the correlation for both structure factor amplitudes and str
 
 ## Using `matchmaps.diagnose`
 
-```{eval-rst}
-.. note::
-    Note that, unlike the main `matchmaps` utilities, `matchmaps.diagnose` does *not* require the PHENIX or CCP4 external dependencies. Just a quick `pip install matchmaps`, and you're ready to go!
-```
+Unlike the main `matchmaps` utilities, `matchmaps.diagnose` does *not* require the PHENIX or CCP4 external dependencies. Just a quick `pip install matchmaps`, and you're ready to go!
+
 The simplest usage of `matchmaps.diagnose` is to just supply your two input files, along with the names for the structure factor amplitudes and phases in each dataset. Make sure you're including *observed* structure factor amplitudes!
 
 ```bash
@@ -35,6 +38,9 @@ matchmaps.diagnose \
     --mtzon  on.mtz  FP PHIC
 ```
 
-Make sure that you're supplying phases here! This syntax is similar to that of the main `matchmaps` utilites, except that in those cases, you supply structure factor amplitudes and *uncertainties*.
+```{eval-rst}
+.. note::
+    Make sure that you're supplying phases here! This syntax is similar to that of the main `matchmaps` utilites, except that in those cases, you supply structure factor amplitudes and *uncertainties*.
+```
 
-Full documentation of the command-line interface for `matchmaps.diagnose` can be found on the [CLI page](cli.md#matchmaps-diagnose)
+Full documentation of the command-line interface for `matchmaps.diagnose` can be found on the [CLI page](cli.md#matchmaps-diagnose). If you have any feature requests, please [let me know](https://github.com/rs-station/matchmaps/issues)! This utility was suggested by a user, and I want it to contain as much functionality as is useful.
