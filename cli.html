@@ -15,8 +15,8 @@
     <link rel="shortcut icon" href="_static/rs-favicon_32x32.png"/>
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=35edc949"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/documentation_options.js?v=ec42716c"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="author" title="About these documents" href="about.html" />
@@ -89,8 +89,9 @@
 <section id="matchmaps">
 <h2>matchmaps<a class="headerlink" href="#matchmaps" title="Link to this heading"></a></h2>
 <p>Compute a real-space difference map. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. The input file may be in .pdb or .cif format. Please note that both ccp4 and phenix must be installed and active in your environment for this function to run. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon Fon</span>
-<span class="go">                 SigFon --pdboff PDBOFF [--on-as-stationary] [--alpha ALPHA]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps [-h] --mtzoff mtzfileoff Foff SigFoff</span>
+<span class="go">                 --mtzon mtzfileon Fon SigFon --pdboff PDBOFF</span>
+<span class="go">                 [--on-as-stationary] [--alpha ALPHA]</span>
 <span class="go">                 [--unmasked-radius UNMASKED_RADIUS]</span>
 <span class="go">                 [--rbr-selections [RBR_SELECTIONS ...]]</span>
 <span class="go">                 [--ligands [LIGANDS ...]] [--spacing SPACING] [--no-bss]</span>
@@ -218,9 +219,10 @@
 <section id="matchmaps-mr">
 <h2>matchmaps.mr<a class="headerlink" href="#matchmaps-mr" title="Link to this heading"></a></h2>
 <p>Compute a real-space difference map between inputs in different space groups / crystal packings. You will need two MTZ files, which will be referred to throughout as ‘on’ and ‘off’, though they could also be light/dark, bound/apo, mutant/WT, hot/cold, etc. Each mtz will need to contain structure factor amplitudes and uncertainties; you will not need any phases. You will, however, need an input model (assumed to correspond with the ‘off’ state) which will be used to determine phases. The input file may be in .pdb or .cif format. Please note that phenix must be installed and active in your environment for this function to run. If your mtzoff and mtzon are in the same spacegroup and crystal packing, see the basic matchmaps utility. More information can be found online at <a class="reference external" href="https://rs-station.github.io/matchmaps/index.html">https://rs-station.github.io/matchmaps/index.html</a></p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.mr [-h] --mtzoff mtzfileoff Foff SigFoff --mtzon mtzfileon</span>
-<span class="go">                    Fon SigFon --pdboff PDBOFF [--on-as-stationary]</span>
-<span class="go">                    [--alpha ALPHA] [--unmasked-radius UNMASKED_RADIUS]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.mr [-h] --mtzoff mtzfileoff Foff SigFoff</span>
+<span class="go">                    --mtzon mtzfileon Fon SigFon --pdboff PDBOFF</span>
+<span class="go">                    [--on-as-stationary] [--alpha ALPHA]</span>
+<span class="go">                    [--unmasked-radius UNMASKED_RADIUS]</span>
 <span class="go">                    [--rbr-selections [RBR_SELECTIONS ...]]</span>
 <span class="go">                    [--ligands [LIGANDS ...]] [--spacing SPACING] [--no-bss]</span>
 <span class="go">                    [--verbose] [--eff EFF]</span>
@@ -462,8 +464,8 @@
 <section id="matchmaps-diagnose">
 <h2>matchmaps.diagnose<a class="headerlink" href="#matchmaps-diagnose" title="Link to this heading"></a></h2>
 <p>Plot the isomorphism of two datasets by resolution bin; this plot is analogous to Figure 1a from the matchmaps paper. By default, the plot will open in a separate window, but you can save it with the <code class="xref py py-obj docutils literal notranslate"><span class="pre">--filename</span></code> flag</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.diagnose [-h] --mtzoff mtzfileoff Foff Phioff --mtzon</span>
-<span class="go">                          mtzfileon Fon Phioff [--filename FILENAME]</span>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">usage: matchmaps.diagnose [-h] --mtzoff mtzfileoff Foff Phioff</span>
+<span class="go">                          --mtzon mtzfileon Fon Phioff [--filename FILENAME]</span>
 <span class="go">                          [--title TITLE] [--bins BINS]</span>
 <span class="go">                          [--input-dir INPUT_DIR] [--output-dir OUTPUT_DIR]</span>
 <span class="go">                          [--dmin DMIN]</span>
