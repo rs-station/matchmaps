@@ -155,7 +155,7 @@ def rigid_body_refinement_wrapper(
     if eff is None:
         eff_contents = _auto_eff_refinement_template(phenix_style=phenix_style)
     else:
-        with open(input_dir + eff) as file:
+        with open(input_dir / eff) as file:
             eff_contents = file.read()
 
     if (off_labels is None) or mr_on:
