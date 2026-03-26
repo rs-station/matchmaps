@@ -45,7 +45,7 @@ jobs:
           pytest --color=yes --cov --cov-report=xml --cov-report=term-missing
 
       - name: Coverage
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
 
   deploy:
     name: Deploy
