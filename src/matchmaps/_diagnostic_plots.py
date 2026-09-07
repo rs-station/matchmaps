@@ -10,7 +10,6 @@ from matplotlib import rcParams
 from matchmaps._parsers import matchmaps_diagnose_parser
 from matchmaps._utils import _validate_inputs, _validate_column_dtypes
 
-
 # to do list:
 # [ x ] write function for making plot
 # [  ] write main function which directs command-line arguments into the plot
@@ -132,7 +131,7 @@ def cc_datasets(
 def main():
     args = matchmaps_diagnose_parser.parse_args()
 
-    (input_dir, output_dir, _, mtzoff, mtzon) = _validate_inputs(
+    input_dir, output_dir, _, mtzoff, mtzon = _validate_inputs(
         args.input_dir,
         args.output_dir,
         None,
