@@ -254,14 +254,12 @@ def _handle_special_positions(pdboff, output_dir):
                             )
 
                         else:
-                            raise NotImplementedError(
-                                """
+                            raise NotImplementedError("""
 Input model contains a non-water atom on a special position, which is not allowed in rigid-body refinement.
 You may attempt to exclude this atom via a custom atom selection to the `--rbr-selections` argument, but this feature is not currently tested.
 
 Alternatively, you can remove this atom from your structure altogether and try again.
-"""
-                            )
+""")
 
     # if pdboff.suffix in ('.cif', '.CIF'):
     #     pdboff_nospecialpositions = output_dir / (pdboff.name.lower().removesuffix(".cif") + "_nospecialpositions.pdb")
