@@ -274,7 +274,7 @@ def main():
     if not os.path.exists(args.input_dir):
         raise ValueError(f"Input directory '{args.input_dir}' does not exist")
 
-    (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(
+    input_dir, output_dir, ligands, mtzoff, mtzon, pdboff = _validate_inputs(
         args.input_dir,
         args.output_dir,
         args.ligands,
