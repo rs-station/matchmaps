@@ -35,7 +35,7 @@ from matchmaps._utils import _validate_inputs
     ),
 )
 def test_validate_inputs(inputs):
-    (input_dir, output_dir, ligands, mtzoff, mtzon, pdboff) = _validate_inputs(*inputs)
+    input_dir, output_dir, ligands, mtzoff, mtzon, pdboff = _validate_inputs(*inputs)
 
     assert isinstance(input_dir, Path)
     assert isinstance(output_dir, Path)

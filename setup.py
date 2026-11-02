@@ -1,14 +1,12 @@
 import sys
 
-sys.stderr.write(
-    """
+sys.stderr.write("""
 ===============================
 Unsupported installation method
 ===============================
 matchmaps does not support installation with `python setup.py install`.
 Please use `python -m pip install .` instead.
-"""
-)
+""")
 sys.exit(1)
 
 
